@@ -1,0 +1,21 @@
+services:
+  quiz_database:
+    image: mysql:latest
+    container_name: quiz_database
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: quiz_database
+      MYSQL_USER: quiz_user
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3369:3306"
+  quiz_phpmyadmin:
+    image: phpmyadmin
+    container_name: quiz_phpmyadmin
+    environment:
+      PMA_HOST: quiz_database
+      PMA_PORT: 3306
+    ports:
+      - "5500:80"
+    depends_on:
+      - quiz_database
