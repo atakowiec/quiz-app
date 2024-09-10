@@ -8,7 +8,7 @@ const Header = () => {
     <>
       <header className="header-top-strip p-1">
         <div className="header-content">
-          <div className="logo">Quiz</div>
+          <a href="/" className="logo" >Quiz</a>
           <div className="icon-container">
             <a href="/" className="info gap-15">
               <IoInformationCircleOutline color="white" size="30px" />
@@ -16,7 +16,7 @@ const Header = () => {
             <a href="/" className="notifications gap-15">
               <IoMdNotificationsOutline color="white" size="30px" />
             </a>
-            <a href="/" className="profile gap-15">
+            <a href="/login" className="profile gap-15">
               <IoPersonCircleOutline color="white" size="30px" />
             </a>
           </div>
