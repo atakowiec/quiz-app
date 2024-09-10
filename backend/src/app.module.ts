@@ -1,34 +1,32 @@
-import {Module} from '@nestjs/common';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
-import {QuestionsModule} from './questions/questions.module';
-import {ConfigModule, ConfigService} from '@nestjs/config';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {Question} from "./questions/question.model";
-import {Category} from "./questions/category.model";
-import {Distractor} from "./questions/distractor.model";
-import {Repository} from "typeorm";
-import { QuestionController } from './question/question.controller';
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { QuestionsModule } from "./questions/questions.module";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Distractor } from "./questions/entities/distractor.model";
+import { Question } from "./questions/entities/question.model";
+import { QuestionsController } from "./questions/controllers/questions/questions.controller";
+import databaseConfig from "./config/database.config";
+import { Category } from "./questions/entities/category.model";
 
 @Module({
-  imports: [ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Distractor, Question]),
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [databaseConfig],
+    }),
+    TypeOrmModule.forFeature([Distractor, Question, Category]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('DB_HOST'),
-        port: configService.get('DB_PORT'),
-        username: configService.get('DB_USER'),
-        password: configService.get<string>('DB_PASS'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [Question, Category, Distractor],
-        synchronize: configService.get<string>('DB_SYNC') === 'true',
-      })
-    }), QuestionsModule],
-  controllers: [AppController, QuestionController],
+        ...configService.get("database"),
+      }),
+    }),
+    QuestionsModule,
+  ],
+  controllers: [AppController, QuestionsController],
   providers: [AppService],
 })
-export class AppModule {
-}
+export class AppModule {}
