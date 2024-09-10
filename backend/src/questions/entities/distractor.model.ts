@@ -1,5 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
-import {Question} from "./question.model";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Question } from "./question.model";
 
 @Entity()
 export class Distractor {
@@ -9,6 +9,6 @@ export class Distractor {
   @Column()
   content: string;
 
-  @ManyToOne(() => Question, question => question.distractors)
+  @ManyToOne(() => Question, (question) => question.distractors)
   question: Question;
 }

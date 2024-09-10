@@ -9,7 +9,7 @@ export class Category {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @ManyToMany(() => Question, (question) => question.category)
