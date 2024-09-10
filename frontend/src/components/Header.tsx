@@ -1,4 +1,3 @@
-import React from "react";
 import "../styles/Header.scss";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
