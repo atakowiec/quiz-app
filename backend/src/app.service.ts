@@ -1,42 +1,46 @@
-import {Injectable} from '@nestjs/common';
-import {Question} from "./questions/question.model";
-import {Repository} from "typeorm";
-import {Category} from "./questions/category.model";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Distractor} from "./questions/distractor.model";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+
+import { Repository } from "typeorm";
+import { Distractor } from "./questions/entities/distractor.model";
+import { Question } from "./questions/entities/question.model";
+import { Category } from "./questions/entities/category.model";
 
 @Injectable()
 export class AppService {
-  constructor(@InjectRepository(Distractor)
-              private readonly distractorRepository: Repository<Distractor>,
-              @InjectRepository(Question)
-              private readonly questionRepository: Repository<Question>) {
-    // empty
-  }
+  constructor(
+    @InjectRepository(Question)
+    private questionRepository: Repository<Question>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+    @InjectRepository(Distractor)
+    private distractorRepository: Repository<Distractor>
+  ) {}
 
-  async getHello(): Promise<number> {
-    const question = new Question();
-    question.correctAnswer = '42';
-    question.question = 'What is the answer to life, the universe, and everything?';
-    question.isActive = true;
-    question.createdAt = new Date();
-    question.updatedAt = new Date();
+  async createTestQuestion(): Promise<string> {
+    const distractors = await this.distractorRepository.save([
+      this.distractorRepository.create({ content: "London" }),
+      this.distractorRepository.create({ content: "Berlin" }),
+      this.distractorRepository.create({ content: "Madrid" }),
+    ]);
 
-    const distractor = new Distractor();
-    distractor.content = '41';
-    distractor.question = question;
+    const category = await this.categoryRepository.save(
+      this.categoryRepository.create({
+        name: "Geography",
+        description: "Questions about the world",
+      })
+    );
 
-    const category = new Category();
-    category.name = 'General Knowledge';
-    category.description = 'General knowledge questions';
-
-    question.category = [category];
-    question.distractors = [distractor];
-    question.photo = 'https://www.google.com';
-
-    const savedQuestion = await this.questionRepository.save(question);
-    const saved = await this.distractorRepository.save(distractor);
-
-    return saved.id;
+    const newQuestion = await this.questionRepository.save(
+      this.questionRepository.create({
+        question: "What is the capital of France?",
+        correctAnswer: "Paris",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        distractors: distractors,
+        category: [category],
+      })
+    );
+    return newQuestion.question;
   }
 }
