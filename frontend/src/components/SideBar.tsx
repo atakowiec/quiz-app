@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import "../styles/Sidebar.scss";
+import styles from "../styles/Sidebar.module.scss";
 
 export interface SidebarItem {
   icon: IconType;
@@ -12,13 +12,13 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   return (
-    <div className="sidebar">
+    <div className={styles.sidebar}>
       <ul>
         {items.map((item, index) => (
-          <li key={index} className="sidebar-item">
-            <a href={item.href} className="sidebar-link">
-              <div className="sidebar-icon">{<item.icon />}</div>
-              <div className="sidebar-label">{item.label}</div>
+          <li key={index} className={styles.sidebarItem}>
+            <a href={item.href} className={styles.sidebarLink}>
+              <div className={styles.sidebarIcon}>{<item.icon />}</div>
+              <div className={styles.sidebarLabel}>{item.label}</div>
             </a>
           </li>
         ))}
