@@ -10,8 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    border: none; /* Usuń wszelkie obramowania */
-    box-shadow: none; /* Usuń cień, jeśli jest obecny */
+    border: none; 
+    box-shadow: none; 
   }
   
   ul {
@@ -31,12 +31,12 @@
   }
   
   .sidebar-icon {
-    font-size: 3rem; /* Rozmiar ikon */
-    margin-bottom: 0; /* Odstęp między ikoną a podpisem */
+    font-size: 3rem;
+    margin-bottom: 0; 
   }
   
   .sidebar-label {
-    font-size: 0.75rem; /* Rozmiar podpisu */
+    font-size: 0.75rem; 
   }
 
   .sidebar-link{

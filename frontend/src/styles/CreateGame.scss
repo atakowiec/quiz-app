@@ -2,9 +2,9 @@ $sidebar-width: 90px;
 $sidebar-half-width: 45px;
 
 .create-container {
-    position: relative; // Kontener dla .create-box
-    height: calc(100vh - 90px); // Cała wysokość widoku minus wysokość headera
-    overflow: hidden; // Ukrywa nadmiarowe elementy, które mogą wystawać poza kontener
+    position: relative; 
+    height: calc(100vh - 90px); 
+    overflow: hidden; 
 }
 
 .create-box {
