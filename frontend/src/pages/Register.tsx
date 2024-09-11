@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import Meta from "../components/Meta";
 import { Breadcrumb, Container, Button } from "react-bootstrap";
 import * as yup from "yup";
-import "../styles/Login.scss";
+import styles from "../styles/Login.module.scss";
 import CustomInput from "../components/CustomInput";
 
 const Register = () => {
@@ -32,15 +32,15 @@ const Register = () => {
     <div>
       <Meta title={"Rejestracja"} />
       <Breadcrumb title="Rejestracja" />
-      <Container>
+      <Container className={styles.loginContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
-            <div className="login-box">
-              <div className="login-text">
+            <div className={styles.loginBox}>
+              <div className={styles.loginText}>
                 Rejestracja
               </div>
-              <form onSubmit={formik.handleSubmit} className="login-form">
-                <div className="form-group"> 
+              <form onSubmit={formik.handleSubmit} className={styles.loginForm}>
+                <div className={styles.formGroup}> 
                   <CustomInput 
                     type="email" 
                     name="email" 
@@ -48,14 +48,14 @@ const Register = () => {
                     value={formik.values.email} 
                     onChange={formik.handleChange} 
                     onBlur={formik.handleBlur} 
-                    className={formik.touched.email && formik.errors.email ? "error" : ""} 
+                    className={formik.touched.email && formik.errors.email ? styles.error : ""} 
                     autoComplete="off"
                   />
                   {formik.touched.email && formik.errors.email && (
-                    <div className="error">{formik.errors.email}</div>
+                    <div className={styles.error}>{formik.errors.email}</div>
                   )}
                 </div>
-                <div className="form-group"> 
+                <div className={styles.formGroup}> 
                   <CustomInput 
                     type="text" 
                     name="login" 
@@ -63,14 +63,14 @@ const Register = () => {
                     value={formik.values.login} 
                     onChange={formik.handleChange} 
                     onBlur={formik.handleBlur} 
-                    className={formik.touched.login && formik.errors.login ? "error" : ""} 
+                    className={formik.touched.login && formik.errors.login ? styles.error : ""} 
                     autoComplete="off"
                   />
                   {formik.touched.login && formik.errors.login && (
-                    <div className="error">{formik.errors.login}</div>
+                    <div className={styles.error}>{formik.errors.login}</div>
                   )}
                 </div>
-                <div className="form-group"> 
+                <div className={styles.formGroup}> 
                   <CustomInput 
                     type="password" 
                     name="password" 
@@ -78,14 +78,14 @@ const Register = () => {
                     value={formik.values.password} 
                     onChange={formik.handleChange} 
                     onBlur={formik.handleBlur} 
-                    className={formik.touched.password && formik.errors.password ? "error" : ""} 
+                    className={formik.touched.password && formik.errors.password ? styles.error : ""} 
                     autoComplete="off"
                   />
                   {formik.touched.password && formik.errors.password && (
-                    <div className="error">{formik.errors.password}</div>
+                    <div className={styles.error}>{formik.errors.password}</div>
                   )}
                 </div>
-                <div className="form-group"> 
+                <div className={styles.formGroup}> 
                   <CustomInput 
                     type="password" 
                     name="confirmPassword" 
@@ -93,19 +93,19 @@ const Register = () => {
                     value={formik.values.confirmPassword} 
                     onChange={formik.handleChange} 
                     onBlur={formik.handleBlur} 
-                    className={formik.touched.confirmPassword && formik.errors.confirmPassword ? "error" : ""} 
+                    className={formik.touched.confirmPassword && formik.errors.confirmPassword ? styles.error : ""} 
                     autoComplete="off"
                   />
                   {formik.touched.confirmPassword && formik.errors.confirmPassword && (
                     <div className="error">{formik.errors.confirmPassword}</div>
                   )}
                 </div>
-                <Button type="submit" className="submit-button">
+                <Button type="submit" className={styles.submitButton}>
                   Zarejestruj się
                 </Button>
               </form>
-              <div className="register-link">
-                Masz już konto? <a href="/login" className="register-text">Zaloguj się</a>
+              <div className={styles.registerLink}>
+                Masz już konto? <a href="/login" className={styles.registerText}>Zaloguj się</a>
               </div>
             </div>
           </div>
