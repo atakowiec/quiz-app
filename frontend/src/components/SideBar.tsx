@@ -1,5 +1,6 @@
 import { IconType } from "react-icons";
 import styles from "../styles/Sidebar.module.scss";
+import {Link} from "react-router-dom";
 
 export interface SidebarItem {
   icon: IconType;
@@ -16,10 +17,10 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
       <ul>
         {items.map((item, index) => (
           <li key={index} className={styles.sidebarItem}>
-            <a href={item.href} className={styles.sidebarLink}>
+            <Link to={item.href} className={styles.sidebarLink}>
               <div className={styles.sidebarIcon}>{<item.icon />}</div>
               <div className={styles.sidebarLabel}>{item.label}</div>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
