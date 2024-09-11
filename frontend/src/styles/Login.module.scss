@@ -1,9 +1,15 @@
-.login-box {
+.loginContainer {
+  position: relative; 
+  height: calc(100vh - 90px); 
+  overflow: hidden; 
+}
+
+.loginBox {
   background-color: #fff; 
   padding: 2rem; 
   border-radius: 10px; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  position: fixed; 
+  position: absolute; 
   top: 50%; 
   left: 50%; 
   transform: translate(-50%, -50%); 
@@ -11,11 +17,13 @@
   max-width: 600px; 
   display: flex;
   flex-direction: column;
-  justify-content: center; 
+  justify-content: flex-start; 
+  overflow-y: auto;
+  max-height: 100%;
 
 }
 
-.login-text {
+.loginText {
   background-color: #0C1A25;
   border-radius: 10px;
   color: white;
@@ -24,26 +32,36 @@
   font-weight: 500;
   padding: 0.5rem; 
   margin-bottom: 2.5rem;
+  position: sticky;
+
 }
 
-.login-form {
+.loginForm {
   display: flex;
   flex-direction: column;
   flex-grow: 1; 
 }
 
-.form-group {
+.formGroup {
   margin-bottom: 1rem;
 
 }
 
-.form-control {
+.formControl {
   width: 100%;
   padding: 0.75rem; 
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #F0F4F3;
   margin-bottom: 1rem;
+  font-size: 1rem; 
+  color: #666; 
+
+  &::placeholder {
+    font-size: 1rem;
+    color: #666;
+  }
+
 }
 
 .error {
@@ -53,7 +71,7 @@
   padding-left: 1rem;
 }
 
-.submit-button {
+.submitButton {
   align-self: center; 
   background-color: #2BC440; 
   border: none; 
@@ -67,23 +85,23 @@
   font-weight: 500;
 }
 
-.submit-button:hover {
+.submitButton:hover {
   background-color: #06a53b; 
   color: #0C1A25; 
 }
 
-.register-link{
+.registerLink{
   margin-top: 2rem;
   align-self: center;
 }
 
-.register-text{
+.registerText{
   text-decoration: underline;
   color: black;
 }
 
 @media (max-width: 768px) {
-  .login-box {
+  .loginBox {
     width: 90vw; 
   }
 }

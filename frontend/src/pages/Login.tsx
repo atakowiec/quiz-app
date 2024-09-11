@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import Meta from "../components/Meta";
 import { Breadcrumb, Container, Button } from "react-bootstrap";
 import * as yup from "yup";
-import "../styles/Login.scss";
+import styles from "../styles/Login.module.scss";
 import CustomInput from "../components/CustomInput";
 
 const Login = () => {
@@ -24,15 +24,15 @@ const Login = () => {
     <div>
       <Meta title={"Logowanie"} />
       <Breadcrumb title="Logowanie" />
-      <Container>
+      <Container className={styles.loginContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
-            <div className="login-box">
-              <div className="login-text">
+            <div className={styles.loginBox}>
+              <div className={styles.loginText}>
                 Logowanie
               </div>
-              <form onSubmit={formik.handleSubmit} className="login-form">
-                <div className="form-group"> 
+              <form onSubmit={formik.handleSubmit} className={styles.loginForm}>
+                <div className={styles.formGroup}> 
                   <CustomInput 
                     type="text" 
                     name="login" 
@@ -40,14 +40,14 @@ const Login = () => {
                     value={formik.values.login} 
                     onChange={formik.handleChange} 
                     onBlur={formik.handleBlur} 
-                    className={formik.touched.login && formik.errors.login ? "error" : ""} 
+                    className={formik.touched.login && formik.errors.login ? styles.error : ""} 
                     autoComplete="off"
                   />
                   {formik.touched.login && formik.errors.login && (
-                    <div className="error">{formik.errors.login}</div>
+                    <div className={styles.error}>{formik.errors.login}</div>
                   )}
                 </div>
-                <div className="form-group"> 
+                <div className={styles.formGroup}> 
                   <CustomInput 
                     type="password" 
                     name="password" 
@@ -55,19 +55,19 @@ const Login = () => {
                     value={formik.values.password} 
                     onChange={formik.handleChange} 
                     onBlur={formik.handleBlur} 
-                    className={formik.touched.password && formik.errors.password ? "error" : ""} 
+                    className={formik.touched.password && formik.errors.password ? styles.error : ""} 
                     autoComplete="off"
                   />
                   {formik.touched.password && formik.errors.password && (
-                    <div className="error">{formik.errors.password}</div>
+                    <div className={styles.error}>{formik.errors.password}</div>
                   )}
                 </div>
-                <Button type="submit" className="submit-button">
+                <Button type="submit" className={styles.submitButton}>
                   Zaloguj
                 </Button>
               </form>
-              <div className="register-link">
-                  Nie masz jeszcze konta? <a href="/register" className="register-text">Zarejestruj się</a>
+              <div className={styles.registerLink}>
+                  Nie masz jeszcze konta? <a href="/register" className={styles.registerText}>Zarejestruj się</a>
               </div>
             </div>
           </div>

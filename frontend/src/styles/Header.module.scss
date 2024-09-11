@@ -1,11 +1,11 @@
 
-.header-top-strip {
+.headerTopStrip {
     background-color: #0C1A25; 
     color: white; 
     padding: 1rem;
   }
   
-  .header-content {
+  .headerContent {
     display: flex; 
     justify-content: space-between;
     align-items: center; 
@@ -21,10 +21,10 @@
     text-decoration: none;
   }
   
-  .icon-container {
+  .iconContainer {
     display: flex; 
   }
   
-  .icon-container .gap-15 {
+  .iconContainer .gap15 {
     margin-left: 15px;
   }

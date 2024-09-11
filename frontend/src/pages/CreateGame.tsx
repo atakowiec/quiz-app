@@ -1,9 +1,9 @@
 import { Breadcrumb, Container } from "react-bootstrap";
 import Meta from "../components/Meta";
-import "../styles/CreateGame.scss";
+import styles from "../styles/CreateGame.module.scss";
 import { FaWrench, FaGamepad, FaPlay } from "react-icons/fa";
 import { IoPersonSharp, IoPeopleSharp, IoPodiumSharp, IoStatsChartSharp } from "react-icons/io5";
-import Sidebar, {SidebarItem} from "../components/Sidebar";
+import Sidebar, {SidebarItem} from "../components/SideBar";
 
 const CreateGame: React.FC = () => {
 
@@ -18,18 +18,18 @@ const CreateGame: React.FC = () => {
       <Meta title={"Stwórz grę"} />
       <Breadcrumb title="Stwórz grę" />
       <Sidebar items={sidebarItems} />
-      <Container className="create-container">
+      <Container className={styles.createContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
-            <div className="create-box">
-              <div className="create-text">
+            <div className={styles.createBox}>
+              <div className={styles.createText}>
                 <FaWrench className="mb-2 fs-2" /> Stwórz Grę
               </div>
-              <div className="mode-text">Wybierz tryb gry</div>
-              <div className="selection-boxes">
-                <div className="mode-selection-text">Jednoosobowy <IoPersonSharp className="single-player"/></div>
-                <div className="mode-selection-text">Wieloosobowy <IoPeopleSharp className="multi-player" /></div>
-                <div className="mode-selection-text">Rankingowy <IoPodiumSharp className="ranked"/></div>
+              <div className={styles.modeText}>Wybierz tryb gry</div>
+              <div className={styles.selectionBoxes}>
+                <div className={styles.modeSelectionText}>Jednoosobowy <IoPersonSharp className={styles.singlePlayer}/></div>
+                <div className={styles.modeSelectionText}>Wieloosobowy <IoPeopleSharp className={styles.multiPlayer} /></div>
+                <div className={styles.modeSelectionText}>Rankingowy <IoPodiumSharp className={styles.ranked}/></div>
               </div>
             </div>
           </div>

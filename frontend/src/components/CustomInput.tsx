@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from "../styles/Login.module.scss";
 
 interface CustomInputProps {
   type: string;
@@ -20,7 +21,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
         type={type}
         name={name}
         placeholder={placeholder}
-        className={`form-control ${className || ''}`} 
+        className={`${styles.formControl} ${className || ''}`}  
         value={value || ''} 
         onChange={onChange}
         onBlur={onBlur}
