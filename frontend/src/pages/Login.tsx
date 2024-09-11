@@ -4,6 +4,7 @@ import { Breadcrumb, Container, Button } from "react-bootstrap";
 import * as yup from "yup";
 import styles from "../styles/Login.module.scss";
 import CustomInput from "../components/CustomInput";
+import {Link} from "react-router-dom";
 
 const Login = () => {
   const loginSchema = yup.object({
@@ -21,7 +22,7 @@ const Login = () => {
   });
 
   return (
-    <div>
+    <>
       <Meta title={"Logowanie"} />
       <Breadcrumb title="Logowanie" />
       <Container className={styles.loginContainer}>
@@ -67,13 +68,13 @@ const Login = () => {
                 </Button>
               </form>
               <div className={styles.registerLink}>
-                  Nie masz jeszcze konta? <a href="/register" className={styles.registerText}>Zarejestruj się</a>
+                  Nie masz jeszcze konta? <Link to="/register" className={styles.registerText}>Zarejestruj się</Link>
               </div>
             </div>
           </div>
         </div>
       </Container>
-    </div>
+    </>
   );
 };
 

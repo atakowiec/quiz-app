@@ -2,23 +2,24 @@ import styles from  "../styles/Header.module.scss";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import {Link} from "react-router-dom";
 
 const Header = () => {
   return (
     <>
       <header className={`${styles.headerTopStrip} p-1`}>
         <div className={styles.headerContent}>
-          <a href="/" className={styles.logo} >Quiz</a>
+          <Link to="/" className={styles.logo} >Quiz</Link>
           <div className={styles.iconContainer}>
-            <a href="/" className={`info ${styles.gap15}`}>
+            <Link to="/" className={`info ${styles.gap15}`}>
               <IoInformationCircleOutline color="white" size="30px" />
-            </a>
-            <a href="/" className={`notifications ${styles.gap15}`}>
+            </Link>
+            <Link to="/" className={`notifications ${styles.gap15}`}>
               <IoMdNotificationsOutline color="white" size="30px" />
-            </a>
-            <a href="/login" className={`profile ${styles.gap15}`}>
+            </Link>
+            <Link to="/login" className={`profile ${styles.gap15}`}>
               <IoPersonCircleOutline color="white" size="30px" />
-            </a>
+            </Link>
           </div>
         </div>
       </header>
