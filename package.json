@@ -1,0 +1,24 @@
+{
+  "name": "ranker-course",
+  "version": "0.0.1",
+  "description": "Make decisions with friends via ranked voting!",
+  "main": "index.js",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "docker:compose": "docker-compose up -d",
+    "frontend:dev": "npm run dev --workspace=frontend",
+    "backend:dev": "wait-on tcp:3369 && npm run start:dev --workspace=backend",
+    "start": "concurrently 'npm:docker:compose' 'npm:backend:dev' 'npm:frontend:dev'",
+    "stop": "docker-compose down"
+  },
+  "devDependencies": {
+    "@types/webpack": "^5.28.0",
+    "concurrently": "^7.0.0",
+    "prettier": "^2.5.1",
+    "wait-on": "^6.0.1"
+  }
+}

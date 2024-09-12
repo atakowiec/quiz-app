@@ -12,6 +12,7 @@ import { Category } from "./questions/entities/category.model";
 import {ConfigService} from "@nestjs/config/dist/config.service";
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { RoundModule } from './round/round.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from './user/user.module';
     QuestionsModule,
     AuthModule,
     UserModule,
+    RoundModule,
   ],
   controllers: [AppController, QuestionsController],
   providers: [AppService],

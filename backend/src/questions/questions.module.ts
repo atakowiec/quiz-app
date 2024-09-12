@@ -10,5 +10,6 @@ import { Category } from "./entities/category.model";
   imports: [TypeOrmModule.forFeature([Distractor, Question, Category])],
   providers: [QuestionsService],
   controllers: [QuestionsController],
+  exports: [QuestionsService],
 })
 export class QuestionsModule {}

@@ -1,19 +1,21 @@
-import {ConflictException, Injectable} from '@nestjs/common';
-import {RegisterDto} from "./dto/register.dto";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {User} from "../user/user.model";
-import * as bcrypt from 'bcrypt';
-import {Response} from "express";
-import {Request} from "../app";
-import {JwtService} from "@nestjs/jwt";
-import {TokenPayload} from "./auth";
+import { ConflictException, Injectable } from "@nestjs/common";
+import { RegisterDto } from "./dto/register.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "../user/user.model";
+import * as bcrypt from "bcrypt";
+import { Response } from "express";
+import { Request } from "../app";
+import { JwtService } from "@nestjs/jwt";
+import { TokenPayload } from "./auth";
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectRepository(User)
-              private userRepository: Repository<User>,
-              private readonly jwtService: JwtService) {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    private readonly jwtService: JwtService
+  ) {
     // empty
   }
 
@@ -21,24 +23,24 @@ export class AuthService {
     // first find if the user already exists
     const user = await this.userRepository.findOne({
       where: [
-        {email: createUserDto.email},
-        {username: createUserDto.username}
-      ]
+        { email: createUserDto.email },
+        { username: createUserDto.username },
+      ],
     });
 
     // below is detecting which field is causing the conflict
     const conflictErrors = [];
     if (user?.username === createUserDto.username) {
       conflictErrors.push({
-        "field": "username",
-        "error": "Nazwa użytkownika jest już zajęta"
+        field: "username",
+        error: "The username is already taken",
       });
     }
 
     if (user?.email === createUserDto.email) {
       conflictErrors.push({
-        "field": "email",
-        "error": "Email jest już zajęty"
+        field: "email",
+        error: "The email is already taken",
       });
     }
 
@@ -52,7 +54,7 @@ export class AuthService {
       username: createUserDto.username,
       email: createUserDto.email,
       password: await this.hashPassword(createUserDto.password),
-      permission: 0
+      permission: 0,
     });
 
     // save the user
@@ -66,7 +68,7 @@ export class AuthService {
       id: newUser.id,
       username: newUser.username,
       email: newUser.email,
-      permission: newUser.permission
+      permission: newUser.permission,
     };
   }
 
@@ -74,16 +76,19 @@ export class AuthService {
     return await bcrypt.hash(password, 10);
   }
 
-  async comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
+  async comparePasswords(
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
 
   public async createJwt(user: User): Promise<string> {
-    return this.jwtService.signAsync({id: user.id} as TokenPayload);
+    return this.jwtService.signAsync({ id: user.id } as TokenPayload);
   }
 
   public appendTokenToResponse(res: Response, token: string) {
-    res.cookie('access_token', token, {
+    res.cookie("access_token", token, {
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 year
       httpOnly: true,
       secure: false,
@@ -91,7 +96,7 @@ export class AuthService {
   }
 
   public clearTokenFromResponse(res: Response) {
-    res.clearCookie('access_token', {
+    res.clearCookie("access_token", {
       httpOnly: true,
       secure: false,
     });
