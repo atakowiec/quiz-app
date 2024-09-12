@@ -21,7 +21,8 @@ import {ConfigService} from "@nestjs/config/dist/config.service";
     })
   ],
   providers: [AuthService],
-  controllers: [AuthController]
+  controllers: [AuthController],
+  exports: [AuthService, JwtModule]
 })
 export class AuthModule {
 }
