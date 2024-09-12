@@ -1,13 +1,16 @@
-import { ConflictException, Injectable } from "@nestjs/common";
-import { RegisterDto } from "./dto/register.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { User } from "../user/user.model";
+import {ConflictException, Injectable} from "@nestjs/common";
+import {RegisterDto} from "./dto/register.dto";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import {User} from "../user/user.model";
 import * as bcrypt from "bcrypt";
-import { Response } from "express";
-import { Request } from "../app";
-import { JwtService } from "@nestjs/jwt";
-import { TokenPayload } from "./auth";
+import {Response} from "express";
+import {Request} from "../app";
+import {JwtService} from "@nestjs/jwt";
+import {TokenPayload} from "./auth";
+import {LoginDto} from "./dto/login.dto";
+import {UnauthorizedException} from "@nestjs/common/exceptions/unauthorized.exception";
+import {UserPacket} from "@shared/user";
 
 @Injectable()
 export class AuthService {
@@ -23,8 +26,8 @@ export class AuthService {
     // first find if the user already exists
     const user = await this.userRepository.findOne({
       where: [
-        { email: createUserDto.email },
-        { username: createUserDto.username },
+        {email: createUserDto.email},
+        {username: createUserDto.username},
       ],
     });
 
@@ -33,14 +36,14 @@ export class AuthService {
     if (user?.username === createUserDto.username) {
       conflictErrors.push({
         field: "username",
-        error: "The username is already taken",
+        error: "Nazwa użytkownika jest już zajęta",
       });
     }
 
     if (user?.email === createUserDto.email) {
       conflictErrors.push({
         field: "email",
-        error: "The email is already taken",
+        error: "Email jest już zajęty",
       });
     }
 
@@ -72,19 +75,61 @@ export class AuthService {
     };
   }
 
+  async login(loginDto: LoginDto, res: Response): Promise<UserPacket> {
+    // find the user
+    const user = await this.userRepository.findOne({
+      where: {username: loginDto.username},
+    });
+
+    // if the user doesn't exist, throw an exception
+    if (!user) {
+      throw new UnauthorizedException("Niepoprawne dane logowania");
+    }
+
+    // compare passwords
+    const isPasswordValid = await this.comparePasswords(
+      loginDto.password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException("Niepoprawne dane logowania");
+    }
+
+    // create jwt and set cookie
+    const token = await this.createJwt(user);
+    this.appendTokenToResponse(res, token);
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      permission: user.permission,
+    };
+  }
+
+  public logout(res: Response) {
+    this.clearTokenFromResponse(res);
+    return {}; // I guess I have to return something here
+  }
+
   async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
   }
 
-  async comparePasswords(
-    password: string,
-    hashedPassword: string
-  ): Promise<boolean> {
+  async comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
 
   public async createJwt(user: User): Promise<string> {
-    return this.jwtService.signAsync({ id: user.id } as TokenPayload);
+    const tokenPayload: TokenPayload = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      permission: user.permission,
+    }
+
+    return this.jwtService.signAsync(tokenPayload);
   }
 
   public appendTokenToResponse(res: Response, token: string) {
@@ -102,18 +147,33 @@ export class AuthService {
     });
   }
 
-  extractTokenFromRequest(req: Request): string | null {
+  public extractTokenFromRequest(req: Request): string | null {
     if (req.cookies && req.cookies.access_token) {
       return req.cookies.access_token;
     }
     return null;
   }
 
-  extractPayloadFromToken(token: string): TokenPayload {
-    return this.jwtService.decode(token) as TokenPayload;
+  public extractPayloadFromToken(token: string): TokenPayload {
+    return this.jwtService.verify(token);
   }
 
   public extractTokenPayloadFromRequest(req: Request): TokenPayload {
     return this.extractPayloadFromToken(this.extractTokenFromRequest(req));
+  }
+
+  verify(req: Request, res: Response) {
+    const token = this.extractTokenFromRequest(req);
+    if (!token) {
+      return {};
+    }
+
+    try {
+      this.jwtService.verify(token);
+    } catch (e) {
+      this.clearTokenFromResponse(res);
+    }
+
+    return {};
   }
 }

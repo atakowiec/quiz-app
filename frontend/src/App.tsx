@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import CreateGame from './pages/CreateGame';
 import {Provider} from "react-redux";
 import {store} from "./store";
+import Logout from "./pages/Logout.tsx";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout/>}>
+              <Route path='logout' element={<Logout/>}/>
               <Route path='login' element={<Login/>}/>
               <Route path='register' element={<Register/>}/>
               <Route path='/create-game' element={<CreateGame/>}/>

@@ -1,5 +1,5 @@
 export type UserPacket = {
-  id: string;
+  id: number;
   username: string;
   email: string;
   permission: number;

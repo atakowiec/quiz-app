@@ -3,7 +3,7 @@ import {UserPacket} from "@shared/user";
 
 export type UserState = {
   loggedIn: boolean;
-  id?: string;
+  id?: number;
   username?: string;
   email?: string;
   permission?: number;
@@ -15,8 +15,8 @@ const userSlice = createSlice({
     loggedIn: false
   } as UserState,
   reducers: {
-    setUser: (state, action) => {
-      if(!action.payload) {
+    setUser: (state, action): UserState => {
+      if (!action.payload?.id) {
         return {
           loggedIn: false
         };
@@ -30,7 +30,7 @@ const userSlice = createSlice({
         username: userPacket.username,
         email: userPacket.email,
         permission: userPacket.permission
-      }
+      };
     }
   }
 });
