@@ -1,12 +1,12 @@
-import {IsNotEmpty} from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 export class RegisterDto {
-  @IsNotEmpty({message: "Proszę wprowadzić email"})
+  @IsNotEmpty({ message: "Please enter your email" })
   email: string;
 
-  @IsNotEmpty({message: "Proszę wprowadzić login"})
+  @IsNotEmpty({ message: "Please enter your username" })
   username: string;
 
-  @IsNotEmpty({message: "Proszę wprowadzić hasło"})
+  @IsNotEmpty({ message: "Please enter your password" })
   password: string;
 }
