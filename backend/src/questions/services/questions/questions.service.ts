@@ -1,13 +1,10 @@
 import { BadRequestException } from "@nestjs/common";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { log } from "console";
-import { CategoryDto } from "src/questions/dtos/Category.dto";
 import { Category } from "src/questions/entities/category.model";
 import { Distractor } from "src/questions/entities/distractor.model";
 import { Question } from "src/questions/entities/question.model";
 import {
-  CategoryParams,
   CreateQuestionParams,
   UpdateQuestionParams,
 } from "src/questions/questions";
@@ -25,21 +22,28 @@ export class QuestionsService {
   ) {}
 
   async getQuestions(): Promise<Question[]> {
-    let questionsQuery = this.questionRepository
+    const questionsQuery = this.questionRepository
       .createQueryBuilder("questions")
       .leftJoinAndSelect("questions.distractors", "distractors")
       .leftJoinAndSelect("questions.category", "category")
       .take(25);
     return questionsQuery.getMany();
   }
-  async getCategoryOrCreateByName(categoryName: string): Promise<Category> {
+  async getCategoryOrCreateByName(
+    categoryName: string,
+    description?: string
+  ): Promise<Category> {
     let category = await this.categoryRepository.findOne({
       where: { name: categoryName },
     });
     if (!category) {
       category = this.categoryRepository.create({
         name: categoryName,
+        description: description,
       });
+      await this.categoryRepository.save(category);
+    } else {
+      category.description = description;
       await this.categoryRepository.save(category);
     }
     return category;
@@ -57,8 +61,7 @@ export class QuestionsService {
       });
     }
 
-    // Check if the question is already in the database
-    let question = await this.questionRepository.findOne({
+    const question = await this.questionRepository.findOne({
       where: {
         question: questionDetails.question,
         correctAnswer: questionDetails.correctAnswer,
@@ -72,7 +75,7 @@ export class QuestionsService {
       });
     }
 
-    let categories = await Promise.all(
+    const categories = await Promise.all(
       questionDetails.category.map((category) =>
         this.getCategoryOrCreateByName(category.name)
       )
@@ -140,7 +143,81 @@ export class QuestionsService {
       });
     }
 
-    // TODO Patching the question
-    return 1;
+    if (questionDetails.category) {
+      if (questionDetails.category.some((category) => !category.name)) {
+        throw new BadRequestException({
+          message: "Category name is required",
+        });
+      }
+      if (questionDetails.category.length < 1) {
+        throw new BadRequestException({
+          message: "Question must have at least one category",
+        });
+      }
+      const categories = await Promise.all(
+        questionDetails.category.map((category) =>
+          this.getCategoryOrCreateByName(category.name, category.description)
+        )
+      );
+      question.category = categories;
+    }
+    delete questionDetails.category;
+
+    if (questionDetails.distractors) {
+      if (
+        questionDetails.distractors.some((distractor) => !distractor.content)
+      ) {
+        throw new BadRequestException({
+          message: "Distractor content is required",
+        });
+      }
+      if (questionDetails.distractors.length != 3) {
+        throw new BadRequestException({
+          message: "Distractors must be 3",
+        });
+      }
+
+      question.distractors = question.distractors.filter((distractor) =>
+        questionDetails.distractors
+          .map((distractor) => distractor.content)
+          .includes(distractor.content)
+      );
+
+      let nonExistingDistractors = questionDetails.distractors.filter(
+        (distractor) =>
+          !question.distractors
+            .map((distractor) => distractor.content)
+            .includes(distractor.content)
+      );
+
+      if (
+        nonExistingDistractors.length !=
+        nonExistingDistractors.filter(
+          (distractor, index, self) =>
+            index === self.findIndex((t) => t.content === distractor.content)
+        ).length
+      ) {
+        throw new BadRequestException({
+          message: "Distractors must be unique",
+        });
+      }
+
+      const nonExistingDistractorsObjects =
+        await this.distractorRepository.save(
+          nonExistingDistractors.map((distractor) =>
+            this.distractorRepository.create(distractor)
+          )
+        );
+
+      question.distractors = question.distractors.concat(
+        nonExistingDistractorsObjects
+      );
+    }
+    delete questionDetails.distractors;
+
+    question = this.questionRepository.merge(question, questionDetails);
+    question.updatedAt = new Date();
+    await this.questionRepository.save(question);
+    return question;
   }
 }

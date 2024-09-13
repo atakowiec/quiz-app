@@ -9,6 +9,8 @@ export class Distractor {
   @Column()
   content: string;
 
-  @ManyToOne(() => Question, (question) => question.distractors)
+  @ManyToOne(() => Question, (question) => question.distractors, {
+    orphanedRowAction: "delete",
+  })
   question: Question;
 }

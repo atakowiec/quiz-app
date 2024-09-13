@@ -24,10 +24,14 @@ export class Question {
   @Column()
   correctAnswer: string;
 
-  @OneToMany(() => Distractor, (answer) => answer.question)
+  @OneToMany(() => Distractor, (answer) => answer.question, {
+    cascade: true,
+  })
   distractors: Distractor[];
 
-  @ManyToMany(() => Category, (category) => category.questions)
+  @ManyToMany(() => Category, (category) => category.questions, {
+    cascade: true,
+  })
   @JoinTable()
   category: Category[];
 
