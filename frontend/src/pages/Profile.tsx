@@ -8,6 +8,8 @@ import styles from "../styles/Profile.module.scss";
 import { IoPersonSharp } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import { SiDatadog } from "react-icons/si";
+import { useSelector } from "react-redux";
+import { State } from "../store";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -15,6 +17,8 @@ const Profile: React.FC = () => {
     { icon: FaPlay, label: "Stwórz Grę", href: "/create-game" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
+
+  const user = useSelector<State>((state: State) => state.user) as any;
 
   return (
     <>
@@ -33,11 +37,16 @@ const Profile: React.FC = () => {
                 <div className={styles.personInfo}>
                   <div className={`${styles.personNick} mb-2`}>
                     Nickname:
-                    <span className={styles.nick}> Example nickname</span>
+                    <span className={styles.nick}>
+                      {user.username || "Example username"}
+                    </span>
                     <MdEdit className={styles.editIcon} />
                   </div>
                   <div className={`${styles.personEmail} mb-2`}>
-                    Email: <span className={styles.email}> Example email</span>
+                    Email:{" "}
+                    <span className={styles.email}>
+                      {user.email || "Example email"}
+                    </span>
                     <MdEdit className={styles.editIcon} />
                   </div>
                 </div>
