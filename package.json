@@ -1,7 +1,7 @@
 {
-  "name": "ranker-course",
+  "name": "quiz-app",
   "version": "0.0.1",
-  "description": "Make decisions with friends via ranked voting!",
+  "description": "Quiz App With Ranked Mode and Abilities",
   "main": "index.js",
   "workspaces": [
     "frontend",
