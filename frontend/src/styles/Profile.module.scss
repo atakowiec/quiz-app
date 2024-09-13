@@ -1,0 +1,146 @@
+$sidebar-width: 90px;
+$sidebar-half-width: 45px;
+
+.profileContainer {
+  position: relative;
+  height: calc(100vh - 90px);
+  overflow: hidden;
+}
+
+.profileMainBox {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: calc(50% + #{$sidebar-half-width});
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.profileBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.editPic {
+  position: absolute;
+  color: white;
+  font-size: 1.25rem;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+}
+
+.profilePic {
+  background-color: #0c1a25;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6.5rem;
+  height: 6.5rem;
+  position: relative;
+}
+
+.personIcon {
+  font-size: 5rem;
+  color: #fff;
+}
+
+.personInfo {
+  margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: auto;
+  width: 80%;
+  overflow-y: 1;
+}
+
+.personNick,
+.personEmail {
+  background-color: #e0e0e0;
+  padding: 0.75rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.editIcon {
+  cursor: pointer;
+}
+
+.friendsText {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 0;
+  margin-top: 1rem;
+  color: #0c1a25;
+}
+
+.line {
+  margin-top: 0;
+  border-bottom: 1px solid #888;
+}
+
+.addFriends {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #2bc440;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem;
+  font-weight: 400;
+  width: 35%;
+  justify-content: center;
+  color: #0c1a25;
+  cursor: pointer;
+}
+
+.searchIcon {
+  margin-left: 0.5rem;
+  color: #0c1a25;
+}
+
+.friendsList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 2rem;
+}
+
+.friend {
+  background-color: #0c1a25;
+  border-radius: 10px;
+  padding: 0.35rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  margin-right: 0.5rem;
+}
+
+.friendIcon {
+  font-size: 3.5rem;
+  color: #ffffff;
+}
+
+.friendNickname {
+  color: white;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: center;
+  font-weight: 300;
+}
