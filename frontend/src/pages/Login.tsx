@@ -10,11 +10,11 @@ import {AxiosError} from "axios";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {State} from "../store";
-import {userActions} from "../store/userSlice.ts";
+import {userActions, UserState} from "../store/userSlice.ts";
 
 const Login = () => {
   const [error, setError] = useState("");
-  const user = useSelector<State>((state) => state.user);
+  const user = useSelector<State, UserState>(state => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const Login = () => {
     onSubmit: (values) => {
       getApi().post("/auth/login", values)
         .then((response) => {
-          if(response.status !== 200) {
+          if (response.status !== 200) {
             return;
           }
 
@@ -40,7 +40,7 @@ const Login = () => {
           navigate("/");
         })
         .catch((error: AxiosError) => {
-          if(error.status == 401) {
+          if (error.status == 401) {
             return setError("Niepoprawny login lub hasło");
           }
 
@@ -50,11 +50,11 @@ const Login = () => {
   });
 
   useEffect(() => {
-    if(user.loggedIn)
+    if (user.loggedIn)
       navigate("/");
   }, [user.loggedIn]);
 
-  if(user.loggedIn)
+  if (user.loggedIn)
     return null;
 
   return (

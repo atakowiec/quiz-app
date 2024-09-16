@@ -2,9 +2,10 @@ import { INestApplicationContext, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { IoAdapter } from "@nestjs/platform-socket.io";
-import { log } from "console";
 import { Server, ServerOptions } from "socket.io";
 import { SocketData, SocketType } from "./game/game.types";
+import { NextFunction } from "express";
+import { CorsOptions } from "cors";
 
 export class SocketIOAdapter extends IoAdapter {
   private readonly logger = new Logger(SocketIOAdapter.name);
@@ -17,7 +18,8 @@ export class SocketIOAdapter extends IoAdapter {
   createIOServer(port: number, options?: ServerOptions) {
     const clientPort = parseInt(this.configService.get("CLIENT_PORT"));
 
-    const cors = {
+    const cors: CorsOptions = {
+      credentials: true, // todo Łukasz musisz to dodać jak będziesz odpowiednio konfigurował socketio na backendzie  bez tego nie zadziała
       origin: [
         `http://localhost:${clientPort}`,
         new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
@@ -41,12 +43,11 @@ export class SocketIOAdapter extends IoAdapter {
 }
 
 const createTokenMiddleware =
-  (jwtService: JwtService, logger: Logger) => (socket: SocketType, next) => {
+  (jwtService: JwtService, logger: Logger) => (socket: SocketType, next: NextFunction) => {
     // for Postman testing support, fallback to token header
 
     // TODO: Zmienić na to ciasteczkowe mateusza, bo na razie przez postmana
-    const token =
-      socket.handshake.auth.token || socket.handshake.headers["token"];
+    const token = socket.handshake.auth.token || socket.handshake.headers["token"];
 
     logger.debug(`Validating auth token before connection: ${token}`);
 

@@ -10,13 +10,13 @@ import {AxiosError, AxiosResponse} from "axios";
 import {Link, useNavigate} from "react-router-dom";
 import {UserPacket} from "@shared/user";
 import {useDispatch, useSelector} from "react-redux";
-import {userActions} from "../store/userSlice.ts";
-import {State} from "../store/index";
+import {userActions, UserState} from "../store/userSlice.ts";
+import {State} from "../store";
 
 const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector<State>((state) => state.user)
+  const user = useSelector<State, UserState>(state => state.user)
   const [error, setError] = useState<string>("");
 
   const registerSchema = yup.object({
@@ -44,14 +44,14 @@ const Register = () => {
         username: values.username,
         password: values.password
       }).then((res: AxiosResponse<UserPacket>) => {
-        if(res.status !== 201)
+        if (res.status !== 201)
           return; // should never happen
 
         dispatch(userActions.setUser(res.data));
         navigate("/");
-      }).catch((err: AxiosError) => {
+      }).catch((err: AxiosError<any>) => {
         if (err.status === 409) {
-          err.response.data.message.forEach(error => formik.setFieldError(error.field, error.error));
+          err.response?.data.message.forEach((error: any) => formik.setFieldError(error.field, error.error));
           return;
         }
 
@@ -62,11 +62,11 @@ const Register = () => {
 
   // prevent logged-in users from accessing this page - in the future maybe we will make some kind of protected route
   useEffect(() => {
-    if(user.loggedIn)
+    if (user.loggedIn)
       navigate("/");
   }, [user.loggedIn]);
 
-  if(user.loggedIn)
+  if (user.loggedIn)
     return null;
 
   return (

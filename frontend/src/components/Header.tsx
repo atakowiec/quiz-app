@@ -6,10 +6,11 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { State } from "../store";
 import { useNavigate } from "react-router-dom";
+import { UserState } from "../store/userSlice.ts";
 
 const Header = () => {
   const navigate = useNavigate();
-  const user = useSelector<State>((state: State) => state.user) as any;
+  const user = useSelector<State, UserState>((state: State) => state.user);
 
   const handleIconClick = () => {
     if (user.loggedIn) {
