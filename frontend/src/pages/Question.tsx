@@ -8,6 +8,7 @@ import { MdOutlineMoreTime } from "react-icons/md";
 import { MdQueryStats } from "react-icons/md";
 
 const Question = () => {
+  //TODO: make question a component
   return (
     <>
       <Meta title={"Question"} />
