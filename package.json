@@ -20,5 +20,9 @@
     "concurrently": "^7.0.0",
     "prettier": "^2.5.1",
     "wait-on": "^6.0.1"
+  },
+  "dependencies": {
+    "@nestjs/platform-socket.io": "^10.4.2",
+    "@nestjs/websockets": "^10.4.2"
   }
 }
