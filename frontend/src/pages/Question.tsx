@@ -9,6 +9,8 @@ import { MdQueryStats } from "react-icons/md";
 
 const Question = () => {
   //TODO: make question a component
+  //TODO: make answers show correct/incorrect after choice, show what players chose
+  //TODO: add timer
   return (
     <>
       <Meta title={"Question"} />

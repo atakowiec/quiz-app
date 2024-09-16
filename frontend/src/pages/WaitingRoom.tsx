@@ -18,6 +18,8 @@ const WaitingRoom: React.FC = () => {
     { icon: IoPaperPlaneSharp, label: "Statystyki", href: "/stats" },
   ];
 
+  //TODO: make settings for an owner of the room
+  //TODO: make invite link/ player
   return (
     <>
       <Meta title={"Poczekalnia"} />

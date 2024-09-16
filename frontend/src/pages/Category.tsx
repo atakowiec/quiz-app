@@ -18,6 +18,7 @@ const Category: React.FC = () => {
   }, []);
 
   //TODO: make category a component
+  //TODO: show chosen category
   return (
     <div>
       <Meta title={"Question"} />
