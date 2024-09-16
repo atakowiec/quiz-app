@@ -36,15 +36,16 @@ export class AuthController {
   }
 
   @Post("verify")
-  verify(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authService.verify(req, res);
+  verify(@Req() req: Request) {
+    return this.authService.verify(req);
   }
 
   @Post("nickname")
   async setNickname(
     @Body() { nickname }: SetNicknameDto,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response
   ) {
-    return this.authService.setNickname(nickname, response);
+    return this.authService.setNickname(nickname, request, response);
   }
 }

@@ -12,7 +12,6 @@ import { LoginDto } from "./dto/login.dto";
 import { UnauthorizedException } from "@nestjs/common/exceptions/unauthorized.exception";
 import { UserPacket } from "@shared/user";
 import { GameService } from "src/game/services/game.service";
-import { access } from "fs";
 
 @Injectable()
 export class AuthService {
@@ -168,22 +167,11 @@ export class AuthService {
     return this.extractPayloadFromToken(this.extractTokenFromRequest(req));
   }
 
-  verify(req: Request, res: Response) {
-    const token = this.extractTokenFromRequest(req);
-    if (!token) {
-      return {};
-    }
-
-    try {
-      this.jwtService.verify(token);
-    } catch (e) {
-      this.clearTokenFromResponse(res);
-    }
-
-    return {};
+  verify(req: Request) {
+    return req.user ?? {};
   }
 
-  async setNickname(username: string, Response: Response) {
+  async setNickname(username: string, request: Request, Response: Response) {
     const user = await this.userRepository.findOne({
       where: { username: username },
     });

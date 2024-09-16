@@ -15,7 +15,7 @@ const userSlice = createSlice({
     loggedIn: false
   } as UserState,
   reducers: {
-    setUser: (state, action): UserState => {
+    setUser: (_, action): UserState => {
       if (!action.payload?.id) {
         return {
           loggedIn: false
