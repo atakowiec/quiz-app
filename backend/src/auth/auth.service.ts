@@ -1,22 +1,25 @@
-import {ConflictException, Injectable} from "@nestjs/common";
-import {RegisterDto} from "./dto/register.dto";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {User} from "../user/user.model";
+import { ConflictException, Injectable } from "@nestjs/common";
+import { RegisterDto } from "./dto/register.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "../user/user.model";
 import * as bcrypt from "bcrypt";
-import {Response} from "express";
-import {Request} from "../app";
-import {JwtService} from "@nestjs/jwt";
-import {TokenPayload} from "./auth";
-import {LoginDto} from "./dto/login.dto";
-import {UnauthorizedException} from "@nestjs/common/exceptions/unauthorized.exception";
-import {UserPacket} from "@shared/user";
+import { Response } from "express";
+import { Request } from "../app";
+import { JwtService } from "@nestjs/jwt";
+import { TokenPayload } from "./auth";
+import { LoginDto } from "./dto/login.dto";
+import { UnauthorizedException } from "@nestjs/common/exceptions/unauthorized.exception";
+import { UserPacket } from "@shared/user";
+import { GameService } from "src/game/services/game.service";
+import { access } from "fs";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private readonly gameService: GameService,
     private readonly jwtService: JwtService
   ) {
     // empty
@@ -26,8 +29,8 @@ export class AuthService {
     // first find if the user already exists
     const user = await this.userRepository.findOne({
       where: [
-        {email: createUserDto.email},
-        {username: createUserDto.username},
+        { email: createUserDto.email },
+        { username: createUserDto.username },
       ],
     });
 
@@ -78,7 +81,7 @@ export class AuthService {
   async login(loginDto: LoginDto, res: Response): Promise<UserPacket> {
     // find the user
     const user = await this.userRepository.findOne({
-      where: {username: loginDto.username},
+      where: { username: loginDto.username },
     });
 
     // if the user doesn't exist, throw an exception
@@ -117,7 +120,10 @@ export class AuthService {
     return await bcrypt.hash(password, 10);
   }
 
-  async comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
+  async comparePasswords(
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
 
@@ -127,7 +133,7 @@ export class AuthService {
       username: user.username,
       email: user.email,
       permission: user.permission,
-    }
+    };
 
     return this.jwtService.signAsync(tokenPayload);
   }
@@ -175,5 +181,22 @@ export class AuthService {
     }
 
     return {};
+  }
+
+  async setNickname(username: string, Response: Response) {
+    const user = await this.userRepository.findOne({
+      where: { username: username },
+    });
+
+    // TODO: tu wywala bład za drugim razem jak wyślemy, nie patrzyłem jeszcze dlaczego
+    // if (user || this.gameService.isUsernameConnected(username)) {
+    //   throw new ConflictException("Nazwa użytkownika jest już zajęta");
+    // }
+
+    const tokenPayload: TokenPayload = { username };
+    const token = await this.jwtService.signAsync(tokenPayload);
+    this.appendTokenToResponse(Response, token);
+
+    return tokenPayload && { access_token: token };
   }
 }

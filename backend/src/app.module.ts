@@ -1,4 +1,4 @@
-import {MiddlewareConsumer, Module, NestModule} from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { QuestionsModule } from "./questions/questions.module";
@@ -9,11 +9,12 @@ import { Question } from "./questions/entities/question.model";
 import { QuestionsController } from "./questions/controllers/questions/questions.controller";
 import databaseConfig from "./config/database.config";
 import { Category } from "./questions/entities/category.model";
-import {ConfigService} from "@nestjs/config/dist/config.service";
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { RoundModule } from './round/round.module';
-import {AuthUserMiddleware} from "./auth/auth-user.middleware";
+import { ConfigService } from "@nestjs/config/dist/config.service";
+import { AuthModule } from "./auth/auth.module";
+import { UserModule } from "./user/user.module";
+import { RoundModule } from "./round/round.module";
+import { AuthUserMiddleware } from "./auth/auth-user.middleware";
+import { GameModule } from "./game/game.module";
 
 @Module({
   imports: [
@@ -33,12 +34,13 @@ import {AuthUserMiddleware} from "./auth/auth-user.middleware";
     AuthModule,
     UserModule,
     RoundModule,
+    GameModule,
   ],
   controllers: [AppController, QuestionsController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthUserMiddleware).forRoutes('*');
+    consumer.apply(AuthUserMiddleware).forRoutes("*");
   }
 }
