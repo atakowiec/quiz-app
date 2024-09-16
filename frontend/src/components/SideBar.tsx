@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 import styles from "../styles/Sidebar.module.scss";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export interface SidebarItem {
   icon: IconType;

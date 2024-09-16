@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import Logout from "./pages/Logout.tsx";
 import WaitingRoom from "./pages/WaitingRoom.tsx";
+import Question from "./pages/Question.tsx";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="create-game" element={<CreateGame />} />
               <Route path="profile" element={<Profile />} />
               <Route path="/queue" element={<WaitingRoom />} />
+              <Route path="/question" element={<Question />} />
             </Route>
           </Routes>
         </BrowserRouter>
