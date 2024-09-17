@@ -1,8 +1,8 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import Game from "../classes/game";
 import { GameGateway } from "../gateways/game.gateway";
-import { GameSettings } from "@shared/game";
 import { SocketType } from "../game.types";
+import { GameType } from "@shared/game";
 
 @Injectable()
 export class GameService {
@@ -13,8 +13,8 @@ export class GameService {
     private readonly gameGateway: GameGateway
   ) {}
 
-  public createGame(owner: SocketType, settings: GameSettings) {
-    const game = new Game(owner, this, settings);
+  public createGame(owner: SocketType, gameType: GameType) {
+    const game = new Game(owner, this, gameType);
     this.games.push(game);
     return game;
   }
@@ -31,20 +31,24 @@ export class GameService {
     game.destroy();
   }
 
-  public getGameByNickname(nickname: string): Game {
+  public getGameByNickname(username: string): Game {
     return this.games.find(
       (game) =>
-        game.owner.nickname.includes(nickname) ||
-        game.players.some((player) => player.nickname.includes(nickname))
+        game.owner.username.includes(username) ||
+        game.players.some((player) => player.username.includes(username))
     );
   }
 
-  public isUsernameConnected(nickname: string): boolean {
-    for (const socket of this.gameGateway.server.sockets.sockets?.values()) {
-      if (socket.data.nickname === nickname) {
+  public isUsernameConnected(username: string): boolean {
+    for (const socket of this.gameGateway.server.sockets.sockets.values()) {
+      if (socket.data.username === username) {
         return true;
       }
     }
     return false;
+  }
+
+  public getAllGames() {
+    return this.games;
   }
 }

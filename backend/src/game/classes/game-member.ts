@@ -2,7 +2,7 @@ import Game from "./game";
 import { SocketType } from "../game.types";
 import { Answer, Category, HelperType, IGameMember } from "@shared/game";
 export class GameMember {
-  public nickname: string;
+  public username: string;
   public socket: SocketType;
   public game: Game;
 
@@ -24,13 +24,16 @@ export class GameMember {
 
   constructor(socket: SocketType, game: Game) {
     this.game = game;
-    this.nickname = socket.data.nickname;
+    this.username = socket.data.username;
     this.socket = socket;
+  }
+  public sendNotification(message: string) {
+    this.socket.emit("notification", message);
   }
 
   getPacket(): IGameMember {
     return {
-      nickname: this.nickname,
+      username: this.username,
       owner: this.game.owner === this,
       score: this.score,
       available_helpers: this.available_helpers,

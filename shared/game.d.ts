@@ -5,6 +5,8 @@ export type GameStatus =
   | "game_over";
 export type HelperType = "fifty_fifty" | "extend_time" | "cheat_from_others";
 
+export type GameType = "single" | "multi" | "ranked";
+
 export type Category = {
   id: number;
   name: string;
@@ -18,7 +20,7 @@ export type Answer = {
 };
 
 export interface IGameMember {
-  nickname: string;
+  username: string;
   owner: boolean;
   score: number;
   available_helpers: HelperType[];
@@ -44,6 +46,7 @@ export type SettingType = keyof GameSettings;
 
 export interface IGamePacket {
   status: GameStatus;
+  gameType: GameType;
   settings: GameSettings;
   owner: IGameMember;
   players?: Partial<IGameMember>[];

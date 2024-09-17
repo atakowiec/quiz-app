@@ -1,6 +1,8 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -9,10 +11,12 @@ import {
 import { SocketServerType, SocketType } from "../game.types";
 import { JwtService } from "@nestjs/jwt";
 import { GameService } from "../services/game.service";
-import { forwardRef, Inject } from "@nestjs/common";
-import { GameSettings } from "@shared/game";
+import { forwardRef, Inject, UseFilters } from "@nestjs/common";
 import { log } from "console";
+import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
+import { GameType } from "@shared/game";
 
+@UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
 export class GameGateway {
   @WebSocketServer()
@@ -24,18 +28,28 @@ export class GameGateway {
     @Inject(forwardRef(() => GameService))
     private readonly gameService: GameService
   ) {}
+  handleConnection(client: SocketType) {
+    log(`Client connected: ${client.id}`);
+  }
+
+  handleDisconnect(client: SocketType) {
+    log(`Client disconnected: ${client.id}`);
+  }
 
   @SubscribeMessage("create_game")
   async createNewGame(
     @ConnectedSocket() ownerSocket: SocketType,
-    @MessageBody() settings?: GameSettings
+    @MessageBody() createGameData: GameType
   ) {
     if (ownerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
-    //const game = this.gameService.createGame(ownerSocket, settings);
-    //this.server.to(game.id).emit("game_update", game.getPacket());
-    log("createNewGame", settings, ownerSocket.data);
+    const game = this.gameService.createGame(ownerSocket, createGameData);
+    game.owner.sendNotification(
+      `Utworzono grę ${JSON.stringify(game.getPacket())}`
+    );
+
+    return game.id;
   }
 
   @SubscribeMessage("join_game")
@@ -58,15 +72,6 @@ export class GameGateway {
       throw new WsException("Gra jest pełna!");
     }
     game.join(playerSocket);
-    this.server.to(gameId).emit("game_update", game.getPacket());
-  }
-
-  @SubscribeMessage("get_game")
-  getGame(@MessageBody() id: string) {
-    const game = this.gameService.getGameById(id);
-    if (!game) {
-      throw new WsException("Gra nie istnieje!");
-    }
-    return game.getPacket();
+    playerSocket.emit("notification", JSON.stringify(game.getPacket()));
   }
 }
