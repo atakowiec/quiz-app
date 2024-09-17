@@ -17,7 +17,6 @@ import { UserPacket } from "@shared/user";
 import { userActions } from "./store/userSlice.ts";
 import { useSocket } from "./socket/useSocket.ts";
 
-
 function App() {
   const dispatch = useDispatch();
   const [loaded, setLoaded] = useState(false);
@@ -25,12 +24,12 @@ function App() {
 
   // on start of the application check whether the user has some valid token
   useEffect(() => {
-    getApi().post("/auth/verify")
+    getApi()
+      .post("/auth/verify")
       .then((response: AxiosResponse<UserPacket>) => {
         dispatch(userActions.setUser(response.data));
 
-        if (response.data.id)
-          socket.connect(); // maybe we can do it in a better way maybe connect user only when he enters the game?
+        if (response.data.id) socket.connect(); // maybe we can do it in a better way maybe connect user only when he enters the game?
 
         setLoaded(true);
       })
@@ -42,22 +41,22 @@ function App() {
   }, []);
 
   // wait for the request to finish before rendering the app - this way we can avoid flickering
-  if (!loaded)
-    return null;
+  if (!loaded) return null;
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout/>}>
-            <Route path="logout" element={<Logout/>}/>
-            <Route path="login" element={<Login/>}/>
-            <Route path="register" element={<Register/>}/>
-            <Route path="create-game" element={<CreateGame/>}/>
-            <Route path="profile" element={<Profile/>}/>
-            <Route path="/queue" element={<WaitingRoom/>}/>
-            <Route path="/question" element={<Question/>}/>
-            <Route path="/category" element={<Category/>}/>
+          <Route path="/" element={<Layout />}>
+            <Route path="logout" element={<Logout />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="create-game" element={<CreateGame />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="/queue" element={<WaitingRoom />} />
+            <Route path="/question" element={<Question />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/room" element={<WaitingRoom />} />
           </Route>
         </Routes>
       </BrowserRouter>
