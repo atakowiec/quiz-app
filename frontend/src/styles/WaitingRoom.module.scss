@@ -77,8 +77,6 @@ $sidebar-half-width: 45px;
 }
 
 .playerNickname {
-  display: flex;
-  justify-content: space-between;
   font-size: 1rem;
   font-weight: 300;
   align-items: center;
@@ -102,6 +100,11 @@ $sidebar-half-width: 45px;
   gap: 3rem;
   font-size: 1rem;
   font-weight: 500;
+}
+
+.username {
+  display: flex;
+  justify-content: space-between;
 }
 
 .buttonStart {

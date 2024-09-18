@@ -27,6 +27,7 @@ const WaitingRoom: React.FC = () => {
 
   //TODO: make settings for an owner of the room
   //TODO: make invite link/ player
+  //TODO: make player unable to join the same game twice and more
 
   function leaveGame() {
     socket.emit("leave_game");
@@ -38,7 +39,7 @@ const WaitingRoom: React.FC = () => {
     } else if (game.status !== "waiting_for_players") {
       navigate(`/profile`);
     }
-  }, [game, navigate]);
+  }, [game]);
   return (
     <>
       <Meta title={"Poczekalnia"} />
@@ -56,19 +57,24 @@ const WaitingRoom: React.FC = () => {
                   {game?.owner.username}{" "}
                   <LuCrown className={styles.playerAction} />
                 </div>
-                <div className={styles.singlePlayer}>
-                  {game?.players?.map((player) => (
-                    <div key={player.username}>
-                      {player.username}{" "}
-                      <RxCross2 className={styles.playerAction} />
-                    </div>
-                  ))}
-                </div>
+                {game?.players && game.players.length > 0 && (
+                  <>
+                    {game.players.map((player) => (
+                      <div
+                        className={styles.singlePlayer}
+                        key={player.username}
+                      >
+                        {player.username}
+                        <RxCross2 className={styles.playerAction} />
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
               <div className={styles.actionButtons}>
                 <div className={styles.buttonStart}>Rozpocznij grę</div>
-                <div className={styles.buttonLeave}>
-                  <button onClick={leaveGame}>Opuść grę</button>
+                <div className={styles.buttonLeave} onClick={leaveGame}>
+                  Opuść grę
                 </div>
               </div>
             </div>
