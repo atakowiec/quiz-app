@@ -1,8 +1,6 @@
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -41,15 +39,17 @@ export class GameGateway {
     @ConnectedSocket() ownerSocket: SocketType,
     @MessageBody() createGameData: GameType
   ) {
+    log("hejka test");
+
     if (ownerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
     const game = this.gameService.createGame(ownerSocket, createGameData);
+    game.send(ownerSocket);
+
     game.owner.sendNotification(
       `Utworzono grę ${JSON.stringify(game.getPacket())}`
     );
-
-    return game.id;
   }
 
   @SubscribeMessage("join_game")
@@ -72,6 +72,16 @@ export class GameGateway {
       throw new WsException("Gra jest pełna!");
     }
     game.join(playerSocket);
+    game.send();
     playerSocket.emit("notification", JSON.stringify(game.getPacket()));
+  }
+
+  @SubscribeMessage("leave_game")
+  leaveGame(@ConnectedSocket() playerSocket: SocketType) {
+    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    game.leave(playerSocket);
   }
 }

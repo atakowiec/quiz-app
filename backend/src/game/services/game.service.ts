@@ -49,6 +49,6 @@ export class GameService {
   }
 
   public getAllGames() {
-    return this.games;
+    return JSON.stringify(this.games.map((game) => game.getPacket()));
   }
 }

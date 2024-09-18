@@ -3,7 +3,6 @@ import { GameService } from "../services/game.service";
 import { SocketType } from "../game.types";
 import { createGameID } from "src/utils/ids";
 import { GameSettings, GameStatus, GameType, IGamePacket } from "@shared/game";
-import { log } from "console";
 
 export default class Game {
   public gameService: GameService;
@@ -37,6 +36,7 @@ export default class Game {
 
   public getPacket(): IGamePacket {
     return {
+      id: this.id,
       status: this.gameStatus,
       gameType: this.gameType,
       settings: this.settings,
@@ -65,6 +65,46 @@ export default class Game {
     if (socket) {
       socket.emit("set_game", this.getPacket());
     } else {
+      this.owner.sendGameUpdate();
+      this.players.forEach((player) => player.sendGameUpdate());
+    }
+  }
+  leave(playerSocket: SocketType) {
+    if (this.gameStatus !== "waiting_for_players") {
+      return;
+    }
+
+    const playerOrOwner =
+      this.owner.socket.id === playerSocket.id
+        ? this.owner
+        : this.players.find((player) => player.socket.id === playerSocket.id);
+    if (!playerOrOwner) {
+      return;
+    }
+
+    playerOrOwner.socket.leave(this.id);
+    delete playerOrOwner.socket.data.gameId;
+
+    if (playerOrOwner === this.owner) {
+      if (this.players.length > 0) {
+        this.owner = this.players[0];
+        this.players.shift();
+        this.send();
+      } else {
+        playerSocket.emit("set_game", null);
+        this.gameService.removeGame(this);
+      }
+    } else {
+      this.players = this.players.filter(
+        (player) => player.socket.id !== playerSocket.id
+      );
+
+      this.send();
+
+      playerOrOwner.socket.emit(
+        "notification",
+        JSON.stringify(this.getPacket())
+      );
     }
   }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import {
   IoHomeSharp,
@@ -10,6 +10,10 @@ import { Breadcrumb, Container } from "react-bootstrap";
 import styles from "../styles/WaitingRoom.module.scss";
 import { LuCrown } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
+import { useSelector } from "react-redux";
+import { State } from "../store";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "../socket/useSocket";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -17,9 +21,24 @@ const WaitingRoom: React.FC = () => {
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
     { icon: IoPaperPlaneSharp, label: "Statystyki", href: "/stats" },
   ];
+  const game = useSelector((state: State) => state.game);
+  const navigate = useNavigate();
+  const socket = useSocket();
 
   //TODO: make settings for an owner of the room
   //TODO: make invite link/ player
+
+  function leaveGame() {
+    socket.emit("leave_game");
+  }
+
+  useEffect(() => {
+    if (!game) {
+      navigate("/profile");
+    } else if (game.status !== "waiting_for_players") {
+      navigate(`/profile`);
+    }
+  }, [game, navigate]);
   return (
     <>
       <Meta title={"Poczekalnia"} />
@@ -30,28 +49,27 @@ const WaitingRoom: React.FC = () => {
           <div className="col-12 col-md-8 col-lg-4">
             <div className={styles.queueBox}>
               <div className={styles.queueText}>Poczekalnia</div>
-              <div className={styles.code}>Kod: abc</div>
+              <div className={styles.code}>Kod: {game?.id}</div>
               <hr className={styles.line} />
               <div className={styles.playersBox}>
                 <div className={styles.singlePlayer}>
-                  Player1 <LuCrown className={styles.playerAction} />
+                  {game?.owner.username}{" "}
+                  <LuCrown className={styles.playerAction} />
                 </div>
                 <div className={styles.singlePlayer}>
-                  Player2
-                  <RxCross2 className={styles.playerAction} />
-                </div>
-                <div className={styles.singlePlayer}>
-                  Player3
-                  <RxCross2 className={styles.playerAction} />
-                </div>
-                <div className={styles.singlePlayer}>
-                  Player4
-                  <RxCross2 className={styles.playerAction} />
+                  {game?.players?.map((player) => (
+                    <div key={player.username}>
+                      {player.username}{" "}
+                      <RxCross2 className={styles.playerAction} />
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className={styles.actionButtons}>
                 <div className={styles.buttonStart}>Rozpocznij grę</div>
-                <div className={styles.buttonLeave}>Opuść grę</div>
+                <div className={styles.buttonLeave}>
+                  <button onClick={leaveGame}>Opuść grę</button>
+                </div>
               </div>
             </div>
           </div>

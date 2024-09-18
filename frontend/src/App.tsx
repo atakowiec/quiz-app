@@ -16,6 +16,7 @@ import { AxiosResponse } from "axios";
 import { UserPacket } from "@shared/user";
 import { userActions } from "./store/userSlice.ts";
 import { useSocket } from "./socket/useSocket.ts";
+import JoinGame from "./pages/JoinGame.tsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="create-game" element={<CreateGame />} />
+            <Route path="join-game" element={<JoinGame />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/queue" element={<WaitingRoom />} />
             <Route path="/question" element={<Question />} />
