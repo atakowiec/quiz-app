@@ -39,7 +39,7 @@ const CreateGame: React.FC = () => {
       navigate(`/room`);
       toast.info("Jesteś już w grze"); // TODO:  Dla testu zeby pokazac ze sie dwa razy wykonuje idk dlaczego
     }
-  }, [game, navigate]);
+  }, [game]);
 
   return (
     <div>
@@ -58,12 +58,13 @@ const CreateGame: React.FC = () => {
                 <div className={styles.modeSelectionText}>
                   Jednoosobowy <IoPersonSharp className={styles.singlePlayer} />
                 </div>
-                <div className={styles.modeSelectionText}>
-                  <button onClick={() => onNewGame("multi")}>
-                    Wieloosobowy{" "}
-                    <IoPeopleSharp className={styles.multiPlayer} />
-                  </button>
+                <div
+                  className={styles.modeSelectionText}
+                  onClick={() => onNewGame("multi")}
+                >
+                  Wieloosobowy <IoPeopleSharp className={styles.multiPlayer} />
                 </div>
+
                 <div className={styles.modeSelectionText}>
                   Rankingowy <IoPodiumSharp className={styles.ranked} />
                 </div>
