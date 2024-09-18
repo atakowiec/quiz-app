@@ -17,6 +17,7 @@ import { UserPacket } from "@shared/user";
 import { userActions } from "./store/userSlice.ts";
 import { useSocket } from "./socket/useSocket.ts";
 import JoinGame from "./pages/JoinGame.tsx";
+import Home from "./pages/Home.tsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
+            <Route path="/home" element={<Home />} />
             <Route path="logout" element={<Logout />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
