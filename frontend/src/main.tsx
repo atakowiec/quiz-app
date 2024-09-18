@@ -4,18 +4,26 @@ import App from "./App.tsx";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { SocketProvider } from "./socket/SocketContext.tsx";
-//import { DevSupport } from "@react-buddy/ide-toolbox";
-//import { ComponentPreviews, useInitial } from "./dev";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <SocketProvider>
-        {/* <DevSupport ComponentPreviews={ComponentPreviews}
-                    useInitialHook={useInitial}
-        > */}
         <App />
-        {/* </DevSupport> */}
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </SocketProvider>
     </Provider>
   </StrictMode>

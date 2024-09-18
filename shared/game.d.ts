@@ -45,10 +45,24 @@ export interface GameSettings {
 export type SettingType = keyof GameSettings;
 
 export interface IGamePacket {
+  id: string;
   status: GameStatus;
   gameType: GameType;
   settings: GameSettings;
   owner: IGameMember;
   players?: Partial<IGameMember>[];
   winner?: Partial<IGameMember>;
+}
+
+export interface IGameMember {
+  username: string;
+  owner: boolean;
+  score: number;
+  available_helpers: HelperType[];
+  choosen_category: Category;
+  choosen_answer: Answer;
+  is_answer_correct: boolean;
+  hidden_answers: Answer[];
+  are_all_answers_hidden: boolean;
+  time_to_answer: number;
 }

@@ -10,11 +10,13 @@ import { MdEdit } from "react-icons/md";
 import { SiDatadog } from "react-icons/si";
 import { useSelector } from "react-redux";
 import { State } from "../store";
+import { IoIosAddCircleOutline } from "react-icons/io";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
     { icon: FaGamepad, label: "Historia Gier", href: "/games" },
-    { icon: FaPlay, label: "Stwórz Grę", href: "/create-game" },
+    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
+    { icon: FaPlay, label: "Dołącz Grę", href: "/join-game" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
 

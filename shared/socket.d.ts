@@ -1,5 +1,4 @@
 export interface ServerToClientEvents {
-  game_update: (game: GamePacket) => void;
   send_message: (message: string) => void;
   notification: (message: string) => void;
   exception: (message: string | object) => void;
@@ -9,7 +8,8 @@ export interface ServerToClientEvents {
 export type ServerToClientEventsKeys = keyof ServerToClientEvents;
 
 export interface ClientToServerEvents {
-  create_game: (mapId?: string, cb?: () => void) => void;
+  create_game: (gameMode: string) => void;
   join_game: (gameId: string) => void;
+  leave_game: () => void;
 }
 export type ClientToServerEventsKeys = keyof ClientToServerEvents;

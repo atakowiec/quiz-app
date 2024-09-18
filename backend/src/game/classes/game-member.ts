@@ -45,4 +45,8 @@ export class GameMember {
       time_to_answer: this.time_to_answer,
     };
   }
+
+  sendGameUpdate() {
+    this.socket.emit("set_game", this.game.getPacket());
+  }
 }

@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { WsBadRequestException, WsUnknownException } from "./ws-exceptions";
 import { SocketType } from "src/game/game.types";
+import { log } from "console";
 
 @Catch()
 export class WsCatchAllFilter implements ExceptionFilter {
@@ -19,6 +20,7 @@ export class WsCatchAllFilter implements ExceptionFilter {
 
       const wsException = new WsBadRequestException(exceptionMessage);
       socket.emit("exception", wsException.getError());
+      log(wsException.getError());
       return;
     }
 

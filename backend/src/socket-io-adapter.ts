@@ -49,6 +49,10 @@ export class SocketIOAdapter extends IoAdapter {
 const createTokenMiddleware =
   (jwtService: JwtService, logger: Logger) =>
   (socket: SocketType, next: NextFunction) => {
+    // For Postman Testing Purposes
+    if (socket.handshake.headers["token"])
+      socket.handshake.headers.cookie = `access_token=${socket.handshake.headers["token"]}`;
+
     if (!socket.handshake.headers.cookie) {
       return next(new UnauthorizedException("No auth cookie provided"));
     }

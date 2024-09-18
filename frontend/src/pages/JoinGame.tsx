@@ -1,38 +1,26 @@
 import { Breadcrumb, Container } from "react-bootstrap";
 import Meta from "../components/Meta";
-import styles from "../styles/CreateGame.module.scss";
+import styles from "../styles/JoinGame.module.scss";
 import { FaWrench, FaGamepad, FaPlay } from "react-icons/fa";
-import {
-  IoPersonSharp,
-  IoPeopleSharp,
-  IoPodiumSharp,
-  IoStatsChartSharp,
-} from "react-icons/io5";
+import { IoStatsChartSharp } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { State } from "../store";
+import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
-const CreateGame: React.FC = () => {
+const JoinGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
     { icon: FaGamepad, label: "Historia Gier", href: "/games" },
     { icon: FaPlay, label: "Stwórz Grę", href: "/create-game" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
+  const gameIdRef = useRef<HTMLInputElement>(null);
   const socket = useSocket();
   const navigate = useNavigate();
   const game = useSelector((state: State) => state.game);
-
-  function onNewGame(gameType: string) {
-    socket.emit("create_game", gameType);
-
-    socket.once("set_game", () => {
-      navigate(`/room`);
-    });
-  }
 
   useEffect(() => {
     if (game) {
@@ -41,32 +29,35 @@ const CreateGame: React.FC = () => {
     }
   }, [game, navigate]);
 
+  function onJoinGame() {
+    socket.emit("join_game", gameIdRef.current!.value);
+
+    socket.once("set_game", () => {
+      navigate(`/room`);
+    });
+  }
+
   return (
     <div>
-      <Meta title={"Stwórz grę"} />
-      <Breadcrumb title="Stwórz grę" />
+      <Meta title={"Dołącz do gry"} />
+      <Breadcrumb title="Dołącz do gry" />
       <Sidebar items={sidebarItems} />
       <Container className={styles.createContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
             <div className={styles.createBox}>
               <div className={styles.createText}>
-                <FaWrench className="mb-2 fs-2" /> Stwórz Grę
+                <FaWrench className="mb-2 fs-2" /> Dołącz do gry
               </div>
-              <div className={styles.modeText}>Wybierz tryb gry</div>
               <div className={styles.selectionBoxes}>
-                <div className={styles.modeSelectionText}>
-                  Jednoosobowy <IoPersonSharp className={styles.singlePlayer} />
-                </div>
-                <div className={styles.modeSelectionText}>
-                  <button onClick={() => onNewGame("multi")}>
-                    Wieloosobowy{" "}
-                    <IoPeopleSharp className={styles.multiPlayer} />
-                  </button>
-                </div>
-                <div className={styles.modeSelectionText}>
-                  Rankingowy <IoPodiumSharp className={styles.ranked} />
-                </div>
+                <input
+                  type={"text"}
+                  placeholder={"Podaj ID gry"}
+                  ref={gameIdRef}
+                />
+              </div>
+              <div className={styles.createButton}>
+                <button onClick={() => onJoinGame()}>Dołącz</button>
               </div>
             </div>
           </div>
@@ -76,4 +67,4 @@ const CreateGame: React.FC = () => {
   );
 };
 
-export default CreateGame;
+export default JoinGame;
