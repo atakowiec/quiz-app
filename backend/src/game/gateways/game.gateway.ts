@@ -1,6 +1,8 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -9,29 +11,35 @@ import {
 import { SocketServerType, SocketType } from "../game.types";
 import { JwtService } from "@nestjs/jwt";
 import { GameService } from "../services/game.service";
-import { forwardRef, Inject, UseFilters } from "@nestjs/common";
-import { log } from "console";
+import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
 import { GameType } from "@shared/game";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
-export class GameGateway {
+export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private readonly logger = new Logger(GameGateway.name);
+
   @WebSocketServer()
   server: SocketServerType;
 
   constructor(
     private readonly jwtService: JwtService,
-
     @Inject(forwardRef(() => GameService))
     private readonly gameService: GameService
-  ) {}
+  ) {
+  }
+
   handleConnection(client: SocketType) {
-    log(`Client connected: ${client.id}`);
+    this.logger.log(`Client connected: ${client.data.username} [client.id]`);
+
+    this.gameService.getGameByNickname(client.data.username)?.reconnect(client)
   }
 
   handleDisconnect(client: SocketType) {
-    log(`Client disconnected: ${client.id}`);
+    this.logger.log(`Client disconnected: ${client.data.username} [${client.id}]`);
+
+    // this.gameService.getGameByNickname(client.data.username)?.leave(client);
   }
 
   @SubscribeMessage("create_game")
@@ -39,17 +47,15 @@ export class GameGateway {
     @ConnectedSocket() ownerSocket: SocketType,
     @MessageBody() createGameData: GameType
   ) {
-    log("hejka test");
-
     if (ownerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
     const game = this.gameService.createGame(ownerSocket, createGameData);
     game.send(ownerSocket);
 
-    game.owner.sendNotification(
-      `Utworzono grę ${JSON.stringify(game.getPacket())}`
-    );
+    game.owner.sendNotification(`Utworzono grę ${JSON.stringify(game.getPacket())}`);
+
+    this.logger.log(`New game with id: ${game.id} created by ${ownerSocket.data.username}`);
   }
 
   @SubscribeMessage("join_game")
