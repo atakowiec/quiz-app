@@ -54,6 +54,14 @@ export interface IGamePacket {
   winner?: Partial<IGameMember>;
 }
 
+export type GameUpdatePacket = {
+  status?: GameStatus;
+  owner?: Partial<IGameMember>;
+  players?: Partial<IGameMember>[];
+  winner?: Partial<IGameMember>;
+  settings?: Partial<GameSettings>;
+};
+
 export interface IGameMember {
   username: string;
   owner: boolean;

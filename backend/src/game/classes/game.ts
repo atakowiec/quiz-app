@@ -2,9 +2,12 @@ import { GameMember } from "./game-member";
 import { GameService } from "../services/game.service";
 import { SocketType } from "../game.types";
 import { createGameID } from "src/utils/ids";
-import { GameSettings, GameStatus, GameType, IGamePacket } from "@shared/game";
+import { GameSettings, GameStatus, GameType, GameUpdatePacket, IGamePacket } from "@shared/game";
+import { Logger } from "@nestjs/common";
 
 export default class Game {
+  private readonly logger: Logger;
+
   public gameService: GameService;
   public readonly id: string;
 
@@ -31,7 +34,7 @@ export default class Game {
     this.owner.socket.join(this.id);
     this.owner.socket.data.gameId = this.id;
 
-    console.log(`Game created with id: ${this.id} by ${this.owner.username}`);
+    this.logger = new Logger(`game-${this.id}`);
   }
 
   public getPacket(): IGamePacket {
@@ -59,16 +62,23 @@ export default class Game {
     this.players.push(player);
     player.socket.join(this.id);
     player.socket.data.gameId = this.id;
+
+    this.logger.log(`Player ${player.username} joined the game`);
   }
 
-  send(socket?: SocketType) {
+  public send(socket?: SocketType) {
     if (socket) {
       socket.emit("set_game", this.getPacket());
     } else {
-      this.owner.sendGameUpdate();
-      this.players.forEach((player) => player.sendGameUpdate());
+      this.owner.sendGame();
+      this.players.forEach((player) => player.sendGame());
     }
   }
+
+  public broadcastUpdate(updatePacket: GameUpdatePacket) {
+    [this.owner, ...this.players].forEach((player) => player.sendGameUpdate(updatePacket));
+  }
+
   leave(playerSocket: SocketType) {
     if (this.gameStatus !== "waiting_for_players") {
       return;
@@ -101,10 +111,34 @@ export default class Game {
 
       this.send();
 
+      // leaving player should get the packet so he is not in the game anymore
+      playerOrOwner.socket.emit("set_game", null);
+
       playerOrOwner.socket.emit(
         "notification",
         JSON.stringify(this.getPacket())
       );
     }
+  }
+
+  reconnect(client: SocketType) {
+    // find the game member
+    const member = [this.owner, ...this.players].find((player) => player.username === client.data.username);
+
+    if(!member) return;
+
+    if(member.socket.connected) {
+      // todo lekka kraksa - ktos probuje sie polaczyc z drugiego konta - trzeba ukrócić takie wybryki
+      return;
+    }
+
+    // update the socket to the new one
+    member.socket = client;
+    member.socket.join(this.id);
+
+    // send the game to the client
+    member.sendGame();
+
+    // TODO in the future there might be a need to send the game to all the players
   }
 }

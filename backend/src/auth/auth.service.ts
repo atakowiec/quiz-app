@@ -130,8 +130,6 @@ export class AuthService {
     const tokenPayload: TokenPayload = {
       id: user.id,
       username: user.username,
-      email: user.email,
-      permission: user.permission,
     };
 
     return this.jwtService.signAsync(tokenPayload);
@@ -168,6 +166,8 @@ export class AuthService {
   }
 
   verify(req: Request) {
+
+
     return req.user ?? {};
   }
 

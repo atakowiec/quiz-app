@@ -5,11 +5,7 @@ import { FaWrench, FaGamepad, FaPlay } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { State } from "../store";
-import { useEffect, useRef } from "react";
-import { toast } from "react-toastify";
+import { useRef } from "react";
 
 const JoinGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -19,22 +15,9 @@ const JoinGame: React.FC = () => {
   ];
   const gameIdRef = useRef<HTMLInputElement>(null);
   const socket = useSocket();
-  const navigate = useNavigate();
-  const game = useSelector((state: State) => state.game);
-
-  useEffect(() => {
-    if (game) {
-      navigate(`/room`);
-      toast.info("Jesteś już w grze"); // TODO:  Dla testu zeby pokazac ze sie dwa razy wykonuje idk dlaczego
-    }
-  }, [game, navigate]);
 
   function onJoinGame() {
     socket.emit("join_game", gameIdRef.current!.value);
-
-    socket.once("set_game", () => {
-      navigate(`/room`);
-    });
   }
 
   return (

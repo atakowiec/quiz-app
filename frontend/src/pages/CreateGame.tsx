@@ -10,11 +10,6 @@ import {
 } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { State } from "../store";
-import { toast } from "react-toastify";
 
 const CreateGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -23,23 +18,10 @@ const CreateGame: React.FC = () => {
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
   const socket = useSocket();
-  const navigate = useNavigate();
-  const game = useSelector((state: State) => state.game);
 
   function onNewGame(gameType: string) {
     socket.emit("create_game", gameType);
-
-    socket.once("set_game", () => {
-      navigate(`/room`);
-    });
   }
-
-  useEffect(() => {
-    if (game) {
-      navigate(`/room`);
-      toast.info("Jesteś już w grze"); // TODO:  Dla testu zeby pokazac ze sie dwa razy wykonuje idk dlaczego
-    }
-  }, [game]);
 
   return (
     <div>
