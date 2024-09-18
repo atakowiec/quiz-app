@@ -7,11 +7,11 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import { Server, ServerOptions } from "socket.io";
-import { SocketData, SocketType } from "./game/game.types";
+import { SocketType } from "./game/game.types";
 import { NextFunction } from "express";
 import { CorsOptions } from "cors";
-import { log } from "console";
 import { parse } from "cookie";
+import { TokenPayload } from "./auth/auth";
 
 export class SocketIOAdapter extends IoAdapter {
   private readonly logger = new Logger(SocketIOAdapter.name);
@@ -25,7 +25,7 @@ export class SocketIOAdapter extends IoAdapter {
     const clientPort = parseInt(this.configService.get("CLIENT_PORT"));
 
     const cors: CorsOptions = {
-      credentials: true, // todo Łukasz musisz to dodać jak będziesz odpowiednio konfigurował socketio na backendzie  bez tego nie zadziała
+      credentials: true,
       origin: [
         `http://localhost:${clientPort}`,
         new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
@@ -58,7 +58,7 @@ const createTokenMiddleware =
     }
     const cookies = parse(socket.handshake.headers.cookie);
     try {
-      const payload = jwtService.verify(cookies.access_token) as SocketData;
+      const payload = jwtService.verify(cookies.access_token) as TokenPayload;
       socket.data = { ...socket.data, ...payload };
       next();
     } catch {

@@ -1,8 +1,11 @@
+import { GameUpdatePacket, IGamePacket } from "./game";
+
 export interface ServerToClientEvents {
   send_message: (message: string) => void;
   notification: (message: string) => void;
   exception: (message: string | object) => void;
-  set_game: (game: GamePacket) => void;
+  set_game: (game: IGamePacket) => void;
+  update_game: (game: GameUpdatePacket) => void;
 }
 
 export type ServerToClientEventsKeys = keyof ServerToClientEvents;

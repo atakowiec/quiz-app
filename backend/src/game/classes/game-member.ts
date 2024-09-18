@@ -1,6 +1,6 @@
 import Game from "./game";
 import { SocketType } from "../game.types";
-import { Answer, Category, HelperType, IGameMember } from "@shared/game";
+import { Answer, Category, GameUpdatePacket, HelperType, IGameMember } from "@shared/game";
 export class GameMember {
   public username: string;
   public socket: SocketType;
@@ -46,7 +46,11 @@ export class GameMember {
     };
   }
 
-  sendGameUpdate() {
+  sendGame() {
     this.socket.emit("set_game", this.game.getPacket());
+  }
+
+  sendGameUpdate(updatePacket: GameUpdatePacket) {
+    this.socket.emit("update_game", updatePacket);
   }
 }
