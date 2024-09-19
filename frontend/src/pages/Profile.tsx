@@ -14,9 +14,9 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
-    { icon: FaGamepad, label: "Historia Gier", href: "/games" },
     { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: FaPlay, label: "Dołącz Grę", href: "/join-game" },
+    { icon: FaPlay, label: "Dołącz do gry", href: "/join-game" },
+    { icon: FaGamepad, label: "Historia Gier", href: "/games" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
 

@@ -6,11 +6,12 @@ import { IoStatsChartSharp } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
 import { useRef } from "react";
+import { IoIosAddCircleOutline } from "react-icons/io";
 
 const JoinGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
+    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
     { icon: FaGamepad, label: "Historia Gier", href: "/games" },
-    { icon: FaPlay, label: "Stwórz Grę", href: "/create-game" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
   const gameIdRef = useRef<HTMLInputElement>(null);

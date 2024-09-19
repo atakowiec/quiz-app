@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { State } from "../store";
 import { useNavigate } from "react-router-dom";
 import { UserState } from "../store/userSlice.ts";
+import { Dropdown } from "react-bootstrap";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -20,11 +21,18 @@ const Header = () => {
     }
   };
 
+  //TODO: make logout work
+  //TODO: make edit profile work
+  const handleLogout = () => {
+    console.log("Wylogowano!");
+    navigate("/login");
+  };
+
   return (
     <>
       <header className={`${styles.headerTopStrip} p-1`}>
         <div className={styles.headerContent}>
-          <Link to="/" className={styles.logo}>
+          <Link to="/home" className={styles.logo}>
             Quiz
           </Link>
           <div className={styles.iconContainer}>
@@ -34,12 +42,41 @@ const Header = () => {
             <Link to="/" className={`notifications ${styles.gap15}`}>
               <IoMdNotificationsOutline color="white" size="30px" />
             </Link>
-            <div
-              className={`${styles.profile} ${styles.gap15}`}
-              onClick={handleIconClick}
-            >
-              <IoPersonCircleOutline color="white" size="30px" />
-            </div>
+            {user.loggedIn ? (
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="secondary"
+                  id="dropdown-basic"
+                  className={`${styles.profile} ${styles.gap15}`}
+                >
+                  <IoPersonCircleOutline color="white" size="30px" />
+                </Dropdown.Toggle>
+
+                {/* Menu rozwijane z opcjami */}
+                <Dropdown.Menu className={styles.dropdownMenu}>
+                  <Dropdown.Item
+                    onClick={() => navigate("/profile")}
+                    className={styles.dropdownItemCustom}
+                  >
+                    Profil
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={handleLogout}
+                    className={styles.dropdownItemCustom}
+                  >
+                    Wyloguj się
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              // Przycisk logowania dla niezalogowanego użytkownika
+              <button
+                className={`${styles.loginButton} ${styles.gap15}`}
+                onClick={() => navigate("/login")}
+              >
+                Zaloguj się
+              </button>
+            )}
           </div>
         </div>
       </header>
