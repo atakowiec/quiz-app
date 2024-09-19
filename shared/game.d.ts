@@ -10,7 +10,8 @@ export type GameType = "single" | "multi" | "ranked";
 export type Category = {
   id: number;
   name: string;
-  description: string;
+  description?: string;
+  img?: string;
 };
 
 export type Answer = {

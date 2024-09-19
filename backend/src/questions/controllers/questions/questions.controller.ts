@@ -1,4 +1,10 @@
-import { BadRequestException, Get, Param, ParseIntPipe } from "@nestjs/common";
+import {
+  BadRequestException,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+} from "@nestjs/common";
 import { Body } from "@nestjs/common";
 import { Post } from "@nestjs/common";
 import { Delete, Patch } from "@nestjs/common";
@@ -13,6 +19,22 @@ export class QuestionsController {
   @Get()
   getQuestions() {
     return this.questionsService.getQuestions();
+  }
+
+  @Get("categories")
+  getCategories() {
+    return this.questionsService.getCategories();
+  }
+
+  @Get("paginate/:category/:page")
+  getQuestionsPaginate(
+    @Param("category") category: string,
+    @Param("page") page: number,
+    @Query("limit") limit: number
+  ) {
+    limit = limit ? limit : 25;
+
+    return this.questionsService.getQuestionsPaginate(category, page, limit);
   }
 
   @Post()

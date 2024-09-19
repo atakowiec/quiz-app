@@ -183,7 +183,7 @@ export class QuestionsService {
           .includes(distractor.content)
       );
 
-      let nonExistingDistractors = questionDetails.distractors.filter(
+      const nonExistingDistractors = questionDetails.distractors.filter(
         (distractor) =>
           !question.distractors
             .map((distractor) => distractor.content)
@@ -219,5 +219,38 @@ export class QuestionsService {
     question.updatedAt = new Date();
     await this.questionRepository.save(question);
     return question;
+  }
+  async findQuestions(
+    category: string,
+    page: number,
+    limit: number
+  ): Promise<{ questions: Question[]; total: number }> {
+    const [questions, total] = await this.questionRepository.findAndCount({
+      where: { category: { name: category }, isActive: true },
+      relations: ["category", "distractors"],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: "DESC" },
+    });
+
+    return { questions, total };
+
+    return {
+      questions: [],
+      total: 0,
+    } as { questions: Question[]; total: number };
+  }
+
+  async getQuestionsPaginate(
+    category: string,
+    page: number,
+    limit: number
+  ): Promise<{ questions: Question[]; totalQuestions: number }> {
+    const { questions, total } = await this.findQuestions(
+      category,
+      page,
+      limit
+    );
+    return { questions, totalQuestions: total };
   }
 }

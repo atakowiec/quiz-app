@@ -29,9 +29,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     newSocket.on("set_game", (game) => dispatch(gameActions.setGame(game)));
 
-    newSocket.on("update_game", (game) => dispatch(gameActions.updateGame(game)));
+    newSocket.on("update_game", (game) =>
+      dispatch(gameActions.updateGame(game))
+    );
 
     newSocket.on("exception", (message) => toast.error(message.toString()));
+    newSocket.on("notification", (message) => toast.info(message.toString()));
     return newSocket;
   }, []);
 

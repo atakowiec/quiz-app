@@ -19,6 +19,8 @@ import { useSocket } from "./socket/useSocket.ts";
 import JoinGame from "./pages/JoinGame.tsx";
 import { State } from "./store";
 import { GameState } from "./store/gameSlice.ts";
+import Home from "./pages/Home.tsx";
+import Categories from "./pages/Admin/Questions/Categories.tsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -50,15 +52,11 @@ function App() {
   useEffect(() => {
     if (!game?.status) return;
 
-    if(game.status === "waiting_for_players")
-      navigate("/queue");
-    else if(game.status === "voting_phase")
-      navigate("/category");
-    else if(game.status === "question_phase")
-      navigate("/question");
+    if (game.status === "waiting_for_players") navigate("/queue");
+    else if (game.status === "voting_phase") navigate("/category");
+    else if (game.status === "question_phase") navigate("/question");
 
     // add route to game over screen
-
   }, [game?.status, window.location.pathname]);
 
   // wait for the request to finish before rendering the app - this way we can avoid flickering
@@ -67,16 +65,18 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Layout/>}>
-          <Route path="logout" element={<Logout/>}/>
-          <Route path="login" element={<Login/>}/>
-          <Route path="register" element={<Register/>}/>
-          <Route path="create-game" element={<CreateGame/>}/>
-          <Route path="join-game" element={<JoinGame/>}/>
-          <Route path="profile" element={<Profile/>}/>
-          <Route path="/queue" element={<WaitingRoom/>}/>
-          <Route path="/question" element={<Question/>}/>
-          <Route path="/category" element={<Category/>}/>
+        <Route path="/" element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="logout" element={<Logout />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="create-game" element={<CreateGame />} />
+          <Route path="join-game" element={<JoinGame />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="/queue" element={<WaitingRoom />} />
+          <Route path="/question" element={<Question />} />
+          <Route path="/category" element={<Category />} />
+          <Route path="/admin/categories" element={<Categories />} />
         </Route>
       </Routes>
     </>
