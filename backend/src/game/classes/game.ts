@@ -2,7 +2,13 @@ import { GameMember } from "./game-member";
 import { GameService } from "../services/game.service";
 import { SocketType } from "../game.types";
 import { createGameID } from "src/utils/ids";
-import { GameSettings, GameStatus, GameType, GameUpdatePacket, IGamePacket } from "@shared/game";
+import {
+  GameSettings,
+  GameStatus,
+  GameType,
+  GameUpdatePacket,
+  IGamePacket,
+} from "@shared/game";
 import { Logger } from "@nestjs/common";
 
 export default class Game {
@@ -65,6 +71,41 @@ export default class Game {
 
     this.logger.log(`Player ${player.username} joined the game`);
   }
+  public kick(username: string) {
+    const player = this.players.find((player) => player.username === username);
+    if (!player) {
+      return;
+    }
+
+    player.socket.leave(this.id);
+    delete player.socket.data.gameId;
+    this.players = this.players.filter(
+      (player) => player.username !== username
+    );
+    player.socket.emit("set_game", null);
+    player.socket.emit("notification", "Zostałeś wyrzucony z gry");
+
+    this.send();
+  }
+
+  public giveOwner(username: string) {
+    const player = this.players.find((player) => player.username === username);
+    if (!player) {
+      return;
+    }
+
+    this.owner.socket.emit("notification", "Zmiana właściciela gry");
+
+    const oldOwner = this.owner;
+    this.owner = player;
+    this.players = this.players.filter(
+      (player) => player.username !== username
+    );
+    this.players.push(oldOwner);
+    player.socket.emit("notification", "Zostałeś właścicielem gry");
+
+    this.send();
+  }
 
   public send(socket?: SocketType) {
     if (socket) {
@@ -76,7 +117,9 @@ export default class Game {
   }
 
   public broadcastUpdate(updatePacket: GameUpdatePacket) {
-    [this.owner, ...this.players].forEach((player) => player.sendGameUpdate(updatePacket));
+    [this.owner, ...this.players].forEach((player) =>
+      player.sendGameUpdate(updatePacket)
+    );
   }
 
   leave(playerSocket: SocketType) {
@@ -91,6 +134,7 @@ export default class Game {
     if (!playerOrOwner) {
       return;
     }
+    playerSocket.emit("set_game", null);
 
     playerOrOwner.socket.leave(this.id);
     delete playerOrOwner.socket.data.gameId;
@@ -101,7 +145,6 @@ export default class Game {
         this.players.shift();
         this.send();
       } else {
-        playerSocket.emit("set_game", null);
         this.gameService.removeGame(this);
       }
     } else {
@@ -110,24 +153,18 @@ export default class Game {
       );
 
       this.send();
-
-      // leaving player should get the packet so he is not in the game anymore
-      playerOrOwner.socket.emit("set_game", null);
-
-      playerOrOwner.socket.emit(
-        "notification",
-        JSON.stringify(this.getPacket())
-      );
     }
   }
 
   reconnect(client: SocketType) {
     // find the game member
-    const member = [this.owner, ...this.players].find((player) => player.username === client.data.username);
+    const member = [this.owner, ...this.players].find(
+      (player) => player.username === client.data.username
+    );
 
-    if(!member) return;
+    if (!member) return;
 
-    if(member.socket.connected) {
+    if (member.socket.connected) {
       // todo lekka kraksa - ktos probuje sie polaczyc z drugiego konta - trzeba ukrócić takie wybryki
       return;
     }

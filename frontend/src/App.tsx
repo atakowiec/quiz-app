@@ -20,6 +20,7 @@ import JoinGame from "./pages/JoinGame.tsx";
 import { State } from "./store";
 import { GameState } from "./store/gameSlice.ts";
 import Home from "./pages/Home.tsx";
+import Categories from "./pages/Admin/Questions/Categories.tsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ function App() {
           <Route path="/queue" element={<WaitingRoom />} />
           <Route path="/question" element={<Question />} />
           <Route path="/category" element={<Category />} />
+          <Route path="/admin/categories" element={<Categories />} />
         </Route>
       </Routes>
     </>

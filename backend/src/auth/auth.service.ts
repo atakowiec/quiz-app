@@ -12,6 +12,8 @@ import { LoginDto } from "./dto/login.dto";
 import { UnauthorizedException } from "@nestjs/common/exceptions/unauthorized.exception";
 import { UserPacket } from "@shared/user";
 import { GameService } from "src/game/services/game.service";
+import { SocketType } from "src/game/game.types";
+import { parse } from "cookie";
 
 @Injectable()
 export class AuthService {
@@ -149,6 +151,9 @@ export class AuthService {
       secure: false,
     });
   }
+  public clearTokenFromSocket(socket: SocketType) {
+    socket.handshake.headers.cookie = "";
+  }
 
   public extractTokenFromRequest(req: Request): string | null {
     if (req.cookies && req.cookies.access_token) {
@@ -164,10 +169,12 @@ export class AuthService {
   public extractTokenPayloadFromRequest(req: Request): TokenPayload {
     return this.extractPayloadFromToken(this.extractTokenFromRequest(req));
   }
+  public extractTokenPayloadFromSocket(socket: SocketType): TokenPayload {
+    const token = parse(socket.handshake.headers.cookie).access_token;
+    return this.extractPayloadFromToken(token);
+  }
 
   verify(req: Request) {
-
-
     return req.user ?? {};
   }
 

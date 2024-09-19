@@ -6,4 +6,7 @@ export class CategoryDto {
 
   @IsOptional()
   description: string;
+
+  @IsOptional()
+  img: string;
 }

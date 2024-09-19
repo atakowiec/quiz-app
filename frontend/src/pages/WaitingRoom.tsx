@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { State } from "../store";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../socket/useSocket";
+import { PiFlagBannerFill } from "react-icons/pi";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -21,6 +22,7 @@ const WaitingRoom: React.FC = () => {
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
   ];
   const game = useSelector((state: State) => state.game);
+  const user = useSelector((state: State) => state.user);
   const navigate = useNavigate();
   const socket = useSocket();
 
@@ -32,6 +34,12 @@ const WaitingRoom: React.FC = () => {
     socket.emit("leave_game");
   }
 
+  function kickPlayer(username: string) {
+    socket.emit("kick", username);
+  }
+  function giveOwner(username: string) {
+    socket.emit("give_owner", username);
+  }
   useEffect(() => {
     if (!game) {
       navigate("/profile");
@@ -53,7 +61,7 @@ const WaitingRoom: React.FC = () => {
               <hr className={styles.line} />
               <div className={styles.playersBox}>
                 <div className={styles.singlePlayer}>
-                  {game?.owner.username}{" "}
+                  {game?.owner.username}
                   <LuCrown className={styles.playerAction} />
                 </div>
                 {game?.players && game.players.length > 0 && (
@@ -64,7 +72,26 @@ const WaitingRoom: React.FC = () => {
                         key={player.username}
                       >
                         {player.username}
-                        <RxCross2 className={styles.playerAction} />
+                        {/* Tu możesz gosia zrobić modal z potwierdzeniem */}
+                        {user.username === game.owner.username && (
+                          <div>
+                            <button
+                              className={styles.giveBtn}
+                              onClick={() => giveOwner(player.username!)}
+                            >
+                              <PiFlagBannerFill
+                                className={styles.playerAction}
+                              />
+                            </button>
+
+                            <button
+                              className={styles.kickBtn}
+                              onClick={() => kickPlayer(player.username!)}
+                            >
+                              <RxCross2 className={styles.playerAction} />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </>
@@ -72,6 +99,8 @@ const WaitingRoom: React.FC = () => {
               </div>
               <div className={styles.actionButtons}>
                 <div className={styles.buttonStart}>Rozpocznij grę</div>
+
+                {/* Tu możesz gosia zrobić modal z potwierdzeniem */}
                 <div className={styles.buttonLeave} onClick={leaveGame}>
                   Opuść grę
                 </div>
