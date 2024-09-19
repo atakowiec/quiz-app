@@ -27,17 +27,18 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly jwtService: JwtService,
     @Inject(forwardRef(() => GameService))
     private readonly gameService: GameService
-  ) {
-  }
+  ) {}
 
   handleConnection(client: SocketType) {
     this.logger.log(`Client connected: ${client.data.username} [client.id]`);
 
-    this.gameService.getGameByNickname(client.data.username)?.reconnect(client)
+    this.gameService.getGameByNickname(client.data.username)?.reconnect(client);
   }
 
   handleDisconnect(client: SocketType) {
-    this.logger.log(`Client disconnected: ${client.data.username} [${client.id}]`);
+    this.logger.log(
+      `Client disconnected: ${client.data.username} [${client.id}]`
+    );
 
     // this.gameService.getGameByNickname(client.data.username)?.leave(client);
   }
@@ -53,9 +54,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const game = this.gameService.createGame(ownerSocket, createGameData);
     game.send(ownerSocket);
 
-    game.owner.sendNotification(`Utworzono grę ${JSON.stringify(game.getPacket())}`);
+    game.owner.sendNotification(
+      `Utworzono grę ${JSON.stringify(game.getPacket())}`
+    );
 
-    this.logger.log(`New game with id: ${game.id} created by ${ownerSocket.data.username}`);
+    this.logger.log(
+      `New game with id: ${game.id} created by ${ownerSocket.data.username}`
+    );
   }
 
   @SubscribeMessage("join_game")
@@ -89,5 +94,35 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
     game.leave(playerSocket);
+  }
+
+  @SubscribeMessage("kick")
+  kickPlayer(
+    @ConnectedSocket() ownerSocket: SocketType,
+    @MessageBody() username: string
+  ) {
+    const game = this.gameService.getGameByNickname(ownerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    if (game.owner.username !== ownerSocket.data.username) {
+      throw new WsException("Nie jesteś właścicielem gry!");
+    }
+    game.kick(username);
+  }
+
+  @SubscribeMessage("give_owner")
+  giveOwner(
+    @ConnectedSocket() ownerSocket: SocketType,
+    @MessageBody() username: string
+  ) {
+    const game = this.gameService.getGameByNickname(ownerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    if (game.owner.username !== ownerSocket.data.username) {
+      throw new WsException("Nie jesteś właścicielem gry!");
+    }
+    game.giveOwner(username);
   }
 }

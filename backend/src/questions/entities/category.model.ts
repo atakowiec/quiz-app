@@ -12,6 +12,9 @@ export class Category {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ nullable: true })
+  img: string;
+
   @ManyToMany(() => Question, (question) => question.category)
   questions: Question[];
 }

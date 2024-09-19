@@ -83,13 +83,8 @@ $sidebar-half-width: 45px;
 }
 
 .playerAction {
-  margin-left: 1rem;
   font-size: 1.5rem;
   font-weight: 300;
-  align-items: center;
-  cursor: pointer;
-  background-color: #f0efef;
-  border-radius: 5px;
 }
 
 .actionButtons {
@@ -129,4 +124,16 @@ $sidebar-half-width: 45px;
 
 .buttonLeave:hover {
   background-color: #d9d9d9;
+}
+.kickBtn,
+.giveBtn {
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  background-color: transparent;
+}
+
+.kickBtn:hover,
+.giveBtn:hover {
+  color: rgba(0, 0, 0, 0.6);
 }
