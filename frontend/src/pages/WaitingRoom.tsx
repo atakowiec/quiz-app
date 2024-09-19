@@ -19,7 +19,6 @@ const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
     { icon: IoHomeSharp, label: "Powrót", href: "/lobby" },
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
-    { icon: IoPaperPlaneSharp, label: "Statystyki", href: "/stats" },
   ];
   const game = useSelector((state: State) => state.game);
   const navigate = useNavigate();

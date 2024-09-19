@@ -13,8 +13,8 @@ import { useSocket } from "../socket/useSocket";
 
 const CreateGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
+    { icon: FaPlay, label: "Dołącz do gry", href: "/join-game" },
     { icon: FaGamepad, label: "Historia Gier", href: "/games" },
-    { icon: FaPlay, label: "Stwórz Grę", href: "/create-game" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
   const socket = useSocket();

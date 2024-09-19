@@ -32,4 +32,30 @@
 
 .profile {
   cursor: pointer;
+  background-color: #0c1a25;
+  border: none;
+  padding: 0rem;
+}
+
+.loginButton {
+  border-radius: 10px;
+  border: none;
+  padding: 0.35rem;
+  background-color: #06a53b;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  box-shadow: 0 4px 8px rgba(63, 155, 55, 0.26);
+}
+
+.loginButton:hover {
+  background-color: #06a53bce;
+}
+
+.dropdownItemCustom {
+  font-size: 1rem;
+
+  &:active {
+    background-color: #0c1a25c0;
+  }
 }
