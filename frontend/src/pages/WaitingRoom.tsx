@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import Sidebar, { SidebarItem } from "../components/SideBar";
-import {
-  IoHomeSharp,
-  IoSettingsSharp,
-  IoPaperPlaneSharp,
-} from "react-icons/io5";
+import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import Meta from "../components/Meta";
 import { Breadcrumb, Container } from "react-bootstrap";
 import styles from "../styles/WaitingRoom.module.scss";
@@ -14,7 +10,7 @@ import { useSelector } from "react-redux";
 import { State } from "../store";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../socket/useSocket";
-import { PiFlagBannerFill } from "react-icons/pi";
+import { IoMdArrowUp } from "react-icons/io";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -79,9 +75,7 @@ const WaitingRoom: React.FC = () => {
                               className={styles.giveBtn}
                               onClick={() => giveOwner(player.username!)}
                             >
-                              <PiFlagBannerFill
-                                className={styles.playerAction}
-                              />
+                              <IoMdArrowUp className={styles.playerAction2} />
                             </button>
 
                             <button
