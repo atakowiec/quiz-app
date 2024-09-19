@@ -55,7 +55,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     game.send(ownerSocket);
 
     game.owner.sendNotification(
-      `Utworzono grę ${JSON.stringify(game.getPacket())}`
+      `Utworzono grę`
     );
 
     this.logger.log(
