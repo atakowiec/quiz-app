@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import Meta from "../components/Meta";
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Breadcrumb, Button, Container, Modal } from "react-bootstrap";
 import styles from "../styles/WaitingRoom.module.scss";
 import { LuCrown } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
@@ -22,6 +22,9 @@ const WaitingRoom: React.FC = () => {
   const navigate = useNavigate();
   const socket = useSocket();
 
+  const [showModal, setShowModal] = useState(false); // Kontroluje widoczność modala
+  const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null); // Przechowuje wybranego gracza
+
   //TODO: make settings for an owner of the room
   //TODO: make invite link/ player
   //TODO: make player unable to join the same game twice and more
@@ -36,6 +39,19 @@ const WaitingRoom: React.FC = () => {
   function giveOwner(username: string) {
     socket.emit("give_owner", username);
   }
+
+  function handleGiveOwnerClick(playerUsername: string) {
+    setSelectedPlayer(playerUsername);
+    setShowModal(true);
+  }
+
+  function confirmGiveOwner() {
+    if (selectedPlayer) {
+      giveOwner(selectedPlayer);
+    }
+    setShowModal(false);
+  }
+
   useEffect(() => {
     if (!game) {
       navigate("/profile");
@@ -68,12 +84,13 @@ const WaitingRoom: React.FC = () => {
                         key={player.username}
                       >
                         {player.username}
-                        {/* Tu możesz gosia zrobić modal z potwierdzeniem */}
                         {user.username === game.owner.username && (
                           <div>
                             <button
                               className={styles.giveBtn}
-                              onClick={() => giveOwner(player.username!)}
+                              onClick={() =>
+                                handleGiveOwnerClick(player.username!)
+                              }
                             >
                               <IoMdArrowUp className={styles.playerAction2} />
                             </button>
@@ -93,8 +110,6 @@ const WaitingRoom: React.FC = () => {
               </div>
               <div className={styles.actionButtons}>
                 <div className={styles.buttonStart}>Rozpocznij grę</div>
-
-                {/* Tu możesz gosia zrobić modal z potwierdzeniem */}
                 <div className={styles.buttonLeave} onClick={leaveGame}>
                   Opuść grę
                 </div>
@@ -103,6 +118,27 @@ const WaitingRoom: React.FC = () => {
           </div>
         </div>
       </Container>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        centered
+        className={styles.modalCenter}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Zmiana właściciela pokoju</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Czy na pewno chcesz zmienić właściciela pokoju na {selectedPlayer}?
+        </Modal.Body>
+        <Modal.Footer className={styles.modalButtons}>
+          <Button variant="primary" onClick={confirmGiveOwner}>
+            Tak, zmień właściciela
+          </Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Anuluj
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

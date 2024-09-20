@@ -142,3 +142,12 @@ $sidebar-half-width: 45px;
 .giveBtn:hover {
   color: rgba(0, 0, 0, 0.6);
 }
+
+.modalCenter {
+  left: 45px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+}
