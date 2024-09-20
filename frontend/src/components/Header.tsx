@@ -21,18 +21,16 @@ const Header = () => {
     }
   };
 
-  //TODO: make logout work
   //TODO: make edit profile work
   const handleLogout = () => {
-    console.log("Wylogowano!");
-    navigate("/login");
+    navigate("/logout");
   };
 
   return (
     <>
       <header className={`${styles.headerTopStrip} p-1`}>
         <div className={styles.headerContent}>
-          <Link to="/home" className={styles.logo}>
+          <Link to="/" className={styles.logo}>
             Quiz
           </Link>
           <div className={styles.iconContainer}>
