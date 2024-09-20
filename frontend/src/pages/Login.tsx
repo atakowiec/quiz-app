@@ -11,12 +11,14 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {State} from "../store";
 import {userActions, UserState} from "../store/userSlice.ts";
+import { useSocket } from "../socket/useSocket.ts";
 
 const Login = () => {
   const [error, setError] = useState("");
   const user = useSelector<State, UserState>(state => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const socket = useSocket();
 
   const loginSchema = yup.object({
     username: yup.string().required("Proszę wprowadzić login"),
@@ -37,6 +39,7 @@ const Login = () => {
           }
 
           dispatch(userActions.setUser(response.data));
+          socket.connect();
           navigate("/");
         })
         .catch((error: AxiosError) => {

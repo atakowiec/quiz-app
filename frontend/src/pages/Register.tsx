@@ -12,8 +12,10 @@ import {UserPacket} from "@shared/user";
 import {useDispatch, useSelector} from "react-redux";
 import {userActions, UserState} from "../store/userSlice.ts";
 import {State} from "../store";
+import { useSocket } from "../socket/useSocket.ts";
 
 const Register = () => {
+  const socket = useSocket();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector<State, UserState>(state => state.user)
@@ -48,6 +50,7 @@ const Register = () => {
           return; // should never happen
 
         dispatch(userActions.setUser(res.data));
+        socket.connect();
         navigate("/");
       }).catch((err: AxiosError<any>) => {
         if (err.status === 409) {

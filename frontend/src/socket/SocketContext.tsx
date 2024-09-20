@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useMemo } from "react";
+import { ReactNode, createContext, useEffect, useMemo } from "react";
 import { io, Socket } from "socket.io-client";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/socket";
 import { useDispatch } from "react-redux";
@@ -33,9 +33,16 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       dispatch(gameActions.updateGame(game))
     );
 
-    newSocket.on("exception", (message) => toast.error(message.toString()));
-    newSocket.on("notification", (message) => toast.info(message.toString()));
+    newSocket.on("exception", (message) => toast.error(JSON.stringify(message)));
+    newSocket.on("notification", (message) => toast.info(JSON.stringify(message)));
     return newSocket;
+  }, []);
+
+  // clean up the socket listeners
+  useEffect(() => {
+    return () => {
+      socket.offAny();
+    };
   }, []);
 
   return (
