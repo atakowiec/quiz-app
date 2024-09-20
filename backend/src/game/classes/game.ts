@@ -71,6 +71,7 @@ export default class Game {
 
     this.logger.log(`Player ${player.username} joined the game`);
   }
+
   public kick(username: string) {
     const player = this.players.find((player) => player.username === username);
     if (!player) {
@@ -177,5 +178,10 @@ export default class Game {
     member.sendGame();
 
     // TODO in the future there might be a need to send the game to all the players
+  }
+
+  start() {
+    this.gameStatus = "voting_phase";
+    this.broadcastUpdate({ status: this.gameStatus });
   }
 }

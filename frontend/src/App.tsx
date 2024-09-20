@@ -21,13 +21,14 @@ import { State } from "./store";
 import { GameState } from "./store/gameSlice.ts";
 import Home from "./pages/Home.tsx";
 import Categories from "./pages/Admin/Questions/Categories.tsx";
+import Game from "./pages/game/Game.tsx";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
   const socket = useSocket();
   const game = useSelector<State, GameState>((state) => state.game);
+  const navigate = useNavigate();
 
   // on start of the application check whether the user has some valid token
   useEffect(() => {
@@ -50,17 +51,28 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!game?.status) return;
+    if(!game?.status || game.status === "waiting_for_players")
+      return
 
-    if (game.status === "waiting_for_players") navigate("/queue");
-    else if (game.status === "voting_phase") navigate("/category");
-    else if (game.status === "question_phase") navigate("/question");
+    if(!window.location.pathname.includes('game')) {
+      navigate('/game');
+    }
 
-    // add route to game over screen
-  }, [game?.status, window.location.pathname]);
+  }, [window.location.pathname, game?.status]);
 
   // wait for the request to finish before rendering the app - this way we can avoid flickering
   if (!loaded) return null;
+
+  // this totally blocks other routes if the game already started
+  if(game && game.status !== "waiting_for_players") {
+    return (
+      <Routes>
+        <Route path="*" element={<Layout />}>
+          <Route path="*" element={<Game />} />
+        </Route>
+      </Routes>
+    )
+  }
 
   return (
     <>
@@ -73,7 +85,8 @@ function App() {
           <Route path="create-game" element={<CreateGame />} />
           <Route path="join-game" element={<JoinGame />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="/queue" element={<WaitingRoom />} />
+          <Route path="waiting-room" element={<WaitingRoom />} />
+          <Route path="game" element={<Game />} />
           <Route path="/question" element={<Question />} />
           <Route path="/category" element={<Category />} />
           <Route path="/admin/categories" element={<Categories />} />

@@ -10,6 +10,8 @@ import {
 } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const CreateGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -18,9 +20,10 @@ const CreateGame: React.FC = () => {
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
   const socket = useSocket();
+  const navigate = useNavigate();
 
   function onNewGame(gameType: string) {
-    socket.emit("create_game", gameType);
+    socket.emit("create_game", gameType, () => navigate("/waiting-room"));
   }
 
   return (

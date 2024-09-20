@@ -27,7 +27,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly jwtService: JwtService,
     @Inject(forwardRef(() => GameService))
     private readonly gameService: GameService
-  ) {}
+  ) {
+  }
 
   handleConnection(client: SocketType) {
     this.logger.log(`Client connected: ${client.data.username} [client.id]`);
@@ -61,6 +62,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log(
       `New game with id: ${game.id} created by ${ownerSocket.data.username}`
     );
+
+    // return something so the client can redirect to the waiting room
+    return game.id;
   }
 
   @SubscribeMessage("join_game")
@@ -124,5 +128,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
     game.giveOwner(username);
+  }
+
+  @SubscribeMessage("start_game")
+  startGame(@ConnectedSocket() ownerSocket: SocketType) {
+    const game = this.gameService.getGameByNickname(ownerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    if (game.owner.username !== ownerSocket.data.username) {
+      throw new WsException("Nie jesteś właścicielem gry!");
+    }
+    game.start();
   }
 }
