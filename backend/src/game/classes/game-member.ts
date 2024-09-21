@@ -12,7 +12,7 @@ export class GameMember {
   public question: IQuestion;
   public answersHistory: boolean[]
   public availableHelpers: HelperType[];
-  public chosenCategory: number;
+  public chosenCategory: number = -1;
   public chosenAnswer: IAnswer;
 
   // Propably for the "50/50" helper
@@ -38,6 +38,8 @@ export class GameMember {
   }
 
   getPacket(): IGameMember {
+    console.log(this.score)
+
     return {
       username: this.username,
       owner: this.game.owner === this,
@@ -48,6 +50,7 @@ export class GameMember {
       hiddenAnswers: this.hiddenAnswers,
       areAllAnswersHidden: this.areAllAnswersHidden,
       answerEndTime: this.answerEndTime,
+      answersHistory: this.answersHistory,
     };
   }
 

@@ -50,16 +50,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (ownerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
+
     const game = this.gameService.createGame(ownerSocket, createGameData);
     game.send(ownerSocket);
 
-    game.owner.sendNotification(
-      `Utworzono grę`
-    );
+    game.owner.sendNotification(`Utworzono grę`);
 
-    this.logger.log(
-      `New game with id: ${game.id} created by ${ownerSocket.data.username}`
-    );
+    this.logger.log(`New game with id: ${game.id} created by ${ownerSocket.data.username}`);
 
     // return something so the client can redirect to the waiting room
     // look at the "start_game" event call in the frontend app - there is acknowledgement
@@ -85,9 +82,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (game.players.length >= game.settings.max_number_of_players) {
       throw new WsException("Gra jest pełna!");
     }
-    const gameMember = game.join(playerSocket);
-    game.send();
-    gameMember.sendNotification(JSON.stringify(game.getPacket(gameMember)));
+    game.join(playerSocket);
+
+    return game.id;
   }
 
   @SubscribeMessage("leave_game")

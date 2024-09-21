@@ -12,7 +12,7 @@ export type ServerToClientEventsKeys = keyof ServerToClientEvents;
 
 export interface ClientToServerEvents {
   create_game: (gameMode: string, cb: () => void) => void;
-  join_game: (gameId: string) => void;
+  join_game: (gameId: string, cb: () => void) => void;
   leave_game: () => void;
   kick: (username: string) => void;
   give_owner: (username: string) => void;

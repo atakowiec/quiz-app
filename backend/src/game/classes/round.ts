@@ -4,6 +4,7 @@ import { Question } from "../../questions/entities/question.model";
 import { Category } from "../../questions/entities/category.model";
 import { ConfigService } from "@nestjs/config";
 import { GameMember } from "./game-member";
+import { Logger } from "@nestjs/common";
 
 /**
  * Represents a single round in the game - voting, selecting category, question phase
@@ -11,6 +12,7 @@ import { GameMember } from "./game-member";
  * Game consists of multiple rounds
  */
 export default class Round {
+  private logger: Logger;
   private configService: ConfigService;
   private game: Game;
 
@@ -21,22 +23,25 @@ export default class Round {
   public chosenCategory?: Category;
   public chosenQuestion?: Question;
 
+  public timeStart: number = -1;
   public timeEnd: number = -1;
   public onTimerEnd?: () => void;
 
   constructor(game: Game) {
     this.game = game;
     this.configService = game.gameService.configService;
+    this.logger = game.logger;
   }
 
   /**
    * Handles ticking the round timer and every players' timers - in question phase
    */
-  public tick() {
-    if (this.game.gameStatus == "question_phase") {
+  public async tick() {
+    this.logger.debug("tick, status: " + this.game.gameStatus);
+    if (this.game.gameStatus === "question_phase") {
       // check if every player answered the question - if so, end the question phase
       const time = Date.now();
-      const allAnswered = this.game.players.every(player => player.chosenAnswer != null || player.answerEndTime <= time);
+      const allAnswered = this.game.getAllPlayers().every(player => player.chosenAnswer != null || player.answerEndTime <= time);
 
       if (allAnswered) {
         this.endQuestionPhase();
@@ -45,19 +50,26 @@ export default class Round {
       return
     }
 
-    if (this.timeEnd == -1)
+    if (this.timeEnd == -1) {
       return;
+    }
 
-    if (this.timeEnd > Date.now())
+    if (this.timeEnd > Date.now()) {
       return;
+    }
 
-    this.onTimerEnd?.();
     this.timeEnd = -1;
+    this.onTimerEnd?.();
   }
 
   public setTimer(time: number, callback: () => void) {
-    this.timeEnd = Date.now() + time * 1000;
+    time = parseInt(time.toString());
+
+    this.timeStart = Date.now();
+    this.timeEnd = this.timeStart + time * 1000;
     this.onTimerEnd = callback;
+
+    this.logger.debug(`Timer set for ${time} seconds, start: ${this.timeStart}, end: ${this.timeEnd}, cb: ${callback}`);
   }
 
   /**
@@ -71,13 +83,14 @@ export default class Round {
    * Starts the voting phase - players choose the category
    */
   public async startVoting() {
+    this.logger.debug("Starting voting phase");
     await this.generateCategories();
 
-    this.game.players.forEach(player => player.chosenCategory = -1);
+    this.game.getAllPlayers().forEach(player => player.chosenCategory = -1);
     this.game.gameStatus = "voting_phase";
 
     // first set timer, then send game packet - players need to know the time
-    this.setTimer(this.configService.get("VOTING_TIME"), () => this.endVoting)
+    this.setTimer(this.configService.get("VOTING_TIME"), this.endVoting.bind(this));
 
     this.game.send();
   }
@@ -87,13 +100,14 @@ export default class Round {
    * If no category was chosen randomly select one
    */
   public async endVoting() {
+    this.logger.debug("End voting phase");
     this.chosenCategory = this.evaluateChosenCategory();
     this.questions = await this.generateRandomQuestions()
 
     // when the category is chosen start the selected category phase
     // players see the chosen category and can prepare for the questions
     this.game.gameStatus = "selected_category_phase";
-    this.setTimer(this.configService.get("SELECTED_CATEGORY_TIME_FIRST"), () => this.startQuestionPhase());
+    this.setTimer(this.configService.get("SELECTED_CATEGORY_TIME_FIRST"), this.startQuestionPhase.bind(this));
 
     this.game.send();
   }
@@ -102,11 +116,12 @@ export default class Round {
    * Starts the question phase - players answer the questions
    */
   public startQuestionPhase() {
+    this.logger.debug("Starting question phase");
     // get the next question
     this.chosenQuestion = this.questions[++this.questionIndex];
 
     // every game member should have its own question object with its own randomized answers
-    this.game.players.forEach(player => {
+    this.game.getAllPlayers().forEach(player => {
       player.chosenAnswer = null;
       player.hiddenAnswers = [];
       player.question = this.getRandomizedIQuestion();
@@ -116,9 +131,10 @@ export default class Round {
 
     // we set the timer for each player in the question phase - they have the same time to answer for now
     // the timer for the question phase is handled in the tick method
-    this.game.players.forEach(player => {
+    this.game.getAllPlayers().forEach(player => {
       player.timeToAnswer = this.game.settings.time_for_answer;
       player.answerEndTime = Date.now() + this.game.settings.time_for_answer * 1000;
+      this.timeStart = Date.now();
     });
 
     this.game.send();
@@ -128,15 +144,22 @@ export default class Round {
    * Ends the question phase - shows the results, updates the scores, starts the next selected category phase or ends the round
    */
   public endQuestionPhase() {
+    this.logger.debug("End question phase");
     this.game.gameStatus = "question_result_phase";
 
     // todo calculate the scores
-    if (this.questionIndex == this.game.settings.number_of_questions_per_round - 1) {
-      this.startLeaderboardPhase();
-      return
-    }
+    this.game.getAllPlayers().forEach(player => {
+      const correct = player.chosenAnswer == this.chosenQuestion.correctAnswer;
+      player.score += correct ? 1 : 0;
 
-    this.setTimer(this.configService.get("QUESTION_RESULT_TIME"), () => this.startSelectedCategoryPhase());
+      player.answersHistory.push(correct)
+    })
+
+    if (this.questionIndex == this.game.settings.number_of_questions_per_round - 1) {
+      this.setTimer(this.configService.get("QUESTION_RESULT_TIME"), this.startLeaderboardPhase.bind(this));
+    } else {
+      this.setTimer(this.configService.get("QUESTION_RESULT_TIME"), this.startSelectedCategoryPhase.bind(this));
+    }
     this.game.send();
   }
 
@@ -144,9 +167,10 @@ export default class Round {
    * Starts the next selected category phase - players see the chosen category
    */
   public startSelectedCategoryPhase() {
+    this.logger.debug("Starting selected category phase");
     this.chosenQuestion = null;
     this.game.gameStatus = "selected_category_phase";
-    this.setTimer(this.configService.get("SELECTED_CATEGORY_TIME"), () => this.startQuestionPhase());
+    this.setTimer(this.configService.get("SELECTED_CATEGORY_TIME"), this.startQuestionPhase.bind(this));
 
     this.game.send();
   }
@@ -155,14 +179,16 @@ export default class Round {
    * After all questions are answered, show the leaderboard for a few seconds and start the next round
    */
   private startLeaderboardPhase() {
+    this.logger.debug("Starting leaderboard phase");
     this.game.gameStatus = "leaderboard";
 
-    this.setTimer(10, () => this.endRound());
+    this.setTimer(10, this.endRound.bind(this));
 
     this.game.send();
   }
 
   private endRound() {
+    this.logger.debug("End round");
     this.game.nextRound();
   }
 
@@ -184,7 +210,7 @@ export default class Round {
   public evaluateChosenCategory(): Category {
     const votes = new Map<number, number>();
 
-    this.game.players.forEach(player => {
+    this.game.getAllPlayers().forEach(player => {
       if (player.chosenCategory == -1) return;
 
       if (!votes.has(player.chosenCategory)) {
@@ -242,16 +268,28 @@ export default class Round {
   }
 
   public getPacket(member: GameMember): GameRoundPacket {
+    const commonData = {
+      questionNumber: this.questionIndex + 1,
+      timerStart: this.timeStart,
+      timerEnd: this.game.gameStatus == "question_phase" ? member.answerEndTime : this.timeEnd,
+    }
+
     if (this.game.gameStatus == "voting_phase") {
       // categories are sent in the voting phase
       return {
-        categories: this.categories.map(category => category.toICategory()),
+        categories: this.categories.map(category => category.id),
+        ...commonData
       }
+    }
+
+    if (this.game.gameStatus == "question_result_phase") {
+      commonData["correctAnswer"] = this.chosenQuestion.correctAnswer;
     }
 
     return {
       category: this.chosenCategory,
-      question: member.question
+      question: member.question,
+      ...commonData
     }
   }
 

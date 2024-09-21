@@ -5,7 +5,8 @@ import { FaWrench } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
-import { useRef } from "react";
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   IoIosAddCircleOutline,
   IoIosPlay,
@@ -21,9 +22,10 @@ const JoinGame: React.FC = () => {
   ];
   const gameIdRef = useRef<HTMLInputElement>(null);
   const socket = useSocket();
+  const navigate = useNavigate();
 
   function onJoinGame() {
-    socket.emit("join_game", gameIdRef.current!.value);
+    socket.emit("join_game", gameIdRef.current!.value, () => navigate("/waiting-room"));
   }
 
   return (

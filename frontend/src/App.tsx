@@ -5,11 +5,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateGame from "./pages/CreateGame";
 import Profile from "./pages/Profile.tsx";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Logout from "./pages/Logout.tsx";
 import WaitingRoom from "./pages/WaitingRoom.tsx";
-import Question from "./pages/Question.tsx";
-import Category from "./pages/Category.tsx";
 import { useEffect, useState } from "react";
 import getApi from "./api/axios.ts";
 import { AxiosResponse } from "axios";
@@ -17,18 +15,25 @@ import { UserPacket } from "@shared/user";
 import { userActions } from "./store/userSlice.ts";
 import { useSocket } from "./socket/useSocket.ts";
 import JoinGame from "./pages/JoinGame.tsx";
-import { State } from "./store";
-import { GameState } from "./store/gameSlice.ts";
 import Home from "./pages/Home.tsx";
 import Categories from "./pages/Admin/Questions/Categories.tsx";
 import Game from "./pages/game/Game.tsx";
+import useApi from "./api/useApi.ts";
+import { globalDataActions } from "./store/globalDataSlice.ts";
+import { useGame } from "./store/gameSlice.ts";
 
 function App() {
   const dispatch = useDispatch();
   const [loaded, setLoaded] = useState(false);
   const socket = useSocket();
-  const game = useSelector<State, GameState>((state) => state.game);
+  const game = useGame();
   const navigate = useNavigate();
+  const categoriesData = useApi("/questions/categories", "get")
+
+  // on the start of the application fetch the categories and store them in the global state
+  useEffect(() => {
+    dispatch(globalDataActions.setData({ categories: categoriesData.data }));
+  }, [categoriesData]);
 
   // on start of the application check whether the user has some valid token
   useEffect(() => {
@@ -87,8 +92,6 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="waiting-room" element={<WaitingRoom />} />
           <Route path="game" element={<Game />} />
-          <Route path="/question" element={<Question />} />
-          <Route path="/category" element={<Category />} />
           <Route path="/admin/categories" element={<Categories />} />
         </Route>
       </Routes>

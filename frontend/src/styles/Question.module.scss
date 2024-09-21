@@ -30,6 +30,19 @@
   margin-top: 1rem;
   font-weight: 400;
   width: 95%;
+
+  &.selected {
+    box-sizing: border-box;
+    border: 1px solid #2bc440;
+  }
+
+  &.correctAnswer {
+    background-color: #2bc440;
+  }
+
+  &.incorrectAnswer {
+    background-color: #FF4949;
+  }
 }
 
 .lifebouys {

@@ -1,16 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { GameSettings, GameStatus, GameType, GameUpdatePacket, IGameMember } from "@shared/game";
+import {
+  GameUpdatePacket,
+  IGamePacket
+} from "@shared/game";
 import lodash from 'lodash';
+import { State } from "./index.ts";
+import { useSelector } from "react-redux";
 
-export type GameState = {
-  id: string;
-  owner: IGameMember;
-  players?: Partial<IGameMember>[];
-  settings: GameSettings;
-  gameType: GameType;
-  status: GameStatus;
-  winner?: Partial<IGameMember>;
-} | null;
+export type GameState = IGamePacket | null;
 
 const gameSlice = createSlice({
   name: "game",
@@ -30,8 +27,17 @@ const gameSlice = createSlice({
       const newState = lodash.merge(state, updatePacket);
 
       // if there are no players or no update for the players we can return the new state with previous players
-      if(!playersUpdate) {
+      if (!playersUpdate) {
         return newState;
+      }
+
+      // merge the `player` and `owner` members if the update packet of players contains them
+      if (playersUpdate.find(p => p.username === newState.owner?.username)) {
+        newState.owner = lodash.merge(newState.owner, playersUpdate.find(p => p.username === newState.owner?.username));
+      }
+
+      if (playersUpdate.find(p => p.username === newState.player?.username)) {
+        newState.player = lodash.merge(newState.player, playersUpdate.find(p => p.username === newState.player?.username));
       }
 
       // iterate over the players and update them - hopefully it will work
@@ -48,3 +54,5 @@ const gameSlice = createSlice({
 export const gameActions = gameSlice.actions;
 
 export default gameSlice;
+
+export const useGame = () => useSelector((state: State) => state.game);

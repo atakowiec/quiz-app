@@ -13,7 +13,7 @@ import { Logger } from "@nestjs/common";
 import Round from "./round";
 
 export default class Game {
-  private readonly logger: Logger;
+  readonly logger: Logger;
 
   public gameService: GameService;
   public readonly id: string;
@@ -62,21 +62,19 @@ export default class Game {
       owner: this.owner.getPacket(),
       player: member.getPacket(),
       round: this.round?.getPacket(member),
-      players: this.players.map((player) => player.getPacket()),
+      players: this.getAllPlayers().map((player) => player.getPacket()),
     };
   }
 
   public getPlayer(socket: SocketType): GameMember {
-    return [this.owner, ...this.players].find((player) => player.socket.id === socket.id);
+    return this.getAllPlayers().find((player) => player.socket.id === socket.id);
   }
 
   public destroy() {
-    this.players.forEach((player) => {
+    this.getAllPlayers().forEach((player) => {
       player.socket.leave(this.id);
       delete player.socket.data.gameId;
     });
-    this.owner.socket.leave(this.id);
-    delete this.owner.socket.data.gameId;
   }
 
   /**
@@ -84,7 +82,7 @@ export default class Game {
    *
    * @param playerSocket - the socket of the player
    */
-  public join(playerSocket: SocketType): GameMember {
+  public join(playerSocket: SocketType) {
     const player = new GameMember(playerSocket, this);
     this.players.push(player);
     player.socket.join(this.id);
@@ -92,7 +90,8 @@ export default class Game {
 
     this.logger.log(`Player ${player.username} joined the game`);
 
-    return player;
+    this.send();
+    player.sendNotification("Dołączono do gry!");
   }
 
   public kick(username: string) {
@@ -103,9 +102,7 @@ export default class Game {
 
     player.socket.leave(this.id);
     delete player.socket.data.gameId;
-    this.players = this.players.filter(
-      (player) => player.username !== username
-    );
+    this.players = this.players.filter((player) => player.username !== username);
     player.socket.emit("set_game", null);
     player.socket.emit("notification", "Zostałeś wyrzucony z gry");
 
@@ -122,9 +119,7 @@ export default class Game {
 
     const oldOwner = this.owner;
     this.owner = player;
-    this.players = this.players.filter(
-      (player) => player.username !== username
-    );
+    this.players = this.players.filter((player) => player.username !== username);
     this.players.push(oldOwner);
     player.socket.emit("notification", "Zostałeś właścicielem gry");
 
@@ -133,15 +128,14 @@ export default class Game {
 
   public send(socket?: SocketType) {
     if (socket) {
-      socket.emit("set_game", this.getPacket(this.players.find((player) => player.socket.id === socket.id)));
+      socket.emit("set_game", this.getPacket(this.getPlayer(socket)));
     } else {
-      this.owner.sendGame();
-      this.players.forEach((player) => player.sendGame());
+      this.getAllPlayers().forEach((player) => player.sendGame());
     }
   }
 
   public broadcastUpdate(updatePacket: GameUpdatePacket) {
-    [this.owner, ...this.players].forEach((player) =>
+    this.getAllPlayers().forEach((player) =>
       player.sendGameUpdate(updatePacket)
     );
   }
@@ -151,10 +145,7 @@ export default class Game {
       return;
     }
 
-    const playerOrOwner =
-      this.owner.socket.id === playerSocket.id
-        ? this.owner
-        : this.players.find((player) => player.socket.id === playerSocket.id);
+    const playerOrOwner = this.getPlayer(playerSocket);
     if (!playerOrOwner) {
       return;
     }
@@ -182,9 +173,7 @@ export default class Game {
 
   reconnect(client: SocketType) {
     // find the game member
-    const member = [this.owner, ...this.players].find(
-      (player) => player.username === client.data.username
-    );
+    const member = this.getPlayer(client);
 
     if (!member) return;
 
@@ -211,7 +200,7 @@ export default class Game {
     this.round = new Round(this);
 
     // todo here we should get stats from GameMember and save somewhere, for now I am just clearing it
-    this.players.forEach(player => {
+    this.getAllPlayers().forEach(player => {
       player.chosenCategory = -1;
       player.chosenAnswer = null;
       player.answersHistory = [];
@@ -223,19 +212,28 @@ export default class Game {
   selectCategory(playerSocket: SocketType, categoryId: number) {
     const player = this.getPlayer(playerSocket);
     if (!player) {
+      console.log("Player not found");
       return;
     }
 
-    if(this.gameStatus !== "voting_phase") {
+    if (this.gameStatus !== "voting_phase") {
       player.sendNotification("Nie możesz teraz tego zrobić!");
       return;
     }
 
-    if(player.chosenCategory !== -1) {
+    console.log(player.chosenCategory, categoryId);
+    if (player.chosenCategory !== -1) {
       return;
     }
 
     player.chosenCategory = categoryId;
+
+    this.broadcastUpdate({
+      players: [{
+        username: player.username,
+        chosenCategory: categoryId
+      }]
+    })
   }
 
   selectAnswer(playerSocket: SocketType, answer: string) {
@@ -244,23 +242,25 @@ export default class Game {
       return;
     }
 
-    if(this.gameStatus !== "question_phase") {
+    if (this.gameStatus !== "question_phase") {
       player.sendNotification("Nie możesz teraz tego zrobić!");
       return;
     }
 
-    if(player.chosenAnswer || player.answerEndTime <= Date.now()) {
+    if (player.chosenAnswer || player.answerEndTime <= Date.now()) {
       return;
     }
 
     player.chosenAnswer = answer
-
-    player.answersHistory.push(player.chosenAnswer == this.round.chosenQuestion.correctAnswer);
 
     player.sendGameUpdate({
       player: {
         chosenAnswer: player.chosenAnswer
       }
     })
+  }
+
+  getAllPlayers() {
+    return [this.owner, ...this.players];
   }
 }
