@@ -11,9 +11,9 @@ import { TokenPayload } from "./auth";
 import { LoginDto } from "./dto/login.dto";
 import { UnauthorizedException } from "@nestjs/common/exceptions/unauthorized.exception";
 import { UserPacket } from "@shared/user";
-import { GameService } from "src/game/services/game.service";
 import { SocketType } from "src/game/game.types";
 import { parse } from "cookie";
+import { GameService } from "../game/services/game.service";
 
 @Injectable()
 export class AuthService {
@@ -128,7 +128,7 @@ export class AuthService {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  public async createJwt(user: User): Promise<string> {
+  public async createJwt(user: TokenPayload): Promise<string> {
     const tokenPayload: TokenPayload = {
       id: user.id,
       username: user.username,
@@ -151,6 +151,7 @@ export class AuthService {
       secure: false,
     });
   }
+
   public clearTokenFromSocket(socket: SocketType) {
     socket.handshake.headers.cookie = "";
   }
@@ -169,13 +170,26 @@ export class AuthService {
   public extractTokenPayloadFromRequest(req: Request): TokenPayload {
     return this.extractPayloadFromToken(this.extractTokenFromRequest(req));
   }
+
   public extractTokenPayloadFromSocket(socket: SocketType): TokenPayload {
     const token = parse(socket.handshake.headers.cookie).access_token;
     return this.extractPayloadFromToken(token);
   }
 
-  verify(req: Request) {
-    return req.user ?? {};
+  async verify(req: Request) {
+    if (!req.user?.username) {
+      return {}
+    }
+
+    if (this.gameService.isUsernameConnected(req.user.username)) {
+      this.clearTokenFromResponse(req.res);
+      throw new ConflictException("Użytkownik jest już połączony");
+    }
+
+    // regenerate token when user is verified
+    this.appendTokenToResponse(req.res, await this.createJwt(req.user));
+
+    return req.user;
   }
 
   async setNickname(username: string, request: Request, Response: Response) {
