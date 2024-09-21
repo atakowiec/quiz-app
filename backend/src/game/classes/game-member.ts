@@ -1,6 +1,7 @@
 import Game from "./game";
 import { SocketType } from "../game.types";
-import { Answer, Category, GameUpdatePacket, HelperType, IGameMember } from "@shared/game";
+import { IAnswer, GameUpdatePacket, HelperType, IGameMember, IQuestion } from "@shared/game";
+
 export class GameMember {
   public username: string;
   public socket: SocketType;
@@ -8,25 +9,30 @@ export class GameMember {
 
   public score: number;
 
-  public available_helpers: HelperType[];
-  public choosen_category: Category;
-  public choosen_answer: Answer;
-  public is_answer_correct: boolean;
+  public question: IQuestion;
+  public answersHistory: boolean[]
+  public availableHelpers: HelperType[];
+  public chosenCategory: number;
+  public chosenAnswer: IAnswer;
 
   // Propably for the "50/50" helper
-  public hidden_answers: Answer[];
+  public hiddenAnswers: IAnswer[];
 
   // Propably for the "Cheat from others" helper
-  public are_all_answers_hidden: boolean;
+  public areAllAnswersHidden: boolean;
 
   // For the "Extend time" helper
-  public time_to_answer: number;
+  public timeToAnswer: number;
+
+  // Holds the player's time to answer the question - in unix time
+  public answerEndTime: number;
 
   constructor(socket: SocketType, game: Game) {
     this.game = game;
     this.username = socket.data.username;
     this.socket = socket;
   }
+
   public sendNotification(message: string) {
     this.socket.emit("notification", message);
   }
@@ -36,18 +42,17 @@ export class GameMember {
       username: this.username,
       owner: this.game.owner === this,
       score: this.score,
-      available_helpers: this.available_helpers,
-      choosen_category: this.choosen_category,
-      choosen_answer: this.choosen_answer,
-      is_answer_correct: this.is_answer_correct,
-      hidden_answers: this.hidden_answers,
-      are_all_answers_hidden: this.are_all_answers_hidden,
-      time_to_answer: this.time_to_answer,
+      availableHelpers: this.availableHelpers,
+      chosenCategory: this.chosenCategory,
+      chosenAnswer: this.chosenAnswer,
+      hiddenAnswers: this.hiddenAnswers,
+      areAllAnswersHidden: this.areAllAnswersHidden,
+      answerEndTime: this.answerEndTime,
     };
   }
 
   sendGame() {
-    this.socket.emit("set_game", this.game.getPacket());
+    this.socket.emit("set_game", this.game.getPacket(this));
   }
 
   sendGameUpdate(updatePacket: GameUpdatePacket) {

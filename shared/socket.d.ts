@@ -17,6 +17,8 @@ export interface ClientToServerEvents {
   kick: (username: string) => void;
   give_owner: (username: string) => void;
   start_game: () => void;
+  select_category: (categoryId: number) => void;
+  select_answer: (answer: string) => void;
 }
 
 export type ClientToServerEventsKeys = keyof ClientToServerEvents;

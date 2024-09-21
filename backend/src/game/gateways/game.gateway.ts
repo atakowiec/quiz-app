@@ -9,7 +9,6 @@ import {
   WsException,
 } from "@nestjs/websockets";
 import { SocketServerType, SocketType } from "../game.types";
-import { JwtService } from "@nestjs/jwt";
 import { GameService } from "../services/game.service";
 import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
@@ -24,14 +23,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: SocketServerType;
 
   constructor(
-    private readonly jwtService: JwtService,
     @Inject(forwardRef(() => GameService))
     private readonly gameService: GameService
   ) {
   }
 
   handleConnection(client: SocketType) {
-    this.logger.log(`Client connected: ${client.data.username} [client.id]`);
+    this.logger.log(`Client connected: ${client.data.username} [${client.id}]`);
 
     this.gameService.getGameByNickname(client.data.username)?.reconnect(client);
   }
@@ -64,6 +62,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     );
 
     // return something so the client can redirect to the waiting room
+    // look at the "start_game" event call in the frontend app - there is acknowledgement
     return game.id;
   }
 
@@ -86,9 +85,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (game.players.length >= game.settings.max_number_of_players) {
       throw new WsException("Gra jest pełna!");
     }
-    game.join(playerSocket);
+    const gameMember = game.join(playerSocket);
     game.send();
-    playerSocket.emit("notification", JSON.stringify(game.getPacket()));
+    gameMember.sendNotification(JSON.stringify(game.getPacket(gameMember)));
   }
 
   @SubscribeMessage("leave_game")
@@ -131,14 +130,46 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("start_game")
-  startGame(@ConnectedSocket() ownerSocket: SocketType) {
+  async startGame(@ConnectedSocket() ownerSocket: SocketType) {
     const game = this.gameService.getGameByNickname(ownerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
+
     if (game.owner.username !== ownerSocket.data.username) {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
-    game.start();
+
+    if(game.gameType !== "single" && game.players.length == 0) {
+      throw new WsException("Nie można rozpocząć gry bez graczy!");
+    }
+
+    await game.start();
+  }
+
+  @SubscribeMessage("select_category")
+  selectCategory(
+    @ConnectedSocket() playerSocket: SocketType,
+    @MessageBody() categoryId: number
+  ) {
+    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+
+    game.selectCategory(playerSocket, categoryId);
+  }
+
+  @SubscribeMessage("select_answer")
+  selectAnswer(
+    @ConnectedSocket() playerSocket: SocketType,
+    @MessageBody() answer: string
+  ) {
+    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+
+    game.selectAnswer(playerSocket, answer);
   }
 }

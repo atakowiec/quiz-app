@@ -10,6 +10,7 @@ import {
   IGamePacket,
 } from "@shared/game";
 import { Logger } from "@nestjs/common";
+import Round from "./round";
 
 export default class Game {
   private readonly logger: Logger;
@@ -22,6 +23,8 @@ export default class Game {
   public gameStatus: GameStatus = "waiting_for_players";
   public settings: GameSettings;
   public gameType: GameType;
+
+  public round: Round;
 
   constructor(owner: SocketType, gameService: GameService, gameType: GameType) {
     this.gameService = gameService;
@@ -43,15 +46,28 @@ export default class Game {
     this.logger = new Logger(`game-${this.id}`);
   }
 
-  public getPacket(): IGamePacket {
+  /**
+   * This method is called every second
+   */
+  public tick() {
+    this.round?.tick()
+  }
+
+  public getPacket(member: GameMember): IGamePacket {
     return {
       id: this.id,
       status: this.gameStatus,
       gameType: this.gameType,
       settings: this.settings,
       owner: this.owner.getPacket(),
+      player: member.getPacket(),
+      round: this.round?.getPacket(member),
       players: this.players.map((player) => player.getPacket()),
     };
+  }
+
+  public getPlayer(socket: SocketType): GameMember {
+    return [this.owner, ...this.players].find((player) => player.socket.id === socket.id);
   }
 
   public destroy() {
@@ -63,13 +79,20 @@ export default class Game {
     delete this.owner.socket.data.gameId;
   }
 
-  public join(playerSocket: SocketType) {
+  /**
+   * Adds a player to the game and returns the GameMember object
+   *
+   * @param playerSocket - the socket of the player
+   */
+  public join(playerSocket: SocketType): GameMember {
     const player = new GameMember(playerSocket, this);
     this.players.push(player);
     player.socket.join(this.id);
     player.socket.data.gameId = this.id;
 
     this.logger.log(`Player ${player.username} joined the game`);
+
+    return player;
   }
 
   public kick(username: string) {
@@ -110,7 +133,7 @@ export default class Game {
 
   public send(socket?: SocketType) {
     if (socket) {
-      socket.emit("set_game", this.getPacket());
+      socket.emit("set_game", this.getPacket(this.players.find((player) => player.socket.id === socket.id)));
     } else {
       this.owner.sendGame();
       this.players.forEach((player) => player.sendGame());
@@ -180,8 +203,64 @@ export default class Game {
     // TODO in the future there might be a need to send the game to all the players
   }
 
-  start() {
-    this.gameStatus = "voting_phase";
-    this.broadcastUpdate({ status: this.gameStatus });
+  async start() {
+    this.nextRound();
+  }
+
+  nextRound() {
+    this.round = new Round(this);
+
+    // todo here we should get stats from GameMember and save somewhere, for now I am just clearing it
+    this.players.forEach(player => {
+      player.chosenCategory = -1;
+      player.chosenAnswer = null;
+      player.answersHistory = [];
+    });
+
+    this.round.start();
+  }
+
+  selectCategory(playerSocket: SocketType, categoryId: number) {
+    const player = this.getPlayer(playerSocket);
+    if (!player) {
+      return;
+    }
+
+    if(this.gameStatus !== "voting_phase") {
+      player.sendNotification("Nie możesz teraz tego zrobić!");
+      return;
+    }
+
+    if(player.chosenCategory !== -1) {
+      return;
+    }
+
+    player.chosenCategory = categoryId;
+  }
+
+  selectAnswer(playerSocket: SocketType, answer: string) {
+    const player = this.getPlayer(playerSocket);
+    if (!player) {
+      return;
+    }
+
+    if(this.gameStatus !== "question_phase") {
+      player.sendNotification("Nie możesz teraz tego zrobić!");
+      return;
+    }
+
+    if(player.chosenAnswer || player.answerEndTime <= Date.now()) {
+      return;
+    }
+
+    player.chosenAnswer = answer
+
+    player.answersHistory.push(player.chosenAnswer == this.round.chosenQuestion.correctAnswer);
+
+    player.sendGameUpdate({
+      player: {
+        chosenAnswer: player.chosenAnswer
+      }
+    })
   }
 }

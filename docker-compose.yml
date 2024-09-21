@@ -15,6 +15,7 @@ services:
     environment:
       PMA_HOST: quiz_database
       PMA_PORT: 3306
+      UPLOAD_LIMIT: 300M
     ports:
       - "5500:80"
     depends_on:

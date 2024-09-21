@@ -3,11 +3,14 @@ import { GameService } from "./services/game.service";
 import { GameGateway } from "./gateways/game.gateway";
 import { AuthModule } from "src/auth/auth.module";
 import { GameController } from "./game.controller";
+import { QuestionsModule } from "../questions/questions.module";
 
 @Module({
-  imports: [forwardRef(() => AuthModule)],
+  imports: [forwardRef(() => AuthModule),
+    QuestionsModule],
   providers: [GameService, GameGateway],
   controllers: [GameController],
-  exports: [GameService],
+  exports: [GameService, GameGateway],
 })
-export class GameModule {}
+export class GameModule {
+}
