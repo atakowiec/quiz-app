@@ -26,11 +26,11 @@ const JoinGame: React.FC = () => {
       <Meta title={"Dołącz do gry"} />
       <Breadcrumb title="Dołącz do gry" />
       <Sidebar items={sidebarItems} />
-      <Container className={styles.createContainer}>
+      <Container className={styles.mainContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
-            <div className={styles.createBox}>
-              <div className={styles.createText}>
+            <div className={styles.mainBox}>
+              <div className={styles.mainText}>
                 <FaWrench className="mb-2 fs-2" /> Dołącz do gry
               </div>
               <div className={styles.selectionBoxes}>

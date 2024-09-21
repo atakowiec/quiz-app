@@ -1,28 +1,7 @@
-$sidebar-width: 90px;
-$sidebar-half-width: 45px;
+@import "./Global.scss";
 
-.createContainer {
-  position: relative;
-  height: calc(100vh - 90px);
-  overflow: hidden;
-}
-
-.createBox {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
+.mainBox {
   left: calc(50% + #{$sidebar-half-width});
-  transform: translate(-50%, -50%);
-  width: calc(100% - #{$sidebar-width});
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  max-height: 100%;
 }
 
 .createText {

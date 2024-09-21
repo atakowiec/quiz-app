@@ -1,12 +1,14 @@
 .timeBarWrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 5rem;
+  position: absolute;
+  padding: 7.5rem 0rem;
+  width: 100%;
 }
 
 .timeBarContainer {
   width: 80%;
-  max-width: 800px;
+  max-width: 600px;
   height: 1rem;
   background-color: #ffffff;
   position: relative;

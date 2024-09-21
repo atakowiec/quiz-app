@@ -1,7 +1,11 @@
+@import "./Global.scss";
+
 .headerTopStrip {
   background-color: #0c1a25;
   color: white;
   padding: 1rem;
+  z-index: 1000;
+  position: relative;
 }
 
 .headerContent {
@@ -13,7 +17,7 @@
 }
 
 .logo {
-  font-size: 60px;
+  font-size: 2.5rem;
   padding: 0;
   font-weight: bold;
   color: white;
@@ -38,14 +42,14 @@
 }
 
 .loginButton {
-  border-radius: 10px;
+  border-radius: $button-border-radius;
   border: none;
-  padding: 0.35rem;
-  background-color: #06a53b;
+  padding: $button-padding;
+  background-color: $green;
   color: white;
-  font-weight: 500;
-  font-size: 1rem;
-  box-shadow: 0 4px 8px rgba(63, 155, 55, 0.26);
+  font-weight: $button-font-weight;
+  font-size: $button-font-size;
+  box-shadow: $button-shadow-green;
 }
 
 .loginButton:hover {

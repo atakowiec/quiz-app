@@ -27,7 +27,6 @@ const WaitingRoom: React.FC = () => {
   const [showModal, setShowModal] = useState(false); // Kontroluje widoczność modala
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null); // Przechowuje wybranego gracza
 
-
   useEffect(() => {
     if (!game) {
       navigate("/profile");
@@ -36,8 +35,7 @@ const WaitingRoom: React.FC = () => {
     }
   }, [game]);
 
-  if (!game)
-    return null;
+  if (!game) return null;
 
   //TODO: make settings for an owner of the room
   //TODO: make invite link/ player
@@ -73,20 +71,20 @@ const WaitingRoom: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Poczekalnia"}/>
-      <Breadcrumb title="Poczekalnia"/>
-      <Sidebar items={sidebarItems}/>
-      <Container className={styles.queueContainer}>
+      <Meta title={"Poczekalnia"} />
+      <Breadcrumb title="Poczekalnia" />
+      <Sidebar items={sidebarItems} />
+      <Container className={styles.mainContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
-            <div className={styles.queueBox}>
-              <div className={styles.queueText}>Poczekalnia</div>
+            <div className={styles.mainBox}>
+              <div className={styles.mainText}>Poczekalnia</div>
               <div className={styles.code}>Kod: {game?.id}</div>
-              <hr className={styles.line}/>
+              <hr className={styles.line} />
               <div className={styles.playersBox}>
                 <div className={styles.singlePlayer}>
                   {game?.owner.username}
-                  <LuCrown className={styles.playerAction}/>
+                  <LuCrown className={styles.playerAction} />
                 </div>
                 {game?.players && game.players.length > 0 && (
                   <>
@@ -104,14 +102,14 @@ const WaitingRoom: React.FC = () => {
                                 handleGiveOwnerClick(player.username!)
                               }
                             >
-                              <IoMdArrowUp className={styles.playerAction2}/>
+                              <IoMdArrowUp className={styles.playerAction2} />
                             </button>
 
                             <button
                               className={styles.kickBtn}
                               onClick={() => kickPlayer(player.username!)}
                             >
-                              <RxCross2 className={styles.playerAction}/>
+                              <RxCross2 className={styles.playerAction} />
                             </button>
                           </div>
                         )}
@@ -121,10 +119,11 @@ const WaitingRoom: React.FC = () => {
                 )}
               </div>
               <div className={styles.actionButtons}>
-                {
-                  user.username === game.owner.username &&
-                    <div className={styles.buttonStart} onClick={startGame}>Rozpocznij grę</div>
-                }
+                {user.username === game.owner.username && (
+                  <div className={styles.buttonStart} onClick={startGame}>
+                    Rozpocznij grę
+                  </div>
+                )}
 
                 <div className={styles.buttonLeave} onClick={leaveGame}>
                   Opuść grę

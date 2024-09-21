@@ -1,54 +1,7 @@
-$sidebar-width: 90px;
-$sidebar-half-width: 45px;
+@import "./Global.scss";
 
-.createContainer {
-  position: relative;
-  height: calc(100vh - 90px);
-  overflow: hidden;
-}
-
-.createBox {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
+.mainBox {
   left: calc(50% + #{$sidebar-half-width});
-  transform: translate(-50%, -50%);
-  width: calc(100% - #{$sidebar-width});
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-.createText {
-  background-color: #0c1a25;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 600;
-  padding: 0.5rem;
-  font-style: italic;
-  margin-bottom: 0.25rem;
-}
-
-.modeText {
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 600;
-  padding: 1rem 0 1rem 0;
-}
-
-.modeSelectionText,
-a {
-  font-size: 1.5rem;
-  font-weight: 300;
-  text-decoration: none;
 }
 
 .selectionBoxes {
@@ -57,37 +10,6 @@ a {
   justify-content: center;
   gap: 30px;
   margin-top: 1rem;
-}
-
-.selectionBoxes > div,
-.selectionBoxes > div > a {
-  flex: 1 1 calc(33% - 30px);
-  padding: 1rem;
-  background-color: #f0f4f3;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: auto;
-  color: black;
-}
-
-.selectionBoxes > div:hover,
-.selectionBoxes > div > a:hover {
-  background-color: rgba(43, 196, 64, 0.9);
-}
-
-.selectionBoxes .singlePlayer,
-.selectionBoxes .multiPlayer,
-.selectionBoxes .ranked {
-  display: block;
-  margin-top: 1rem;
-  font-size: 5rem;
 }
 
 // Media query dla ekranów mniejszych niż 1000px
@@ -102,14 +24,6 @@ a {
     font-size: 2rem;
   }
 
-  .modeText {
-    font-size: 1rem;
-  }
-
-  .modeSelectionText {
-    font-size: 1.25rem;
-  }
-
   .selectionBoxes {
     gap: 20px;
   }
@@ -117,27 +31,25 @@ a {
   .selectionBoxes > div {
     padding: 0.75rem;
   }
-
-  .selectionBoxes .singlePlayer,
-  .selectionBoxes .multiPlayer,
-  .selectionBoxes .ranked {
-    font-size: 4rem;
-  }
 }
+
 .createButton {
   text-align: center;
   margin-top: 1rem;
 }
 .createButton button {
-  background-color: #0c1a25;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
+  background-color: $green-black;
+  color: black;
+  font-weight: $button-font-weight;
+  padding: $button-padding;
   border: none;
-  border-radius: 10px;
+  border-radius: $button-border-radius;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  box-shadow: $button-shadow-black;
+
+  &:hover {
+    background-color: $button-green-hover;
+  }
 }
 .selectionBoxes input {
   border: 1px solid #ccc;
