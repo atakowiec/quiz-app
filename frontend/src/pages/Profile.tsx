@@ -27,10 +27,10 @@ const Profile: React.FC = () => {
       <Meta title={"Profil"} />
       <Breadcrumb title="Profil" />
       <Sidebar items={sidebarItems} />
-      <Container className={styles.profileContainer}>
+      <Container className={styles.mainContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6 d-flex align-items-center">
-            <div className={styles.profileMainBox}>
+            <div className={styles.mainBox}>
               <div className={styles.profileBox}>
                 <div className={styles.profilePic}>
                   <IoPersonSharp className={styles.personIcon} />

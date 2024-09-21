@@ -1,46 +1,7 @@
-$sidebar-width: 90px;
-$sidebar-half-width: 45px;
-
-.questionContainer {
-  position: relative;
-  height: calc(100vh - 30vh);
-  overflow: hidden;
-}
-
-.questionBox {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% - #{$sidebar-width});
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-.questionText {
-  text-transform: uppercase;
-  background-color: #0c1a25;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 600;
-  padding: 0.5rem;
-  font-style: italic;
-  margin-bottom: 0.25rem;
-}
+@import "./Global.scss";
 
 .question {
   text-align: center;
-  margin-top: 1rem;
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0;
@@ -83,6 +44,10 @@ $sidebar-half-width: 45px;
 }
 
 @media (max-width: 1000px) {
+  .mainContainer {
+    height: calc(60vh - $sidebar-width);
+  }
+
   .lifebouys {
     position: relative;
     top: auto;

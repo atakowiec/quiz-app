@@ -1,9 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
 
-html, body{
-    font-family: 'Inter', sans-serif;
-    background-color: #F0F4F3;
-    color: #0C1A25;
+html,
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f0f4f3;
+  color: #0c1a25;
+  font-size: 16px;
 }
 
+//colors
+$green: #06a53b;
+$blue: #0c1a25;
+$gray: #f0f4f3;
+$green-black: #2bc440;
+$button-gray: #e6e3e3;
+$button-green-hover: #17b42c;
+$button-gray-hover: #d9d9d9;
 
+//SideBar
+$sidebar-width: 68px;
+$sidebar-half-width: 34px;
+
+//Buttons
+$button-padding: 0.5rem 1rem;
+$button-font-size: 1rem;
+$button-font-weight: 500;
+$button-shadow-black: 0 2px 4px rgba(0, 0, 0, 0.2);
+$button-shadow-green: 0 4px 8px rgba(63, 155, 55, 0.26);
+$button-border-radius: 10px;
+
+//container
+$container-border-radius: 10px;
+$container-font-size: 2.15rem;
+$container-font-weight: 500;
+
+.mainContainer {
+  position: relative;
+  height: calc(90vh - $sidebar-width);
+}
+
+.mainBox {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.mainText {
+  background-color: $blue;
+  border-radius: $container-border-radius;
+  color: white;
+  text-align: center;
+  font-size: $container-font-size;
+  font-weight: $container-font-weight;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  position: sticky;
+}

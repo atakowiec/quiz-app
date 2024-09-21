@@ -1,65 +1,26 @@
-$sidebar-width: 90px;
-$sidebar-half-width: 45px;
-
-.categoryContainer {
-  position: relative;
-  height: calc(100vh - 90px);
-  overflow: hidden;
-}
-
-.categoryBox {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-.categoryText {
-  text-transform: uppercase;
-  background-color: #0c1a25;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 600;
-  padding: 0.5rem;
-  font-style: italic;
-  margin-bottom: 0.25rem;
-}
+@import "./Global.scss";
 
 .categoryChoiceBox {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
   border-radius: 10px;
-  padding-bottom: 1rem;
-  overflow-y: auto;
   flex-wrap: wrap;
+  overflow-y: auto;
 }
 
 .choice {
-  background-color: #f0f4f3;
-  border-radius: 10px;
+  background-color: $gray;
+  border-radius: $container-border-radius;
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-weight: 500;
-  margin: 1.5rem;
-  padding: 2rem;
+  font-weight: $container-font-weight;
+  margin: 1rem;
+  padding: 1rem;
   cursor: pointer;
   border: 2px solid #f0f4f3;
-  font-size: 1.25rem;
+  font-size: 1rem;
+  margin: 1rem;
 }
 
 .categoryIcon {
@@ -68,5 +29,5 @@ $sidebar-half-width: 45px;
 }
 
 .choice:hover {
-  border: 2px solid #2bc440; /* Dodanie zielonej ramki podczas najechania myszką */
+  border: 2px solid #2bc440;
 }

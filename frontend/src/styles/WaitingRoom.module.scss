@@ -1,46 +1,11 @@
-$sidebar-width: 90px;
-$sidebar-half-width: 45px;
+@import "./Global.scss";
 
-.queueContainer {
-  position: relative;
-  height: calc(100vh - 90px);
-  overflow: hidden;
-}
-
-.queueBox {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
+.mainBox {
   left: calc(50% + #{$sidebar-half-width});
-  transform: translate(-50%, -50%);
-  width: calc(100% - #{$sidebar-width});
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-.queueText {
-  text-transform: uppercase;
-  background-color: #0c1a25;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 600;
-  padding: 0.5rem;
-  font-style: italic;
-  margin-bottom: 0.25rem;
 }
 
 .code {
   text-align: center;
-  margin-top: 1rem;
   font-size: 1.25rem;
   font-weight: 500;
   margin-bottom: 0;
@@ -108,27 +73,27 @@ $sidebar-half-width: 45px;
 }
 
 .buttonStart {
-  background-color: #2bc440;
-  padding: 0.5rem;
-  border-radius: 10px;
+  background-color: $green-black;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: $button-shadow-black;
 }
 
 .buttonStart:hover {
-  background-color: #189929;
+  background-color: $button-green-hover;
 }
 
 .buttonLeave {
-  background-color: #e6e3e3;
-  padding: 0.5rem;
-  border-radius: 10px;
+  background-color: $button-gray;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: $button-shadow-black;
 }
 
 .buttonLeave:hover {
-  background-color: #d9d9d9;
+  background-color: $button-gray-hover;
 }
 .kickBtn,
 .giveBtn {

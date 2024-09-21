@@ -23,11 +23,12 @@ const Category: React.FC = () => {
     <div>
       <Meta title={"Question"} />
       <Breadcrumb title="Question" />
-      <Container className={styles.categoryContainer}>
+      <TimeBar timeElapsed={timeElapsed} totalTime={totalTime} />{" "}
+      <Container className={styles.mainContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
-            <div className={styles.categoryBox}>
-              <div className={styles.categoryText}>Wybór kategorii</div>
+            <div className={styles.mainBox}>
+              <div className={styles.mainText}>Wybór kategorii</div>
               <div className={styles.categoryChoiceBox}>
                 <div className={styles.choice}>
                   <FaEarthAfrica className={styles.categoryIcon} />
@@ -58,7 +59,6 @@ const Category: React.FC = () => {
           </div>
         </div>
       </Container>
-      <TimeBar timeElapsed={timeElapsed} totalTime={totalTime} />
     </div>
   );
 };

@@ -1,38 +1,4 @@
-.loginContainer {
-  position: relative;
-  height: calc(100vh - 90px);
-  overflow: hidden;
-}
-
-.loginBox {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80vw;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-.loginText {
-  background-color: #0c1a25;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 30px;
-  font-weight: 500;
-  padding: 0.5rem;
-  margin-bottom: 2.5rem;
-  position: sticky;
-}
+@import "./Global.scss";
 
 .loginForm {
   display: flex;
@@ -41,7 +7,7 @@
 }
 
 .formGroup {
-  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 .formControl {
@@ -69,20 +35,21 @@
 
 .submitButton {
   align-self: center;
-  background-color: #2bc440;
+  background-color: $green-black;
   border: none;
   color: #0c1a25;
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
-  font-size: 16px;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  font-size: $button-font-size;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 1rem;
-  font-weight: 500;
+  font-weight: $button-font-weight;
+  box-shadow: $button-shadow-black;
 }
 
 .submitButton:hover {
-  background-color: #06a53b;
+  background-color: $button-green-hover;
   color: #0c1a25;
 }
 

@@ -31,11 +31,11 @@ const CreateGame: React.FC = () => {
       <Meta title={"Stwórz grę"} />
       <Breadcrumb title="Stwórz grę" />
       <Sidebar items={sidebarItems} />
-      <Container className={styles.createContainer}>
+      <Container className={styles.mainContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
-            <div className={styles.createBox}>
-              <div className={styles.createText}>
+            <div className={styles.mainBox}>
+              <div className={styles.mainText}>
                 <FaWrench className="mb-2 fs-2" /> Stwórz Grę
               </div>
               <div className={styles.modeText}>Wybierz tryb gry</div>
