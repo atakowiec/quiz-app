@@ -101,13 +101,15 @@ const Register = () => {
                     onBlur={formik.handleBlur}
                     className={
                       formik.touched.email && formik.errors.email
-                        ? styles.error
+                        ? `${styles.error} ${styles.errorMargin}`
                         : ""
                     }
                     autoComplete="off"
                   />
                   {formik.touched.email && formik.errors.email && (
-                    <div className={styles.error}>{formik.errors.email}</div>
+                    <div className={`${styles.error} ${styles.errorMargin}`}>
+                      {formik.errors.email}
+                    </div>
                   )}
                 </div>
                 <div className={styles.formGroup}>
@@ -120,13 +122,15 @@ const Register = () => {
                     onBlur={formik.handleBlur}
                     className={
                       formik.touched.username && formik.errors.username
-                        ? styles.error
+                        ? `${styles.error} ${styles.errorMargin}`
                         : ""
                     }
                     autoComplete="off"
                   />
                   {formik.touched.username && formik.errors.username && (
-                    <div className="error">{formik.errors.username}</div>
+                    <div className={`${styles.error} ${styles.errorMargin}`}>
+                      {formik.errors.username}
+                    </div>
                   )}
                 </div>
                 <div className={styles.formGroup}>
@@ -139,13 +143,15 @@ const Register = () => {
                     onBlur={formik.handleBlur}
                     className={
                       formik.touched.password && formik.errors.password
-                        ? styles.error
+                        ? `${styles.error} ${styles.errorMargin}`
                         : ""
                     }
                     autoComplete="off"
                   />
                   {formik.touched.password && formik.errors.password && (
-                    <div className={styles.error}>{formik.errors.password}</div>
+                    <div className={`${styles.error} ${styles.errorMargin}`}>
+                      {formik.errors.password}
+                    </div>
                   )}
                 </div>
                 <div className={styles.formGroup}>
@@ -159,14 +165,14 @@ const Register = () => {
                     className={
                       formik.touched.confirmPassword &&
                       formik.errors.confirmPassword
-                        ? styles.error
+                        ? `${styles.error} ${styles.errorMargin}`
                         : ""
                     }
                     autoComplete="off"
                   />
                   {formik.touched.confirmPassword &&
                     formik.errors.confirmPassword && (
-                      <div className="error">
+                      <div className={`${styles.error} ${styles.errorMargin}`}>
                         {formik.errors.confirmPassword}
                       </div>
                     )}

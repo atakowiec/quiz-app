@@ -2,18 +2,18 @@
 - [ ] w trakcie gry - usunac z navbara profil
 - [ ] strona główna - jakeis grafiki
 - [ ] niezalogowany nie widzi historie gier i statystyk
-- [ ] po wejdziu w np stworz gre, sidebar ma zostac bez zmian - ten element nie znika
+- [X] po wejdziu w np stworz gre, sidebar ma zostac bez zmian - ten element nie znika
 - [ ] przy małych ekranach sidebar z ikonkami przechodzi na dół
 - [x] ujednolicic przyciski - te same paddingi, cienie itp
 - [x] ujednolicic tytuły stron - rozmiary, w sensie ten box np z POCZEKALNIA, Logowanie
 - [ ] w grze jak ktos sie wyloguje to go wywala z gry
-- [ ] logowanie i rejestracja za duzy margin top błędu przy inpucie
+- [x] logowanie i rejestracja za duzy margin top błędu przy inpucie
 - [x] header `z-index` na 1000, ogarnac sidebar tak zeby strona sie nie scrollowala, na header dac `position: relative`
 - [x] logo font-size zmniejszyc
 - [ ] globalny scss - https://github.com/atakowiec/bricks-battle-game/blob/master/bricks-battle-app/src/style/globals.module.scss
 - [ ] zablokować zalogowanie się na konto na które ktoś jest juz zalogowany - socket połączony - /auth/verify
 - [ ] w poczekalni można pedałować po całej apce, sidebar - stwórz/dolacz zmienia się na zielony przycisk "wroc do gry", /create-game itp przenosi do gry
-- [ ] naprawic czas w wyborze kategorii
+- [X] naprawic czas w wyborze kategorii
 - [ ] dodac komponenty placeholdery do brakujacych stron - ustawienia, staty itp
 - [ ] mocno przetestowac responsywnosc i naprawic 
 

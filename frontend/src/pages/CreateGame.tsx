@@ -1,7 +1,7 @@
 import { Breadcrumb, Container } from "react-bootstrap";
 import Meta from "../components/Meta";
 import styles from "../styles/CreateGame.module.scss";
-import { FaWrench, FaGamepad, FaPlay } from "react-icons/fa";
+import { FaWrench } from "react-icons/fa";
 import {
   IoPersonSharp,
   IoPeopleSharp,
@@ -12,11 +12,17 @@ import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  IoIosAddCircleOutline,
+  IoIosPlay,
+  IoLogoGameControllerB,
+} from "react-icons/io";
 
 const CreateGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
-    { icon: FaPlay, label: "Dołącz do gry", href: "/join-game" },
-    { icon: FaGamepad, label: "Historia Gier", href: "/games" },
+    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
+    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+    { icon: IoLogoGameControllerB, label: "Historia Gier", href: "/games" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
   const socket = useSocket();
