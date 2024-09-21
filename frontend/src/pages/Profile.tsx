@@ -1,6 +1,6 @@
 import React from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
-import { FaGamepad, FaPlay, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Meta from "../components/Meta";
 import Sidebar, { SidebarItem } from "../components/SideBar";
@@ -10,13 +10,17 @@ import { MdEdit } from "react-icons/md";
 import { SiDatadog } from "react-icons/si";
 import { useSelector } from "react-redux";
 import { State } from "../store";
-import { IoIosAddCircleOutline } from "react-icons/io";
+import {
+  IoIosAddCircleOutline,
+  IoIosPlay,
+  IoLogoGameControllerB,
+} from "react-icons/io";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
     { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: FaPlay, label: "Dołącz do gry", href: "/join-game" },
-    { icon: FaGamepad, label: "Historia Gier", href: "/games" },
+    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+    { icon: IoLogoGameControllerB, label: "Historia Gier", href: "/games" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
 

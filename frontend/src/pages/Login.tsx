@@ -79,7 +79,7 @@ const Login = () => {
                     onBlur={formik.handleBlur}
                     className={
                       formik.touched.username && formik.errors.username
-                        ? styles.error
+                        ? `${styles.error} ${styles.errorMargin}`
                         : ""
                     }
                     autoComplete="off"
@@ -98,7 +98,7 @@ const Login = () => {
                     onBlur={formik.handleBlur}
                     className={
                       formik.touched.password && formik.errors.password
-                        ? styles.error
+                        ? `${styles.error} ${styles.errorMargin}`
                         : ""
                     }
                     autoComplete="off"
