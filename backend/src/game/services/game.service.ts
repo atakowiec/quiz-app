@@ -45,10 +45,9 @@ export class GameService {
   }
 
   public getGameByNickname(username: string): Game {
-    return this.games.find(
-      (game) =>
-        game.owner.username.includes(username) ||
-        game.players.some((player) => player.username.includes(username))
+    return this.games.find((game) =>
+      game.owner.username === username ||
+      game.players.some((player) => player.username === username)
     );
   }
 

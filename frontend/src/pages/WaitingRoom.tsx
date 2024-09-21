@@ -88,7 +88,7 @@ const WaitingRoom: React.FC = () => {
                 </div>
                 {game?.players && game.players.length > 0 && (
                   <>
-                    {game.players.map((player) => (
+                    {game.players.filter(player => !player.owner).map((player) => (
                       <div
                         className={styles.singlePlayer}
                         key={player.username}

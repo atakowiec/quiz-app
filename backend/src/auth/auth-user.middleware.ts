@@ -26,7 +26,7 @@ export class AuthUserMiddleware implements NestMiddleware {
     try {
       const user = this.authService.extractTokenPayloadFromRequest(req) as TokenPayload;
 
-      this.logger.log(`Validating incoming token for user ${user.username}`);
+      this.logger.log(`[${req.baseUrl}] Validating incoming token for user ${user.username}`);
 
       if (user.id) {
         // the user is logged in - find the user in the database

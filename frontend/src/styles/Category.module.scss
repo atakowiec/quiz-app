@@ -20,14 +20,17 @@
   cursor: pointer;
   border: 2px solid #f0f4f3;
   font-size: 1rem;
-  margin: 1rem;
+
+  &:hover {
+    border: 2px solid #2bc440;
+  }
+
+  &.selected {
+    border: 2px solid #2bc440;
+  }
 }
 
 .categoryIcon {
   font-size: 4rem;
   margin-bottom: 0.5rem;
-}
-
-.choice:hover {
-  border: 2px solid #2bc440;
 }

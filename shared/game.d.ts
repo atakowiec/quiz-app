@@ -31,6 +31,7 @@ export interface IQuestion {
  * Represents an answer object that is sent to the client - without the correct flag
  */
 export type IAnswer = string;
+
 /**
  * Represents a game member object that is sent to the client
  */
@@ -44,6 +45,7 @@ export interface IGameMember {
   hiddenAnswers: IAnswer[];
   areAllAnswersHidden: boolean;
   answerEndTime: number;
+  answersHistory: boolean[]
 }
 
 export interface GameSettings {
@@ -58,6 +60,9 @@ export interface GameSettings {
 
 export type SettingType = keyof GameSettings;
 
+/**
+ * Represents a packet that stores all the information about the game for the client
+ */
 export interface IGamePacket {
   id: string;
   status: GameStatus;
@@ -70,6 +75,9 @@ export interface IGamePacket {
   winner?: Partial<IGameMember>;
 }
 
+/**
+ * Represents a packet that is sent to the client to update certain parts of the game state
+ */
 export interface GameUpdatePacket {
   status?: GameStatus;
   owner?: Partial<IGameMember>;
@@ -84,8 +92,11 @@ export interface GameUpdatePacket {
  * Holds volatile informaction strictly about the game round
  */
 export interface GameRoundPacket {
-  categories?: ICategory[];
+  categories?: number[];
   category?: ICategory;
   question?: IQuestion;
+  correctAnswer?: IAnswer;
+  timerStart?: number;
   timerEnd?: number;
+  questionNumber?: number;
 }
