@@ -6,6 +6,7 @@ export class GameMember {
   public username: string;
   public socket: SocketType;
   public game: Game;
+  public disconnectTimeout: NodeJS.Timeout;
 
   public score: number;
 
@@ -57,5 +58,18 @@ export class GameMember {
 
   sendGameUpdate(updatePacket: GameUpdatePacket) {
     this.socket.emit("update_game", updatePacket);
+  }
+
+  setDisconnectTimeout(cb: () => void) {
+    if(this.disconnectTimeout) {
+      clearTimeout(this.disconnectTimeout);
+    }
+
+    this.disconnectTimeout = setTimeout(cb, 1000 * 60);
+  }
+
+  clearDisconnectTimeout() {
+    clearTimeout(this.disconnectTimeout);
+    this.disconnectTimeout = null;
   }
 }

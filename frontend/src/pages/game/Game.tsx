@@ -3,7 +3,6 @@ import { State } from "../../store";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
 import CategoryVotingPhase from "./CategoryVotingPhase.tsx";
 import SelectedCategoryPhase from "./SelectedCategoryPhase.tsx";
 import QuestionPhase from "./QuestionPhase.tsx";
@@ -16,7 +15,6 @@ export default function Game() {
 
   useEffect(() => {
     if (shouldRedirect) {
-      toast.error("Nie jesteś w grze lub gra nie została jeszcze rozpoczęta");
       navigate('/profile');
     }
   }, []);

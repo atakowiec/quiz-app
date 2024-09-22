@@ -68,7 +68,7 @@ export default class Game {
   }
 
   public getPlayer(socket: SocketType): GameMember {
-    return this.getAllPlayers().find((player) => player.socket.id === socket.id);
+    return this.getAllPlayers().find((player) => player.username === socket.data.username);
   }
 
   public destroy() {
@@ -141,34 +141,73 @@ export default class Game {
     );
   }
 
+  public broadcastNotification(message: string) {
+    this.getAllPlayers().forEach(player => player.sendNotification(message))
+  }
+
+  /**
+   * Handles ONLY leaving game peacefully using the 'leave' button
+   * Leaving game by disconnect is handled in this::onPlayerDisconnect
+   * But disconnecting in the waiting room or leaderboard calls this method
+   *
+   * @param playerSocket the socket that wants to leave the game
+   */
   leave(playerSocket: SocketType) {
-    if (this.gameStatus !== "waiting_for_players") {
+    if (!["leaderboard", "waiting_for_players"].includes(this.gameStatus)) {
       return;
     }
+    this.logger.log(`Player ${playerSocket.data.username} has left the game`);
 
     const playerOrOwner = this.getPlayer(playerSocket);
     if (!playerOrOwner) {
       return;
     }
-    playerSocket.emit("set_game", null);
 
-    playerOrOwner.socket.leave(this.id);
-    delete playerOrOwner.socket.data.gameId;
+    this.removePlayer(playerOrOwner)
+  }
 
-    // todo handle leaving during the game (maybe add a flag to the player and give them 60s to reconnect)
-    // todo send notifications that someone left the game
-    if (playerOrOwner === this.owner) {
+  /**
+   * Handles player disconnecting from the game
+   * @param playerSocket
+   */
+  onPlayerDisconnect(playerSocket: SocketType) {
+    if (["leaderboard", "waiting_for_players"].includes(this.gameStatus)) {
+      this.leave(playerSocket)
+      return;
+    }
+
+    const player = this.getPlayer(playerSocket);
+    if (!player) return;
+
+    this.logger.log(`Player ${player.username} disconnected from the game - waiting 60s before removing him`);
+    player.setDisconnectTimeout(() => {
+      this.removePlayer(player);
+    });
+  }
+
+  /**
+   * Force removes given game member from the game
+   */
+  removePlayer(gameMember: GameMember) {
+    this.logger.log(`Player ${gameMember.username} has been removed from the game`);
+    gameMember.socket.emit("set_game", null);
+
+    gameMember.socket.leave(this.id);
+    delete gameMember.socket.data.gameId;
+
+    if (gameMember === this.owner) {
       if (this.players.length > 0) {
         this.owner = this.players[0];
         this.players.shift();
         this.send();
+
+        this.broadcastNotification(`Właściciel pokoju opuścił grę, ${this.owner.username} zostaje nowym właścicielem.`)
       } else {
         this.gameService.removeGame(this);
       }
     } else {
-      this.players = this.players.filter(
-        (player) => player.socket.id !== playerSocket.id
-      );
+      this.players = this.players.filter((player) => player.socket.id !== gameMember.socket.id);
+      this.broadcastNotification(`${gameMember.username} opuścił grę.`)
 
       this.send();
     }
@@ -181,13 +220,18 @@ export default class Game {
     if (!member) return;
 
     if (member.socket.connected) {
+      this.logger.warn(`Player ${member.username} tried to reconnect, but he is already connected`);
       // todo lekka kraksa - ktos probuje sie polaczyc z drugiego konta - trzeba ukrócić takie wybryki
       return;
     }
+    this.logger.log(`Player ${member.username} reconnected to the game`);
+    this.broadcastNotification(`${member.username} wrócił do gry!`);
 
     // update the socket to the new one
     member.socket = client;
     member.socket.join(this.id);
+    member.clearDisconnectTimeout();
+    member.sendNotification("Ponownie połączono z grą!");
 
     // send the game to the client
     member.sendGame();
@@ -196,6 +240,7 @@ export default class Game {
   }
 
   async start() {
+    this.logger.log("Game started");
     this.nextRound();
   }
 
@@ -204,9 +249,7 @@ export default class Game {
 
     // todo here we should get stats from GameMember and save somewhere, for now I am just clearing it
     this.getAllPlayers().forEach(player => {
-      player.chosenCategory = -1;
-      player.chosenAnswer = null;
-      player.answersHistory = [];
+      player.score = 0;
     });
 
     this.round.start();
@@ -229,7 +272,11 @@ export default class Game {
 
     this.logger.log(`Player ${player.username} selected category ${categoryId}`);
     player.chosenCategory = categoryId;
-    this.round.setTimer(2, this.round.startSelectedCategoryPhase.bind(this.round));
+
+    // if everyone selected the category, we can move to the next phase
+    if (this.players.every(player => player.chosenCategory !== -1)) {
+      this.round.setTimer(2, this.round.endVoting.bind(this.round));
+    }
 
     this.broadcastUpdate({
       players: [{
