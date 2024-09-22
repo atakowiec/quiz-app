@@ -38,8 +38,6 @@ export class GameMember {
   }
 
   getPacket(): IGameMember {
-    console.log(this.score)
-
     return {
       username: this.username,
       owner: this.game.owner === this,
@@ -50,7 +48,6 @@ export class GameMember {
       hiddenAnswers: this.hiddenAnswers,
       areAllAnswersHidden: this.areAllAnswersHidden,
       answerEndTime: this.answerEndTime,
-      answersHistory: this.answersHistory,
     };
   }
 

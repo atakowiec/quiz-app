@@ -35,11 +35,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: SocketType) {
-    this.logger.log(
-      `Client disconnected: ${client.data.username} [${client.id}]`
-    );
+    this.logger.log(`Client disconnected: ${client.data.username} [${client.id}]`);
 
-    // this.gameService.getGameByNickname(client.data.username)?.leave(client);
+    this.gameService.getGameByNickname(client.data.username)?.leave(client);
   }
 
   @SubscribeMessage("create_game")
