@@ -35,8 +35,16 @@ export class AuthService {
       ],
     });
 
-    // below is detecting which field is causing the conflict
     const conflictErrors = [];
+    // first check if the user is already connected to the game
+    if(this.gameService.isUsernameConnected(createUserDto.username)) {
+      conflictErrors.push({
+        field: "username",
+        error: "Gracz z tą nazwą jest już połączony",
+      });
+    }
+
+    // below is detecting which field is causing the conflict
     if (user?.username === createUserDto.username) {
       conflictErrors.push({
         field: "username",
@@ -98,6 +106,10 @@ export class AuthService {
 
     if (!isPasswordValid) {
       throw new UnauthorizedException("Niepoprawne dane logowania");
+    }
+
+    if (this.gameService.isUsernameConnected(user.username)) {
+      throw new ConflictException("Użytkownik jest już połączony");
     }
 
     // create jwt and set cookie

@@ -86,7 +86,10 @@ export default class Round {
     this.logger.debug("Starting voting phase");
     await this.generateCategories();
 
-    this.game.getAllPlayers().forEach(player => player.chosenCategory = -1);
+    this.game.getAllPlayers().forEach(player => {
+      player.chosenCategory = -1
+      player.answersHistory = [];
+    });
     this.game.gameStatus = "voting_phase";
 
     // first set timer, then send game packet - players need to know the time

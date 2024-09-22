@@ -18,7 +18,7 @@ const SelectedCategoryPhase = () => {
         </p>
         <ul>
           {Array.from({length: game.settings.number_of_questions_per_round }, (_, i) => i).map((i) => {
-            const history = game.player.answersHistory;
+            const history = game.answersHistory;
             const answered = history.length > i;
 
             return (
