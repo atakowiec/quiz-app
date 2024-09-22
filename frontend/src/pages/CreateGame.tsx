@@ -17,6 +17,8 @@ import {
   IoIosPlay,
   IoLogoGameControllerB,
 } from "react-icons/io";
+import { useUser } from "../store/userSlice.ts";
+import { toast } from "react-toastify";
 
 const CreateGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -27,8 +29,15 @@ const CreateGame: React.FC = () => {
   ];
   const socket = useSocket();
   const navigate = useNavigate();
+  const user = useUser();
 
   function onNewGame(gameType: string) {
+    // todo allow not logged users to play the game - modal with username input
+    if(!user?.loggedIn) {
+      toast.error("Musisz być zalogowany, aby stworzyć grę");
+      return;
+    }
+
     socket.emit("create_game", gameType, () => navigate("/waiting-room"));
   }
 

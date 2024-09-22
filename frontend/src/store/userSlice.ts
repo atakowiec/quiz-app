@@ -1,5 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {UserPacket} from "@shared/user";
+import { useSelector } from "react-redux";
+import { State } from "./index.ts";
 
 export type UserState = {
   loggedIn: boolean;
@@ -38,3 +40,5 @@ const userSlice = createSlice({
 export const userActions = userSlice.actions;
 
 export default userSlice;
+
+export const useUser = () => useSelector((state: State) => state.user)

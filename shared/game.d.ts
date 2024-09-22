@@ -45,7 +45,6 @@ export interface IGameMember {
   hiddenAnswers: IAnswer[];
   areAllAnswersHidden: boolean;
   answerEndTime: number;
-  answersHistory: boolean[]
 }
 
 export interface GameSettings {
@@ -69,6 +68,7 @@ export interface IGamePacket {
   gameType: GameType;
   settings: GameSettings;
   round?: GameRoundPacket;
+  answersHistory: boolean[]
   owner: IGameMember;
   player: IGameMember;
   players?: Partial<IGameMember>[];
@@ -83,6 +83,7 @@ export interface GameUpdatePacket {
   owner?: Partial<IGameMember>;
   player?: Partial<IGameMember>;
   round?: GameRoundPacket;
+  answersHistory?: boolean[]
   players?: Partial<IGameMember>[];
   winner?: Partial<IGameMember>;
   settings?: Partial<GameSettings>;

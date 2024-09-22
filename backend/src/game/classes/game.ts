@@ -60,6 +60,7 @@ export default class Game {
       gameType: this.gameType,
       settings: this.settings,
       owner: this.owner.getPacket(),
+      answersHistory: member.answersHistory,
       player: member.getPacket(),
       round: this.round?.getPacket(member),
       players: this.getAllPlayers().map((player) => player.getPacket()),
@@ -154,6 +155,8 @@ export default class Game {
     playerOrOwner.socket.leave(this.id);
     delete playerOrOwner.socket.data.gameId;
 
+    // todo handle leaving during the game (maybe add a flag to the player and give them 60s to reconnect)
+    // todo send notifications that someone left the game
     if (playerOrOwner === this.owner) {
       if (this.players.length > 0) {
         this.owner = this.players[0];
@@ -212,7 +215,6 @@ export default class Game {
   selectCategory(playerSocket: SocketType, categoryId: number) {
     const player = this.getPlayer(playerSocket);
     if (!player) {
-      console.log("Player not found");
       return;
     }
 
@@ -221,12 +223,13 @@ export default class Game {
       return;
     }
 
-    console.log(player.chosenCategory, categoryId);
     if (player.chosenCategory !== -1) {
       return;
     }
 
+    this.logger.log(`Player ${player.username} selected category ${categoryId}`);
     player.chosenCategory = categoryId;
+    this.round.setTimer(2, this.round.startSelectedCategoryPhase.bind(this.round));
 
     this.broadcastUpdate({
       players: [{

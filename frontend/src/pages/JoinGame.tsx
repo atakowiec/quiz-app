@@ -12,6 +12,8 @@ import {
   IoIosPlay,
   IoLogoGameControllerB,
 } from "react-icons/io";
+import { useUser } from "../store/userSlice.ts";
+import { toast } from "react-toastify";
 
 const JoinGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -23,8 +25,15 @@ const JoinGame: React.FC = () => {
   const gameIdRef = useRef<HTMLInputElement>(null);
   const socket = useSocket();
   const navigate = useNavigate();
+  const user = useUser();
 
   function onJoinGame() {
+    if(!user?.loggedIn) {
+    // todo allow not logged users to play the game - modal with username input
+      toast.error("Musisz być zalogowany, aby dołączyć do gry");
+      return;
+    }
+
     socket.emit("join_game", gameIdRef.current!.value, () => navigate("/waiting-room"));
   }
 
