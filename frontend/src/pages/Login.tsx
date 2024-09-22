@@ -48,6 +48,10 @@ const Login = () => {
             return setError("Niepoprawny login lub hasło");
           }
 
+          if(error.status == 409) {
+            return setError("Użytkownik jest już połączony na innym urządzeniu");
+          }
+
           setError("Wystąpił błąd podczas logowania");
         });
     },
