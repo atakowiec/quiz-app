@@ -12,27 +12,6 @@
   margin-top: 1rem;
 }
 
-// Media query dla ekranów mniejszych niż 1000px
-@media (max-width: 1000px) {
-  .createBox {
-    width: calc(100% - #{$sidebar-width});
-    max-width: 60%;
-    padding: 1.5rem;
-  }
-
-  .createText {
-    font-size: 2rem;
-  }
-
-  .selectionBoxes {
-    gap: 20px;
-  }
-
-  .selectionBoxes > div {
-    padding: 0.75rem;
-  }
-}
-
 .createButton {
   text-align: center;
   margin-top: 1rem;

@@ -21,6 +21,7 @@ import Game from "./pages/game/Game.tsx";
 import useApi from "./api/useApi.ts";
 import { globalDataActions } from "./store/globalDataSlice.ts";
 import { useGame } from "./store/gameSlice.ts";
+import CategoryVotingPhase from "./pages/game/CategoryVotingPhase.tsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ function App() {
   const socket = useSocket();
   const game = useGame();
   const navigate = useNavigate();
-  const categoriesData = useApi("/questions/categories", "get")
+  const categoriesData = useApi("/questions/categories", "get");
 
   // on the start of the application fetch the categories and store them in the global state
   useEffect(() => {
@@ -56,27 +57,25 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(!game?.status || game.status === "waiting_for_players")
-      return
+    if (!game?.status || game.status === "waiting_for_players") return;
 
-    if(!window.location.pathname.includes('game')) {
-      navigate('/game');
+    if (!window.location.pathname.includes("game")) {
+      navigate("/game");
     }
-
   }, [window.location.pathname, game?.status]);
 
   // wait for the request to finish before rendering the app - this way we can avoid flickering
   if (!loaded) return null;
 
   // this totally blocks other routes if the game already started
-  if(game && game.status !== "waiting_for_players") {
+  if (game && game.status !== "waiting_for_players") {
     return (
       <Routes>
         <Route path="*" element={<Layout />}>
           <Route path="*" element={<Game />} />
         </Route>
       </Routes>
-    )
+    );
   }
 
   return (

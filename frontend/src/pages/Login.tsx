@@ -107,7 +107,11 @@ const Login = () => {
                     <div className={styles.error}>{formik.errors.password}</div>
                   )}
                 </div>
-                {error && <div className="error p-0 text-center">{error}</div>}
+                {error && (
+                  <div className={`${styles.error} p-0 text-center`}>
+                    {error}
+                  </div>
+                )}
                 <Button type="submit" className={styles.submitButton}>
                   Zaloguj się
                 </Button>

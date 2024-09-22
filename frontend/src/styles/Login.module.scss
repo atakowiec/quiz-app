@@ -1,5 +1,9 @@
 @import "./Global.scss";
 
+.mainContainer {
+  height: calc(90vh - $sidebar-width);
+}
+
 .loginForm {
   display: flex;
   flex-direction: column;
@@ -54,7 +58,7 @@
 
 .submitButton:hover {
   background-color: $button-green-hover;
-  color: #0c1a25;
+  color: $blue;
 }
 
 .registerLink {
@@ -69,8 +73,31 @@
   font-weight: 400;
 }
 
-@media (max-width: 768px) {
-  .loginBox {
-    width: 90vw;
+@media (max-width: 500px) {
+  .formControl {
+    font-size: $input-phone-font-size;
+    margin-bottom: 0.25rem;
+    padding: $input-phone-padding;
+
+    &::placeholder {
+      font-size: $input-phone-font-size;
+    }
+  }
+
+  .registerText {
+    font-size: 0.75rem;
+  }
+
+  .submitButton {
+    padding: $button-phone-padding;
+    font-size: $button-phone-font-size;
+  }
+
+  .errorMargin {
+    margin-bottom: 0;
+  }
+
+  .error {
+    font-size: $input-phone-font-size;
   }
 }

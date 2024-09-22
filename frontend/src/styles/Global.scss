@@ -29,14 +29,25 @@ $button-shadow-black: 0 2px 4px rgba(0, 0, 0, 0.2);
 $button-shadow-green: 0 4px 8px rgba(63, 155, 55, 0.26);
 $button-border-radius: 10px;
 
+//max 500px buttons
+$button-phone-padding: 0.5rem 0.75rem;
+$button-phone-font-size: 0.75rem;
+
 //container
 $container-border-radius: 10px;
 $container-font-size: 2.15rem;
 $container-font-weight: 500;
 
+//input
+
+//phone input
+$input-phone-font-size: 0.8rem;
+$input-phone-padding: 0.5rem;
+
 .mainContainer {
   position: relative;
   height: calc(90vh - $sidebar-width);
+  overflow-y: auto;
 }
 
 .mainBox {
@@ -67,4 +78,47 @@ $container-font-weight: 500;
   padding: 0.5rem;
   margin-bottom: 1rem;
   position: sticky;
+}
+
+@media (max-width: 1000px) {
+  .mainContainer {
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 500px) {
+  body {
+    font-size: 12px;
+  }
+
+  .mainBox {
+    left: 50% !important;
+    width: 70vw;
+    max-width: 500px;
+  }
+
+  .mainContainer {
+    height: calc(90vh - 2 * $sidebar-width);
+  }
+
+  .mainText {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  .selectionBoxes {
+    overflow-y: hidden;
+  }
+
+  .inputBox::placeholder {
+    font-size: 0.8rem;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 390px) {
+  .mainText {
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
 }
