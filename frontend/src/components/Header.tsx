@@ -35,10 +35,16 @@ const Header = () => {
           </Link>
           <div className={styles.iconContainer}>
             <Link to="/" className={`info ${styles.gap15}`}>
-              <IoInformationCircleOutline color="white" size="30px" />
+              <IoInformationCircleOutline
+                color="white"
+                className={styles.iconSize}
+              />
             </Link>
             <Link to="/" className={`notifications ${styles.gap15}`}>
-              <IoMdNotificationsOutline color="white" size="30px" />
+              <IoMdNotificationsOutline
+                color="white"
+                className={styles.iconSize}
+              />
             </Link>
             {user.loggedIn ? (
               <Dropdown align="end">
@@ -47,7 +53,10 @@ const Header = () => {
                   id="dropdown-basic"
                   className={`${styles.profile} ${styles.gap15}`}
                 >
-                  <IoPersonCircleOutline color="white" size="30px" />
+                  <IoPersonCircleOutline
+                    color="white"
+                    className={styles.iconSize}
+                  />
                 </Dropdown.Toggle>
 
                 {/* Menu rozwijane z opcjami */}

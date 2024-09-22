@@ -1,7 +1,7 @@
 @import "./Global.scss";
 
 .headerTopStrip {
-  background-color: #0c1a25;
+  background-color: $blue;
   color: white;
   padding: 1rem;
   z-index: 1000;
@@ -28,6 +28,10 @@
   display: flex;
 }
 
+.iconSize {
+  font-size: 2rem;
+}
+
 .iconContainer .gap15 {
   margin-left: 15px;
   display: flex;
@@ -36,7 +40,7 @@
 
 .profile {
   cursor: pointer;
-  background-color: #0c1a25;
+  background-color: $blue;
   border: none;
   padding: 0rem;
 }
@@ -61,5 +65,44 @@
 
   &:active {
     background-color: #0c1a25c0;
+  }
+}
+
+@media (max-width: 500px) {
+  .loginButton {
+    padding: $button-phone-padding;
+    font-size: $button-phone-font-size;
+  }
+}
+
+@media (max-width: 300px) {
+  .headerTopStrip {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .headerContent {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+  }
+
+  .logo {
+    font-size: 2rem;
+  }
+
+  .iconContainer {
+    font-size: 0.25rem;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .iconSize {
+    font-size: 1.5rem;
+  }
+
+  .loginButton {
+    font-size: 0.5rem;
   }
 }

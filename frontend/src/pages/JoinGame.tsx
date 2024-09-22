@@ -25,7 +25,9 @@ const JoinGame: React.FC = () => {
   const navigate = useNavigate();
 
   function onJoinGame() {
-    socket.emit("join_game", gameIdRef.current!.value, () => navigate("/waiting-room"));
+    socket.emit("join_game", gameIdRef.current!.value, () =>
+      navigate("/waiting-room")
+    );
   }
 
   return (
@@ -42,6 +44,7 @@ const JoinGame: React.FC = () => {
               </div>
               <div className={styles.selectionBoxes}>
                 <input
+                  className={styles.inputBox}
                   type={"text"}
                   placeholder={"Podaj ID gry"}
                   ref={gameIdRef}
