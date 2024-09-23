@@ -21,19 +21,28 @@ import { useUser } from "../store/userSlice.ts";
 import { toast } from "react-toastify";
 
 const CreateGame: React.FC = () => {
-  const sidebarItems: SidebarItem[] = [
-    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
-    { icon: IoLogoGameControllerB, label: "Historia Gier", href: "/games" },
-    { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-  ];
   const socket = useSocket();
   const navigate = useNavigate();
   const user = useUser();
 
+  const sidebarItems: SidebarItem[] = [
+    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
+    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+    ...(user.loggedIn
+      ? [
+          {
+            icon: IoLogoGameControllerB,
+            label: "Historia Gier",
+            href: "/games",
+          },
+          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
+        ]
+      : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
+  ];
+
   function onNewGame(gameType: string) {
     // todo allow not logged users to play the game - modal with username input
-    if(!user?.loggedIn) {
+    if (!user?.loggedIn) {
       toast.error("Musisz być zalogowany, aby stworzyć grę");
       return;
     }

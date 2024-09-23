@@ -1,7 +1,7 @@
 ## Poprawki frontend
-- [ ] w trakcie gry - usunac z navbara profil
-- [ ] strona główna - jakeis grafiki
-- [ ] niezalogowany nie widzi historie gier i statystyk
+- [x] w trakcie gry - usunac z navbara profil
+- [x] strona główna - jakeis grafiki
+- [x] niezalogowany nie widzi historie gier i statystyk
 - [X] po wejdziu w np stworz gre, sidebar ma zostac bez zmian - ten element nie znika
 - [X] przy małych ekranach sidebar z ikonkami przechodzi na dół
 - [x] ujednolicic przyciski - te same paddingi, cienie itp
@@ -11,11 +11,12 @@
 - [x] logowanie i rejestracja za duzy margin top błędu przy inpucie
 - [x] header `z-index` na 1000, ogarnac sidebar tak zeby strona sie nie scrollowala, na header dac `position: relative`
 - [x] logo font-size zmniejszyc
-- [ ] globalny scss - https://github.com/atakowiec/bricks-battle-game/blob/master/bricks-battle-app/src/style/globals.module.scss
+- [x] globalny scss - https://github.com/atakowiec/bricks-battle-game/blob/master/bricks-battle-app/src/style/globals.module.scss
 - [x] zablokować zalogowanie się na konto na które ktoś jest juz zalogowany - socket połączony - /auth/verify
 - [ ] w poczekalni można pedałować po całej apce, sidebar - stwórz/dolacz zmienia się na zielony przycisk "wroc do gry", /create-game itp przenosi do gry
 - [X] naprawic czas w wyborze kategorii
 - [x] czas responsywność
+- [ ] naprawić responsywność dla ekranów większych niż 2500 x 1080
 - [ ] dodac komponenty placeholdery do brakujacych stron - ustawienia, staty itp
 - [x] mocno przetestowac responsywnosc i naprawic 
 
