@@ -5,7 +5,7 @@
 - [X] po wejdziu w np stworz gre, sidebar ma zostac bez zmian - ten element nie znika
 - [X] przy małych ekranach sidebar z ikonkami przechodzi na dół
 - [x] ujednolicic przyciski - te same paddingi, cienie itp
-- [ ] ujednolicić przyciski- responsywność
+- [x] ujednolicić przyciski- responsywność
 - [x] ujednolicic tytuły stron - rozmiary, w sensie ten box np z POCZEKALNIA, Logowanie
 - [x] w grze jak ktos sie wyloguje to go wywala z gry
 - [x] logowanie i rejestracja za duzy margin top błędu przy inpucie
@@ -15,9 +15,9 @@
 - [x] zablokować zalogowanie się na konto na które ktoś jest juz zalogowany - socket połączony - /auth/verify
 - [ ] w poczekalni można pedałować po całej apce, sidebar - stwórz/dolacz zmienia się na zielony przycisk "wroc do gry", /create-game itp przenosi do gry
 - [X] naprawic czas w wyborze kategorii
-- [ ] czas responsywność
+- [x] czas responsywność
 - [ ] dodac komponenty placeholdery do brakujacych stron - ustawienia, staty itp
-- [ ] mocno przetestowac responsywnosc i naprawic 
+- [x] mocno przetestowac responsywnosc i naprawic 
 
 ## Ficzery
 - [x] nie mozna zmieniac wybranej kategorii
