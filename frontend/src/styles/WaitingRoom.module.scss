@@ -116,3 +116,21 @@
   display: flex;
   justify-content: space-between;
 }
+
+@media (max-width: 500px) {
+  .buttonLeave,
+  .buttonStart {
+    font-size: $button-phone-font-size;
+    padding: $button-phone-padding;
+  }
+
+  .code {
+    font-size: $code-phone-font-size-500;
+  }
+}
+
+@media (max-width: 300px) {
+  .code {
+    font-size: $code-phone-font-size-300;
+  }
+}

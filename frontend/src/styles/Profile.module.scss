@@ -57,6 +57,10 @@
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
 }
 
+.personEmail > span {
+  margin-left: 2rem;
+}
+
 .editIcon {
   cursor: pointer;
 }
@@ -122,4 +126,33 @@
   display: flex;
   justify-content: center;
   font-weight: 300;
+}
+
+@media (max-width: 500px) {
+  .personIcon {
+    font-size: 3rem;
+  }
+
+  .profilePic {
+    height: 5.5rem;
+  }
+
+  .friendsText {
+    font-size: 1.15rem;
+  }
+
+  .editPic {
+    position: absolute;
+    font-size: 1rem;
+  }
+  .friend {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .friendIcon {
+    font-size: 2.5rem;
+    align-items: center;
+  }
 }

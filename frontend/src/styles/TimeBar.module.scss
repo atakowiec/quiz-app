@@ -1,9 +1,12 @@
+@import "Global.scss";
+
 .timeBarWrapper {
   display: flex;
   justify-content: center;
-  position: absolute;
-  padding: 7.5rem 0rem;
+  position: relative;
   width: 100%;
+  margin-top: 7rem;
+  z-index: 998;
 }
 
 .timeBarContainer {
@@ -12,8 +15,7 @@
   height: 1rem;
   background-color: #ffffff;
   position: relative;
-  overflow: hidden;
-  border-radius: 10px;
+  border-radius: $container-border-radius;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -21,4 +23,21 @@
   height: 100%;
   background-color: #0c1a25;
   transition: width 0.25s ease;
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: $container-border-radius;
+}
+
+@media (max-width: 500px) {
+  .timeBarContainer {
+    width: 60%;
+    height: 0.75rem;
+  }
+}
+
+@media (max-width: 300px) {
+  .timeBarContainer {
+    height: 0.5rem;
+    margin-top: -1rem;
+  }
 }
