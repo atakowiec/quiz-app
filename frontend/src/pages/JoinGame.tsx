@@ -14,6 +14,7 @@ import {
 } from "react-icons/io";
 import { useUser } from "../store/userSlice.ts";
 import { toast } from "react-toastify";
+import useQueryParam from "../hooks/useQueryParam.ts";
 
 const JoinGame: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -26,6 +27,7 @@ const JoinGame: React.FC = () => {
   const socket = useSocket();
   const navigate = useNavigate();
   const user = useUser();
+  const codeQueryParam = useQueryParam("code");
 
   function onJoinGame() {
     if (!user?.loggedIn) {
@@ -56,6 +58,7 @@ const JoinGame: React.FC = () => {
                   className={styles.inputBox}
                   type={"text"}
                   placeholder={"Podaj ID gry"}
+                  defaultValue={codeQueryParam ?? ""}
                   ref={gameIdRef}
                 />
               </div>

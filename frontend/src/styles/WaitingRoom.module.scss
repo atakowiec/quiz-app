@@ -9,6 +9,34 @@
   font-size: 1.25rem;
   font-weight: 500;
   margin-bottom: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  & > span {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0 10px;
+    border-radius: $button-border-radius;
+    transition: all ease-in-out .1s;
+
+    &:hover {
+      background-color: $button-gray;
+      box-shadow: $button-shadow-black;
+    }
+  }
+
+  &.copying,
+  &.ending {
+    opacity: 0;
+  }
+
+  &.copied, &.ending {
+    user-select: none;
+  }
+
+  &.copied,
+  &.none {
+      opacity: 1;
+  }
 }
 
 .line {
@@ -95,6 +123,7 @@
 .buttonLeave:hover {
   background-color: $button-gray-hover;
 }
+
 .kickBtn,
 .giveBtn {
   border: 0;
