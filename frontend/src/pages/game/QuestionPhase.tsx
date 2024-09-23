@@ -13,15 +13,13 @@ const QuestionPhase = () => {
   const game = useGame();
   const socket = useSocket();
 
-  if (!game?.round?.question)
-    return null;
+  if (!game?.round?.question) return null;
 
   const resultShown = game.status === "question_result_phase";
   const selected = game.player.chosenAnswer;
 
   function selectAnswer(answer: string) {
-    if(game?.status !== "question_phase" || game?.player.chosenAnswer)
-      return
+    if (game?.status !== "question_phase" || game?.player.chosenAnswer) return;
 
     socket.emit("select_answer", answer);
   }
@@ -31,38 +29,56 @@ const QuestionPhase = () => {
   //TODO: add timer
   return (
     <>
-      <Meta title={"Question"}/>
-      <Breadcrumb title="Question"/>
-      <TimeBar/>{" "}
+      <Meta title={"Question"} />
+      <Breadcrumb title="Question" />
       <div className={styles.lifebouys}>
-        <LifeBouy icon={FaRegEye}/>
-        <LifeBouy icon={MdOutlineMoreTime}/>
-        <LifeBouy icon={MdQueryStats}/>
+        <LifeBouy icon={FaRegEye} />
+        <LifeBouy icon={MdOutlineMoreTime} />
+        <LifeBouy icon={MdQueryStats} />
       </div>
+      <TimeBar />{" "}
       <Container className={styles.mainContainer}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-4">
             <div className={styles.mainBox}>
-              <div className={styles.mainText}>Pytanie #{game.round.questionNumber}</div>
-              <div className={styles.question}> {game.round.question.text} </div>
+              <div className={styles.mainText}>
+                Pytanie #{game.round.questionNumber}
+              </div>
+              <div className={styles.question}>
+                {" "}
+                {game.round.question.text}{" "}
+              </div>
               <div className={styles.answersBox}>
                 {game.round.question.answers.map((answer) => {
                   const isSelected = selected === answer;
                   const isCorrect = game?.round?.correctAnswer === answer;
-                  const className = resultShown ? (isCorrect ? styles.correctAnswer : isSelected ? styles.incorrectAnswer : '') : isSelected ? styles.selected : '';
-                  const playersThatAnswered = !resultShown ? [] : game?.players?.filter(player => player.chosenAnswer === answer).map(player => player.username);
+                  const className = resultShown
+                    ? isCorrect
+                      ? styles.correctAnswer
+                      : isSelected
+                        ? styles.incorrectAnswer
+                        : ""
+                    : isSelected
+                      ? styles.selected
+                      : "";
+                  const playersThatAnswered = !resultShown
+                    ? []
+                    : game?.players
+                        ?.filter((player) => player.chosenAnswer === answer)
+                        .map((player) => player.username);
 
                   return (
-                    <div className={`${styles.answerBox} ${className}`} key={answer}
-                         onClick={() => selectAnswer(answer)}>
+                    <div
+                      className={`${styles.answerBox} ${className}`}
+                      key={answer}
+                      onClick={() => selectAnswer(answer)}
+                    >
                       {answer}
                       {playersThatAnswered && (
-                        <div>
-                          {playersThatAnswered.join(", ")}
-                        </div>
+                        <div>{playersThatAnswered.join(", ")}</div>
                       )}
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
