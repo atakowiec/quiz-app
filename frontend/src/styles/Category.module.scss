@@ -1,5 +1,26 @@
 @import "./Global.scss";
 
+.mainContainer {
+  height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+  padding: 0;
+  margin-bottom: 10%;
+  margin-top: 2rem;
+}
+
+.mainBox {
+  margin: 0;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
 .categoryChoiceBox {
   display: flex;
   justify-content: center;
@@ -34,3 +55,5 @@
   font-size: 4rem;
   margin-bottom: 0.5rem;
 }
+
+//pamietaj ze jak commit to tylko stylów a nie tsx!!!!!
