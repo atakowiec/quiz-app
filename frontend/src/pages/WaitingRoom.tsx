@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import Meta from "../components/Meta";
-import { Breadcrumb, Button, Container, Modal } from "react-bootstrap";
+import { Breadcrumb, Button, Container, Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "../styles/WaitingRoom.module.scss";
 import { LuCrown } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
@@ -13,12 +13,15 @@ import { useSocket } from "../socket/useSocket";
 import { IoMdArrowUp } from "react-icons/io";
 import { GameState } from "../store/gameSlice.ts";
 import { UserState } from "../store/userSlice.ts";
+import { FaCheck, FaLink } from "react-icons/fa6";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
     { icon: IoHomeSharp, label: "Powrót", href: "/" },
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
   ];
+  const [copyAnimationStage, setCopyAnimationStage] = useState("none" as "none" | "copying" | "copied" | "ending");
+
   const game: GameState = useSelector((state: State) => state.game);
   const user: UserState = useSelector((state: State) => state.user);
   const navigate = useNavigate();
@@ -69,6 +72,37 @@ const WaitingRoom: React.FC = () => {
     setShowModal(false);
   }
 
+  function copyId() {
+    const id = game?.id;
+    if (!id || copyAnimationStage !== "none") {
+      return;
+    }
+
+    navigator.clipboard.writeText(`http://localhost:5173/join-game?code=${id}`);
+
+    setCopyAnimationStage("copying");
+
+    setTimeout(() => {
+      setCopyAnimationStage("copied");
+    }, 300);
+
+    setTimeout(() => {
+      setCopyAnimationStage("ending");
+    }, 2000);
+
+    setTimeout(() => {
+      setCopyAnimationStage("none");
+    }, 2300);
+  }
+
+  function renderTooltip(props: any) {
+    return (
+      <Tooltip id="button-tooltip" {...props}>
+        Kliknij, aby skopiować link do pokoju
+      </Tooltip>
+    )
+  }
+
   return (
     <>
       <Meta title={"Poczekalnia"} />
@@ -79,7 +113,18 @@ const WaitingRoom: React.FC = () => {
           <div className="col-12 col-md-8 col-lg-4">
             <div className={styles.mainBox}>
               <div className={styles.mainText}>Poczekalnia</div>
-              <div className={styles.code}>Kod: {game?.id}</div>
+              <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
+                {["ending", "copied"].includes(copyAnimationStage) ?
+                  <><FaCheck/> Skopiowano!</>
+                  : <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 250, hide: 400 }}
+                    overlay={renderTooltip}
+                  >
+                    <span onClick={copyId}>Kod: {game?.id} <FaLink/></span>
+                  </OverlayTrigger>
+                }
+              </div>
               <hr className={styles.line} />
               <div className={styles.playersBox}>
                 <div className={styles.singlePlayer}>
