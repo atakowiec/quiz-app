@@ -17,17 +17,26 @@ import { toast } from "react-toastify";
 import useQueryParam from "../hooks/useQueryParam.ts";
 
 const JoinGame: React.FC = () => {
-  const sidebarItems: SidebarItem[] = [
-    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
-    { icon: IoLogoGameControllerB, label: "Historia Gier", href: "/games" },
-    { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-  ];
   const gameIdRef = useRef<HTMLInputElement>(null);
   const socket = useSocket();
   const navigate = useNavigate();
   const user = useUser();
   const codeQueryParam = useQueryParam("code");
+
+  const sidebarItems: SidebarItem[] = [
+    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
+    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+    ...(user.loggedIn
+      ? [
+          {
+            icon: IoLogoGameControllerB,
+            label: "Historia Gier",
+            href: "/games",
+          },
+          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
+        ]
+      : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
+  ];
 
   function onJoinGame() {
     if (!user?.loggedIn) {
