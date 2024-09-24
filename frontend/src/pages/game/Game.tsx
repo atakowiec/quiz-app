@@ -7,6 +7,7 @@ import CategoryVotingPhase from "./CategoryVotingPhase.tsx";
 import SelectedCategoryPhase from "./SelectedCategoryPhase.tsx";
 import QuestionPhase from "./QuestionPhase.tsx";
 import LeaderboardPhase from "./LeaderboardPhase.tsx";
+import GameOverPhase from "./GameOverPhase.tsx";
 
 export default function Game() {
   const game = useSelector<State, GameState>((state) => state.game);
@@ -15,7 +16,7 @@ export default function Game() {
 
   useEffect(() => {
     if (shouldRedirect) {
-      navigate('/profile');
+      navigate("/profile");
     }
   }, []);
 
@@ -26,13 +27,15 @@ export default function Game() {
   // todo some better handling of switching between phases, add some slide in/out animations
   switch (game.status) {
     case "voting_phase":
-      return <CategoryVotingPhase/>;
+      return <CategoryVotingPhase />;
     case "selected_category_phase":
-      return <SelectedCategoryPhase/>;
+      return <SelectedCategoryPhase />;
     case "question_phase":
     case "question_result_phase":
-      return <QuestionPhase/>
+      return <QuestionPhase />;
     case "leaderboard":
-      return <LeaderboardPhase/>;
+      return <LeaderboardPhase />;
+    case "game_over":
+      return <GameOverPhase />;
   }
 }

@@ -25,13 +25,14 @@ export default class Game {
   public gameType: GameType;
 
   public round: Round;
+  public roundNumber = 0;
 
   constructor(owner: SocketType, gameService: GameService, gameType: GameType) {
     this.gameService = gameService;
 
     this.settings = {
-      number_of_rounds: 5,
-      number_of_questions_per_round: 5,
+      number_of_rounds: 1,
+      number_of_questions_per_round: 1,
       number_of_categories_per_voting: 3,
       time_for_answer: 30,
       max_number_of_players: 49,
@@ -50,7 +51,7 @@ export default class Game {
    * This method is called every second
    */
   public tick() {
-    this.round?.tick()
+    this.round?.tick();
   }
 
   public getPacket(member: GameMember): IGamePacket {
@@ -68,7 +69,9 @@ export default class Game {
   }
 
   public getPlayer(socket: SocketType): GameMember {
-    return this.getAllPlayers().find((player) => player.username === socket.data.username);
+    return this.getAllPlayers().find(
+      (player) => player.username === socket.data.username
+    );
   }
 
   public destroy() {
@@ -103,7 +106,9 @@ export default class Game {
 
     player.socket.leave(this.id);
     delete player.socket.data.gameId;
-    this.players = this.players.filter((player) => player.username !== username);
+    this.players = this.players.filter(
+      (player) => player.username !== username
+    );
     player.socket.emit("set_game", null);
     player.socket.emit("notification", "Zostałeś wyrzucony z gry");
 
@@ -120,7 +125,9 @@ export default class Game {
 
     const oldOwner = this.owner;
     this.owner = player;
-    this.players = this.players.filter((player) => player.username !== username);
+    this.players = this.players.filter(
+      (player) => player.username !== username
+    );
     this.players.push(oldOwner);
     player.socket.emit("notification", "Zostałeś właścicielem gry");
 
@@ -142,7 +149,7 @@ export default class Game {
   }
 
   public broadcastNotification(message: string) {
-    this.getAllPlayers().forEach(player => player.sendNotification(message))
+    this.getAllPlayers().forEach((player) => player.sendNotification(message));
   }
 
   /**
@@ -163,7 +170,7 @@ export default class Game {
       return;
     }
 
-    this.removePlayer(playerOrOwner)
+    this.removePlayer(playerOrOwner);
   }
 
   /**
@@ -172,14 +179,16 @@ export default class Game {
    */
   onPlayerDisconnect(playerSocket: SocketType) {
     if (["leaderboard", "waiting_for_players"].includes(this.gameStatus)) {
-      this.leave(playerSocket)
+      this.leave(playerSocket);
       return;
     }
 
     const player = this.getPlayer(playerSocket);
     if (!player) return;
 
-    this.logger.log(`Player ${player.username} disconnected from the game - waiting 60s before removing him`);
+    this.logger.log(
+      `Player ${player.username} disconnected from the game - waiting 60s before removing him`
+    );
     player.setDisconnectTimeout(() => {
       this.removePlayer(player);
     });
@@ -189,7 +198,9 @@ export default class Game {
    * Force removes given game member from the game
    */
   removePlayer(gameMember: GameMember) {
-    this.logger.log(`Player ${gameMember.username} has been removed from the game`);
+    this.logger.log(
+      `Player ${gameMember.username} has been removed from the game`
+    );
     gameMember.socket.emit("set_game", null);
 
     gameMember.socket.leave(this.id);
@@ -201,13 +212,17 @@ export default class Game {
         this.players.shift();
         this.send();
 
-        this.broadcastNotification(`Właściciel pokoju opuścił grę, ${this.owner.username} zostaje nowym właścicielem.`)
+        this.broadcastNotification(
+          `Właściciel pokoju opuścił grę, ${this.owner.username} zostaje nowym właścicielem.`
+        );
       } else {
         this.gameService.removeGame(this);
       }
     } else {
-      this.players = this.players.filter((player) => player.socket.id !== gameMember.socket.id);
-      this.broadcastNotification(`${gameMember.username} opuścił grę.`)
+      this.players = this.players.filter(
+        (player) => player.socket.id !== gameMember.socket.id
+      );
+      this.broadcastNotification(`${gameMember.username} opuścił grę.`);
 
       this.send();
     }
@@ -220,7 +235,9 @@ export default class Game {
     if (!member) return;
 
     if (member.socket.connected) {
-      this.logger.warn(`Player ${member.username} tried to reconnect, but he is already connected`);
+      this.logger.warn(
+        `Player ${member.username} tried to reconnect, but he is already connected`
+      );
       // todo lekka kraksa - ktos probuje sie polaczyc z drugiego konta - trzeba ukrócić takie wybryki
       return;
     }
@@ -246,9 +263,10 @@ export default class Game {
 
   nextRound() {
     this.round = new Round(this);
+    this.roundNumber++;
 
     // todo here we should get stats from GameMember and save somewhere, for now I am just clearing it
-    this.getAllPlayers().forEach(player => {
+    this.getAllPlayers().forEach((player) => {
       player.score = 0;
     });
 
@@ -270,20 +288,24 @@ export default class Game {
       return;
     }
 
-    this.logger.log(`Player ${player.username} selected category ${categoryId}`);
+    this.logger.log(
+      `Player ${player.username} selected category ${categoryId}`
+    );
     player.chosenCategory = categoryId;
 
     // if everyone selected the category, we can move to the next phase
-    if (this.players.every(player => player.chosenCategory !== -1)) {
+    if (this.players.every((player) => player.chosenCategory !== -1)) {
       this.round.setTimer(2, this.round.endVoting.bind(this.round));
     }
 
     this.broadcastUpdate({
-      players: [{
-        username: player.username,
-        chosenCategory: categoryId
-      }]
-    })
+      players: [
+        {
+          username: player.username,
+          chosenCategory: categoryId,
+        },
+      ],
+    });
   }
 
   selectAnswer(playerSocket: SocketType, answer: string) {
@@ -301,13 +323,26 @@ export default class Game {
       return;
     }
 
-    player.chosenAnswer = answer
+    player.chosenAnswer = answer;
 
     player.sendGameUpdate({
       player: {
-        chosenAnswer: player.chosenAnswer
-      }
-    })
+        chosenAnswer: player.chosenAnswer,
+      },
+    });
+  }
+
+  public endGame() {
+    this.logger.log(`Game with id ${this.id} ended`);
+    this.gameStatus = "game_over";
+    this.broadcastUpdate({ status: "game_over" });
+
+    // TODO: save the game to the database
+    // TODO: calculate the winner
+
+    setTimeout(() => {
+      this.gameService.removeGame(this);
+    }, 10000);
   }
 
   getAllPlayers() {

@@ -4,7 +4,8 @@ export type GameStatus =
   | "selected_category_phase"
   | "question_phase"
   | "question_result_phase"
-  | "leaderboard";
+  | "leaderboard"
+  | "game_over";
 export type HelperType = "fifty_fifty" | "extend_time" | "cheat_from_others";
 
 export type GameType = "single" | "multi" | "ranked";
@@ -68,7 +69,7 @@ export interface IGamePacket {
   gameType: GameType;
   settings: GameSettings;
   round?: GameRoundPacket;
-  answersHistory: boolean[]
+  answersHistory: boolean[];
   owner: IGameMember;
   player: IGameMember;
   players?: Partial<IGameMember>[];
@@ -83,7 +84,7 @@ export interface GameUpdatePacket {
   owner?: Partial<IGameMember>;
   player?: Partial<IGameMember>;
   round?: GameRoundPacket;
-  answersHistory?: boolean[]
+  answersHistory?: boolean[];
   players?: Partial<IGameMember>[];
   winner?: Partial<IGameMember>;
   settings?: Partial<GameSettings>;
