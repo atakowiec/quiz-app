@@ -1,6 +1,7 @@
 ## Poprawki frontend
 
 - [x] w trakcie gry - usunac z navbara profil
+- [ ] zdjęcia w folderze public/assets i wtedy dostęp src={`/assets/categories/`}
 - [x] strona główna - jakeis grafiki
 - [x] niezalogowany nie widzi historie gier i statystyk
 - [x] po wejdziu w np stworz gre, sidebar ma zostac bez zmian - ten element nie znika
