@@ -3,10 +3,11 @@
 .timeBarWrapper {
   display: flex;
   justify-content: center;
-  position: relative;
+  position: absolute;
   width: 100%;
-  margin-top: 7rem;
+  margin-bottom: 2rem;
   z-index: 998;
+  margin-top: 2rem;
 }
 
 .timeBarContainer {
@@ -39,5 +40,11 @@
   .timeBarContainer {
     height: 0.5rem;
     margin-top: -1rem;
+  }
+}
+
+@media (min-height: 1100px) {
+  .timeBarWrapper {
+    margin-top: 3rem;
   }
 }

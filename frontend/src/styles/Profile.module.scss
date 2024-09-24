@@ -1,7 +1,7 @@
 @import "./Global.scss";
 
-.mainBox {
-  left: calc(50% + #{$sidebar-half-width});
+.mainContainer {
+  left: $sidebar-width;
 }
 
 .profileBox {
@@ -129,6 +129,10 @@
 }
 
 @media (max-width: 500px) {
+  .mainContainer {
+    left: 0;
+  }
+
   .personIcon {
     font-size: 3rem;
   }
