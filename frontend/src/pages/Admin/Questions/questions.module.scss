@@ -1,0 +1,18 @@
+ul:not(.questions) {
+  flex-direction: row !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchBar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  background-color: #f1f1f1;
+  padding: 0.5rem;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #d1d0d0;
+}

@@ -1,5 +1,6 @@
 import React from "react";
 import classes from "./styles/categoryElement.module.scss";
+import { Link } from "react-router-dom";
 
 interface CategoryElementProps {
   name: string;
@@ -9,11 +10,13 @@ interface CategoryElementProps {
 export default function CategoryElement(props: CategoryElementProps) {
   return (
     <div className={classes.container}>
-      <img src={`/assets/categories/${props.img}`} alt={props.name} />
-      <div className={classes.categoryDetails}>
-        <h3>{props.name}</h3>
-        <p>{props.description}</p>
-      </div>
+      <Link to={`/admin/categories/${props.name}`}>
+        <img src={`/assets/categories/${props.img}`} alt={props.name} />
+        <div className={classes.categoryDetails}>
+          <h3>{props.name}</h3>
+          <p>{props.description}</p>
+        </div>
+      </Link>
     </div>
   );
 }
