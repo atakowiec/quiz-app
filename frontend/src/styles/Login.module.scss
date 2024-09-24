@@ -74,6 +74,10 @@
 }
 
 @media (max-width: 500px) {
+  .mainContainer {
+    left: 0;
+  }
+
   .formControl {
     font-size: $input-phone-font-size;
     margin-bottom: 0.25rem;

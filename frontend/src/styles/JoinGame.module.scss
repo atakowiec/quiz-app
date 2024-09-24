@@ -1,7 +1,7 @@
 @import "./Global.scss";
 
-.mainBox {
-  left: calc(50% + #{$sidebar-half-width});
+.mainContainer {
+  left: $sidebar-width;
 }
 
 .selectionBoxes {
@@ -37,4 +37,10 @@
   font-size: 1rem;
   width: 50%;
   transition: border-color 0.3s ease;
+}
+
+@media (max-width: 500px) {
+  .mainContainer {
+    left: 0;
+  }
 }

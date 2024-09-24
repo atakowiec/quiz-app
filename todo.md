@@ -19,7 +19,8 @@
 - [x] naprawic czas w wyborze kategorii
 - [x] czas responsywność
 - [x] naprawić responsywność dla ekranów większych niż 2500 x 1080
-- [ ] responsywność ipad
+- [ ] poprawic kategorie, odpowiedzi. ustawic max rozmiar zdjecia. wzorowac sie na question html i scss.
+- [x] responsywność ipad
 - [ ] dodac komponenty placeholdery do brakujacych stron - ustawienia, staty itp
 - [x] mocno przetestowac responsywnosc i naprawic
 

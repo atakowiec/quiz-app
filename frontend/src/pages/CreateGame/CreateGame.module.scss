@@ -1,7 +1,7 @@
 @import "../../styles/Global.scss";
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
-.mainBox {
-  left: calc(50% + #{$sidebar-half-width});
+.mainContainer {
+  left: $sidebar-width;
 }
 
 .createText {
@@ -105,6 +105,9 @@ a {
 }
 
 @media (max-width: 500px) {
+  .mainContainer {
+    left: 0;
+  }
   .selectionBoxes .singlePlayer,
   .selectionBoxes .multiPlayer,
   .selectionBoxes .ranked {

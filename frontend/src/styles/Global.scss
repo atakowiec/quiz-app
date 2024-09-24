@@ -50,7 +50,7 @@ $input-phone-padding: 0.5rem;
 .mainContainer {
   position: relative;
   height: calc(90vh - $sidebar-width);
-  margin-top: 6rem;
+  margin-top: 8rem;
 }
 
 .mainBox {
@@ -123,5 +123,14 @@ $input-phone-padding: 0.5rem;
   .mainText {
     font-size: 1rem;
     margin-bottom: 0;
+  }
+}
+
+@media (min-width: 2000px) and (min-height: 1000px) {
+  .mainBox {
+    scale: 1.2;
+    top: calc(50% + 6rem); /* Uwzględniamy wysokość headera (3rem) */
+    left: calc(50% + 3.4rem);
+    transform: translate(-50%, -50%);
   }
 }
