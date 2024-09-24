@@ -50,7 +50,7 @@ $input-phone-padding: 0.5rem;
 .mainContainer {
   position: relative;
   height: calc(90vh - $sidebar-width);
-  overflow-y: auto;
+  margin-top: 6rem;
 }
 
 .mainBox {

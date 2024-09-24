@@ -5,7 +5,8 @@
   color: white;
   padding: 1rem;
   z-index: 1000;
-  position: relative;
+  position: fixed;
+  width: 100%;
 }
 
 .headerContent {
@@ -104,5 +105,15 @@
 
   .loginButton {
     font-size: 0.5rem;
+  }
+}
+
+@media (min-width: 2000px) and (min-height: 1000px) {
+  .logo {
+    font-size: 3.5rem;
+  }
+
+  .iconSize {
+    font-size: 2.5rem;
   }
 }
