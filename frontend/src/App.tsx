@@ -22,6 +22,7 @@ import useApi from "./api/useApi.ts";
 import { globalDataActions } from "./store/globalDataSlice.ts";
 import { useGame } from "./store/gameSlice.ts";
 import IsInWaitingRoomLayout from "./components/IsInWaitingRoomLayout.tsx";
+import Questions from "./pages/Admin/Questions/Questions.tsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,7 +31,6 @@ function App() {
   const game = useGame();
   const navigate = useNavigate();
   const categoriesData = useApi("/questions/categories", "get");
-
   // on the start of the application fetch the categories and store them in the global state
   useEffect(() => {
     dispatch(globalDataActions.setData({ categories: categoriesData.data }));
@@ -91,6 +91,10 @@ function App() {
           <Route path="waiting-room" element={<WaitingRoom />} />
           <Route path="game" element={<Game />} />
           <Route path="/admin/categories" element={<Categories />} />
+          <Route
+            path="/admin/categories/:categoryName/"
+            element={<Questions />}
+          />
 
           <Route
             element={
