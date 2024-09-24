@@ -25,6 +25,7 @@ export interface ICategory {
  */
 export interface IQuestion {
   text: string;
+  photo?: string;
   answers: IAnswer[];
 }
 

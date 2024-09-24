@@ -240,6 +240,7 @@ export default class Round {
 
     return {
       text: this.chosenQuestion.question,
+      photo: this.chosenQuestion.photo,
       answers: answers,
     };
   }

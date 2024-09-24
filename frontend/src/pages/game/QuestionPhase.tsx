@@ -47,6 +47,13 @@ const QuestionPhase = () => {
               <div className={styles.question}>
                 {" "}
                 {game.round.question.text}{" "}
+                {game.round.question.photo && (
+                  <img
+                    src={game.round.question.photo}
+                    alt={game.round.question.text}
+                    className={styles.questionImage}
+                  />
+                )}
               </div>
               <div className={styles.answersBox}>
                 {game.round.question.answers.map((answer) => {
