@@ -41,13 +41,18 @@ export default class Round {
     if (this.game.gameStatus === "question_phase") {
       // check if every player answered the question - if so, end the question phase
       const time = Date.now();
-      const allAnswered = this.game.getAllPlayers().every(player => player.chosenAnswer != null || player.answerEndTime <= time);
+      const allAnswered = this.game
+        .getAllPlayers()
+        .every(
+          (player) =>
+            player.chosenAnswer != null || player.answerEndTime <= time
+        );
 
       if (allAnswered) {
         this.endQuestionPhase();
       }
 
-      return
+      return;
     }
 
     if (this.timeEnd == -1) {
@@ -69,7 +74,9 @@ export default class Round {
     this.timeEnd = this.timeStart + time * 1000;
     this.onTimerEnd = callback;
 
-    this.logger.debug(`Timer set for ${time} seconds, start: ${this.timeStart}, end: ${this.timeEnd}, cb: ${callback}`);
+    this.logger.debug(
+      `Timer set for ${time} seconds, start: ${this.timeStart}, end: ${this.timeEnd}, cb: ${callback}`
+    );
   }
 
   /**
@@ -86,14 +93,17 @@ export default class Round {
     this.logger.debug("Starting voting phase");
     await this.generateCategories();
 
-    this.game.getAllPlayers().forEach(player => {
-      player.chosenCategory = -1
+    this.game.getAllPlayers().forEach((player) => {
+      player.chosenCategory = -1;
       player.answersHistory = [];
     });
     this.game.gameStatus = "voting_phase";
 
     // first set timer, then send game packet - players need to know the time
-    this.setTimer(this.configService.get("VOTING_TIME"), this.endVoting.bind(this));
+    this.setTimer(
+      this.configService.get("VOTING_TIME"),
+      this.endVoting.bind(this)
+    );
 
     this.game.send();
   }
@@ -105,12 +115,15 @@ export default class Round {
   public async endVoting() {
     this.logger.debug("End voting phase");
     this.chosenCategory = this.evaluateChosenCategory();
-    this.questions = await this.generateRandomQuestions()
+    this.questions = await this.generateRandomQuestions();
 
     // when the category is chosen start the selected category phase
     // players see the chosen category and can prepare for the questions
     this.game.gameStatus = "selected_category_phase";
-    this.setTimer(this.configService.get("SELECTED_CATEGORY_TIME_FIRST"), this.startQuestionPhase.bind(this));
+    this.setTimer(
+      this.configService.get("SELECTED_CATEGORY_TIME_FIRST"),
+      this.startQuestionPhase.bind(this)
+    );
 
     this.game.send();
   }
@@ -124,7 +137,7 @@ export default class Round {
     this.chosenQuestion = this.questions[++this.questionIndex];
 
     // every game member should have its own question object with its own randomized answers
-    this.game.getAllPlayers().forEach(player => {
+    this.game.getAllPlayers().forEach((player) => {
       player.chosenAnswer = null;
       player.hiddenAnswers = [];
       player.question = this.getRandomizedIQuestion();
@@ -134,9 +147,10 @@ export default class Round {
 
     // we set the timer for each player in the question phase - they have the same time to answer for now
     // the timer for the question phase is handled in the tick method
-    this.game.getAllPlayers().forEach(player => {
+    this.game.getAllPlayers().forEach((player) => {
       player.timeToAnswer = this.game.settings.time_for_answer;
-      player.answerEndTime = Date.now() + this.game.settings.time_for_answer * 1000;
+      player.answerEndTime =
+        Date.now() + this.game.settings.time_for_answer * 1000;
       this.timeStart = Date.now();
     });
 
@@ -151,17 +165,26 @@ export default class Round {
     this.game.gameStatus = "question_result_phase";
 
     // todo calculate the scores
-    this.game.getAllPlayers().forEach(player => {
+    this.game.getAllPlayers().forEach((player) => {
       const correct = player.chosenAnswer == this.chosenQuestion.correctAnswer;
       player.score += correct ? 1 : 0;
 
-      player.answersHistory.push(correct)
-    })
+      player.answersHistory.push(correct);
+    });
 
-    if (this.questionIndex == this.game.settings.number_of_questions_per_round - 1) {
-      this.setTimer(this.configService.get("QUESTION_RESULT_TIME"), this.startLeaderboardPhase.bind(this));
+    if (
+      this.questionIndex ==
+      this.game.settings.number_of_questions_per_round - 1
+    ) {
+      this.setTimer(
+        this.configService.get("QUESTION_RESULT_TIME"),
+        this.startLeaderboardPhase.bind(this)
+      );
     } else {
-      this.setTimer(this.configService.get("QUESTION_RESULT_TIME"), this.startSelectedCategoryPhase.bind(this));
+      this.setTimer(
+        this.configService.get("QUESTION_RESULT_TIME"),
+        this.startSelectedCategoryPhase.bind(this)
+      );
     }
     this.game.send();
   }
@@ -173,7 +196,10 @@ export default class Round {
     this.logger.debug("Starting selected category phase");
     this.chosenQuestion = null;
     this.game.gameStatus = "selected_category_phase";
-    this.setTimer(this.configService.get("SELECTED_CATEGORY_TIME"), this.startQuestionPhase.bind(this));
+    this.setTimer(
+      this.configService.get("SELECTED_CATEGORY_TIME"),
+      this.startQuestionPhase.bind(this)
+    );
 
     this.game.send();
   }
@@ -192,6 +218,11 @@ export default class Round {
 
   private endRound() {
     this.logger.debug("End round");
+
+    if (this.game.roundNumber == this.game.settings.number_of_rounds) {
+      this.game.endGame();
+      return;
+    }
     this.game.nextRound();
   }
 
@@ -199,7 +230,10 @@ export default class Round {
    * Gets the current question as a IQuestion object with randomized answers
    */
   public getRandomizedIQuestion(): IQuestion {
-    const answers = [...this.chosenQuestion.distractors.map(answer => answer.content), this.chosenQuestion.correctAnswer];
+    const answers = [
+      ...this.chosenQuestion.distractors.map((answer) => answer.content),
+      this.chosenQuestion.correctAnswer,
+    ];
 
     // randomize the answers
     answers.sort(() => Math.random() - 0.5);
@@ -207,13 +241,13 @@ export default class Round {
     return {
       text: this.chosenQuestion.question,
       answers: answers,
-    }
+    };
   }
 
   public evaluateChosenCategory(): Category {
     const votes = new Map<number, number>();
 
-    this.game.getAllPlayers().forEach(player => {
+    this.game.getAllPlayers().forEach((player) => {
       if (player.chosenCategory == -1) return;
 
       if (!votes.has(player.chosenCategory)) {
@@ -233,11 +267,15 @@ export default class Round {
       }
     });
 
-    const chosenCategory = this.categories.find(category => category.id == selectedCategoryId);
+    const chosenCategory = this.categories.find(
+      (category) => category.id == selectedCategoryId
+    );
 
     // if no category was chosen randomly select one
     if (!chosenCategory) {
-      return this.categories[Math.floor(Math.random() * this.categories.length)];
+      return this.categories[
+        Math.floor(Math.random() * this.categories.length)
+      ];
     }
 
     return chosenCategory;
@@ -250,20 +288,31 @@ export default class Round {
 
     // if whitelist is set, only use the categories from the whitelist
     if (this.game.settings.category_whitelist) {
-      availableCategories = allCategories.filter(category => this.game.settings.category_whitelist.includes(category.id));
+      availableCategories = allCategories.filter((category) =>
+        this.game.settings.category_whitelist.includes(category.id)
+      );
     }
 
     this.categories = [];
 
     // if there are fewer categories than the number of categories per voting, use all of them
-    if (availableCategories.length <= this.game.settings.number_of_categories_per_voting) {
-      this.categories = availableCategories
+    if (
+      availableCategories.length <=
+      this.game.settings.number_of_categories_per_voting
+    ) {
+      this.categories = availableCategories;
       return;
     }
 
     // if there are more categories than the number of categories per voting, randomly select the categories
-    for (let i = 0; i < this.game.settings.number_of_categories_per_voting; i++) {
-      const randomIndex = Math.floor(Math.random() * availableCategories.length);
+    for (
+      let i = 0;
+      i < this.game.settings.number_of_categories_per_voting;
+      i++
+    ) {
+      const randomIndex = Math.floor(
+        Math.random() * availableCategories.length
+      );
       const category = availableCategories[randomIndex];
       this.categories.push(category);
       availableCategories.splice(randomIndex, 1);
@@ -274,15 +323,18 @@ export default class Round {
     const commonData = {
       questionNumber: this.questionIndex + 1,
       timerStart: this.timeStart,
-      timerEnd: this.game.gameStatus == "question_phase" ? member.answerEndTime : this.timeEnd,
-    }
+      timerEnd:
+        this.game.gameStatus == "question_phase"
+          ? member.answerEndTime
+          : this.timeEnd,
+    };
 
     if (this.game.gameStatus == "voting_phase") {
       // categories are sent in the voting phase
       return {
-        categories: this.categories.map(category => category.id),
-        ...commonData
-      }
+        categories: this.categories.map((category) => category.id),
+        ...commonData,
+      };
     }
 
     if (this.game.gameStatus == "question_result_phase") {
@@ -292,12 +344,15 @@ export default class Round {
     return {
       category: this.chosenCategory,
       question: member.question,
-      ...commonData
-    }
+      ...commonData,
+    };
   }
 
   private async generateRandomQuestions(): Promise<Question[]> {
-    const questions = await this.game.gameService.questionsService.getQuestionsByCategory(this.chosenCategory);
+    const questions =
+      await this.game.gameService.questionsService.getQuestionsByCategory(
+        this.chosenCategory
+      );
 
     // if there are fewer questions than the number of questions per round, use all of them - should not happen
     if (questions.length <= this.game.settings.number_of_questions_per_round) {
