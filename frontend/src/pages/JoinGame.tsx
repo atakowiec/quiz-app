@@ -5,7 +5,7 @@ import { FaWrench } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { useSocket } from "../socket/useSocket";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   IoIosAddCircleOutline,
@@ -15,6 +15,7 @@ import {
 import { useUser } from "../store/userSlice.ts";
 import { toast } from "react-toastify";
 import useQueryParam from "../hooks/useQueryParam.ts";
+import SetUserNameModal from "../components/SetUserNameModal/SetUserNameModal.tsx";
 
 const JoinGame: React.FC = () => {
   const gameIdRef = useRef<HTMLInputElement>(null);
@@ -22,6 +23,8 @@ const JoinGame: React.FC = () => {
   const navigate = useNavigate();
   const user = useUser();
   const codeQueryParam = useQueryParam("code");
+
+  const [showModal, setShowModal] = useState(false);
 
   const sidebarItems: SidebarItem[] = [
     { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
@@ -39,13 +42,14 @@ const JoinGame: React.FC = () => {
   ];
 
   function onJoinGame() {
-    if(!user?.loggedIn) {
-    // todo allow not logged users to play the game - modal with username input
-      toast.error("Musisz być zalogowany, aby dołączyć do gry");
+    if (!user?.loggedIn) {
+      setShowModal(true);
       return;
     }
 
-    socket.emit("join_game", gameIdRef.current!.value, () => navigate("/waiting-room"));
+    socket.emit("join_game", gameIdRef.current!.value, () =>
+      navigate("/waiting-room")
+    );
   }
 
   return (
@@ -62,6 +66,7 @@ const JoinGame: React.FC = () => {
               </div>
               <div className={styles.selectionBoxes}>
                 <input
+                  className={styles.inputBox}
                   type={"text"}
                   placeholder={"Podaj ID gry"}
                   defaultValue={codeQueryParam ?? ""}
@@ -75,6 +80,16 @@ const JoinGame: React.FC = () => {
           </div>
         </div>
       </Container>
+      <SetUserNameModal
+        show={showModal}
+        confirmBtnText="Dołącz do gry"
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          socket.emit("join_game", gameIdRef.current!.value, () =>
+            navigate("/waiting-room")
+          );
+        }}
+      />
     </div>
   );
 };
