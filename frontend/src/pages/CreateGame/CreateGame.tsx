@@ -1,6 +1,6 @@
-import { Breadcrumb, Container } from "react-bootstrap";
-import Meta from "../components/Meta";
-import styles from "../styles/CreateGame.module.scss";
+import { Breadcrumb, Container, Modal } from "react-bootstrap";
+import Meta from "../../components/Meta.tsx";
+import styles from "./CreateGame.module.scss";
 import { FaWrench } from "react-icons/fa";
 import {
   IoPersonSharp,
@@ -8,22 +8,25 @@ import {
   IoPodiumSharp,
   IoStatsChartSharp,
 } from "react-icons/io5";
-import Sidebar, { SidebarItem } from "../components/SideBar";
-import { useSocket } from "../socket/useSocket";
-import React from "react";
+import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
+import { useSocket } from "../../socket/useSocket.ts";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   IoIosAddCircleOutline,
   IoIosPlay,
   IoLogoGameControllerB,
 } from "react-icons/io";
-import { useUser } from "../store/userSlice.ts";
-import { toast } from "react-toastify";
+import { useUser } from "../../store/userSlice.ts";
+import SetUserNameModal from "../../components/SetUserNameModal/SetUserNameModal.tsx";
 
 const CreateGame: React.FC = () => {
   const socket = useSocket();
   const navigate = useNavigate();
   const user = useUser();
+
+  const [showModal, setShowModal] = useState(false);
+  const [gameType, setGameType] = useState("");
 
   const sidebarItems: SidebarItem[] = [
     { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
@@ -42,13 +45,18 @@ const CreateGame: React.FC = () => {
 
   function onNewGame(gameType: string) {
     // todo allow not logged users to play the game - modal with username input
+    setGameType(gameType);
     if (!user?.loggedIn) {
-      toast.error("Musisz być zalogowany, aby stworzyć grę");
+      setShowModal(true);
       return;
     }
 
     socket.emit("create_game", gameType, () => navigate("/waiting-room"));
   }
+
+  /*
+    if client has a game in "waiting_for_players" status, redirect to waiting room
+  */
 
   return (
     <div>
@@ -82,6 +90,14 @@ const CreateGame: React.FC = () => {
           </div>
         </div>
       </Container>
+      <SetUserNameModal
+        show={showModal}
+        confirmBtnText="Stwórz grę"
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          socket.emit("create_game", gameType, () => navigate("/waiting-room"));
+        }}
+      />
     </div>
   );
 };

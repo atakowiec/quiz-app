@@ -10,13 +10,24 @@ import {
   IoLogoGameControllerB,
 } from "react-icons/io";
 import { useUser } from "../store/userSlice";
+import { useGame } from "../store/gameSlice";
 
 const Home: React.FC = () => {
   const user = useUser();
+  const game = useGame();
 
   const sidebarItems: SidebarItem[] = [
-    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+    ...(game?.status != "waiting_for_players"
+      ? [
+          {
+            icon: IoIosAddCircleOutline,
+            label: "Stwórz Grę",
+            href: "/create-game",
+          },
+          { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+        ]
+      : [{ icon: IoIosPlay, label: "Wróć do gry", href: "/waiting-room" }]),
+
     ...(user.loggedIn
       ? [
           {

@@ -3,7 +3,7 @@ import Layout from "./components/Layout";
 import "./styles/Global.scss";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import CreateGame from "./pages/CreateGame";
+import CreateGame from "./pages/CreateGame/CreateGame.tsx";
 import Profile from "./pages/Profile.tsx";
 import { useDispatch } from "react-redux";
 import Logout from "./pages/Logout.tsx";
@@ -21,7 +21,7 @@ import Game from "./pages/game/Game.tsx";
 import useApi from "./api/useApi.ts";
 import { globalDataActions } from "./store/globalDataSlice.ts";
 import { useGame } from "./store/gameSlice.ts";
-import CategoryVotingPhase from "./pages/game/CategoryVotingPhase.tsx";
+import IsInWaitingRoomLayout from "./components/IsInWaitingRoomLayout.tsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -86,12 +86,22 @@ function App() {
           <Route path="logout" element={<Logout />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-          <Route path="create-game" element={<CreateGame />} />
-          <Route path="join-game" element={<JoinGame />} />
+
           <Route path="profile" element={<Profile />} />
           <Route path="waiting-room" element={<WaitingRoom />} />
           <Route path="game" element={<Game />} />
           <Route path="/admin/categories" element={<Categories />} />
+
+          <Route
+            element={
+              <IsInWaitingRoomLayout
+                isInLobby={game?.status === "waiting_for_players"}
+              />
+            }
+          >
+            <Route path="create-game" element={<CreateGame />} />
+            <Route path="join-game" element={<JoinGame />} />
+          </Route>
         </Route>
       </Routes>
     </>

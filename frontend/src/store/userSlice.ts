@@ -1,5 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {UserPacket} from "@shared/user";
+import { createSlice } from "@reduxjs/toolkit";
+import { UserPacket } from "@shared/user";
 import { useSelector } from "react-redux";
 import { State } from "./index.ts";
 
@@ -9,18 +9,21 @@ export type UserState = {
   username?: string;
   email?: string;
   permission?: number;
-}
+};
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: {
-    loggedIn: false
+    loggedIn: false,
   } as UserState,
   reducers: {
     setUser: (_, action): UserState => {
       if (!action.payload?.id) {
         return {
-          loggedIn: false
+          loggedIn: false,
+          username: !action.payload?.username
+            ? undefined
+            : action.payload.username,
         };
       }
 
@@ -31,14 +34,14 @@ const userSlice = createSlice({
         id: userPacket.id,
         username: userPacket.username,
         email: userPacket.email,
-        permission: userPacket.permission
+        permission: userPacket.permission,
       };
-    }
-  }
+    },
+  },
 });
 
 export const userActions = userSlice.actions;
 
 export default userSlice;
 
-export const useUser = () => useSelector((state: State) => state.user)
+export const useUser = () => useSelector((state: State) => state.user);

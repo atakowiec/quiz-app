@@ -6,14 +6,14 @@ import globalDataSlice, { GlobalDataState } from "./globalDataSlice.ts";
 export type State = {
   user: UserState;
   game: GameState;
-  globalData: GlobalDataState
+  globalData: GlobalDataState;
 };
 
 export const store = configureStore<State>({
   reducer: {
     user: userSlice.reducer,
     game: gameSlice.reducer,
-    globalData: globalDataSlice.reducer
+    globalData: globalDataSlice.reducer,
   },
 });
 

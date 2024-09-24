@@ -25,8 +25,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     @Inject(forwardRef(() => GameService))
     private readonly gameService: GameService
-  ) {
-  }
+  ) {}
 
   handleConnection(client: SocketType) {
     this.logger.log(`Client connected: ${client.data.username} [${client.id}]`);
@@ -35,9 +34,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: SocketType) {
-    this.logger.log(`Client disconnected: ${client.data.username} [${client.id}]`);
+    this.logger.log(
+      `Client disconnected: ${client.data.username} [${client.id}]`
+    );
 
-    this.gameService.getGameByNickname(client.data.username)?.onPlayerDisconnect(client);
+    this.gameService
+      .getGameByNickname(client.data.username)
+      ?.onPlayerDisconnect(client);
   }
 
   @SubscribeMessage("create_game")
@@ -52,9 +55,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const game = this.gameService.createGame(ownerSocket, createGameData);
     game.send(ownerSocket);
 
-    game.owner.sendNotification(`Utworzono grę`);
+    game.owner.sendNotification("Utworzono grę");
 
-    this.logger.log(`New game with id: ${game.id} created by ${ownerSocket.data.username}`);
+    this.logger.log(
+      `New game with id: ${game.id} created by ${ownerSocket.data.username}`
+    );
 
     // return something so the client can redirect to the waiting room
     // look at the "start_game" event call in the frontend app - there is acknowledgement
@@ -135,7 +140,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
 
-    if(game.gameType !== "single" && game.players.length == 0) {
+    if (game.gameType !== "single" && game.players.length == 0) {
       throw new WsException("Nie można rozpocząć gry bez graczy!");
     }
 
