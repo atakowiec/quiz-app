@@ -14,6 +14,7 @@ import { UserPacket } from "@shared/user";
 import { SocketType } from "src/game/game.types";
 import { parse } from "cookie";
 import { GameService } from "../game/services/game.service";
+import { log } from "console";
 
 @Injectable()
 export class AuthService {
@@ -37,7 +38,7 @@ export class AuthService {
 
     const conflictErrors = [];
     // first check if the user is already connected to the game
-    if(this.gameService.isUsernameConnected(createUserDto.username)) {
+    if (this.gameService.isUsernameConnected(createUserDto.username)) {
       conflictErrors.push({
         field: "username",
         error: "Gracz z tą nazwą jest już połączony",
@@ -190,7 +191,7 @@ export class AuthService {
 
   async verify(req: Request) {
     if (!req.user?.username) {
-      return {}
+      return {};
     }
 
     if (this.gameService.isUsernameConnected(req.user.username)) {
@@ -209,15 +210,20 @@ export class AuthService {
       where: { username: username },
     });
 
-    // TODO: tu wywala bład za drugim razem jak wyślemy, nie patrzyłem jeszcze dlaczego
-    // if (user || this.gameService.isUsernameConnected(username)) {
-    //   throw new ConflictException("Nazwa użytkownika jest już zajęta");
-    // }
+    if (user) {
+      throw new ConflictException("Nazwa użytkownika jest już zajęta");
+    }
+
+    if (this.gameService.isUsernameConnected(username)) {
+      throw new ConflictException("Gracz z tą nazwą jest już połączony");
+    }
 
     const tokenPayload: TokenPayload = { username };
     const token = await this.jwtService.signAsync(tokenPayload);
     this.appendTokenToResponse(Response, token);
 
-    return tokenPayload && { access_token: token };
+    return {
+      username: username,
+    };
   }
 }

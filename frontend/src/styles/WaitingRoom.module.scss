@@ -16,7 +16,7 @@
     cursor: pointer;
     padding: 0 10px;
     border-radius: $button-border-radius;
-    transition: all ease-in-out .1s;
+    transition: all ease-in-out 0.1s;
 
     &:hover {
       background-color: $button-gray;
@@ -29,13 +29,14 @@
     opacity: 0;
   }
 
-  &.copied, &.ending {
+  &.copied,
+  &.ending {
     user-select: none;
   }
 
   &.copied,
   &.none {
-      opacity: 1;
+    opacity: 1;
   }
 }
 
@@ -144,6 +145,15 @@
 .modalButtons {
   display: flex;
   justify-content: space-between;
+}
+
+.currentPlayer {
+  font-weight: 400;
+  &::after {
+    font-weight: 500;
+    color: $green-black;
+    content: " (Ty)";
+  }
 }
 
 @media (max-width: 500px) {

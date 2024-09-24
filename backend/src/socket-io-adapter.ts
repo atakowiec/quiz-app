@@ -57,6 +57,7 @@ const createTokenMiddleware =
     }
     try {
       const user = authService.extractTokenPayloadFromSocket(socket);
+
       if (user.id) {
         const dbUser = await userService.repository.findOne({
           where: { id: user.id },

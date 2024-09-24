@@ -10,4 +10,9 @@ export class GameController {
   getGames() {
     return this.gameService.getAllGames();
   }
+
+  @Get("sockets")
+  getSockets() {
+    return this.gameService.getAllSockets();
+  }
 }

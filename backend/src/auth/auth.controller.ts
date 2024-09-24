@@ -6,6 +6,7 @@ import { Request } from "../app";
 import { LoginDto } from "./dto/login.dto";
 import { UserPacket } from "@shared/user";
 import { SetNicknameDto } from "./dto/set-nickname.dto";
+import { log } from "console";
 
 @Controller("auth")
 export class AuthController {
@@ -41,6 +42,7 @@ export class AuthController {
   }
 
   @Post("nickname")
+  @HttpCode(200)
   async setNickname(
     @Body() { nickname }: SetNicknameDto,
     @Req() request: Request,

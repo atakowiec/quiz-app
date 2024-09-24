@@ -6,6 +6,7 @@ import { GameType } from "@shared/game";
 import { Category } from "../../questions/entities/category.model";
 import { QuestionsService } from "../../questions/services/questions/questions.service";
 import { ConfigService } from "@nestjs/config";
+import { log } from "console";
 
 @Injectable()
 export class GameService {
@@ -45,9 +46,10 @@ export class GameService {
   }
 
   public getGameByNickname(username: string): Game {
-    return this.games.find((game) =>
-      game.owner.username === username ||
-      game.players.some((player) => player.username === username)
+    return this.games.find(
+      (game) =>
+        game.owner.username === username ||
+        game.players.some((player) => player.username === username)
     );
   }
 
@@ -66,12 +68,14 @@ export class GameService {
 
   public getAllGames() {
     // I don't know if this endpoint is needed but for now it will return game packet like this because GamePacket is now member based
-    return JSON.stringify(this.games.map((game) => ({
-      id: game.id,
-      owner: game.owner,
-      players: game.players.map((player) => player.username),
-      status: game.gameStatus,
-      gameType: game.gameType
-    })));
+    log("Games: ", this.games);
+  }
+
+  public getAllSockets() {
+    return JSON.stringify(
+      Array.from(this.gameGateway.server.sockets.sockets.values()).map(
+        (socket) => socket.data.username
+      )
+    );
   }
 }

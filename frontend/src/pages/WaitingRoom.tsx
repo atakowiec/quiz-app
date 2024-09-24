@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import Meta from "../components/Meta";
-import { Breadcrumb, Button, Container, Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Button,
+  Container,
+  Modal,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import styles from "../styles/WaitingRoom.module.scss";
 import { LuCrown } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
@@ -20,7 +27,9 @@ const WaitingRoom: React.FC = () => {
     { icon: IoHomeSharp, label: "Powrót", href: "/" },
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
   ];
-  const [copyAnimationStage, setCopyAnimationStage] = useState("none" as "none" | "copying" | "copied" | "ending");
+  const [copyAnimationStage, setCopyAnimationStage] = useState(
+    "none" as "none" | "copying" | "copied" | "ending"
+  );
 
   const game: GameState = useSelector((state: State) => state.game);
   const user: UserState = useSelector((state: State) => state.user);
@@ -100,8 +109,10 @@ const WaitingRoom: React.FC = () => {
       <Tooltip id="button-tooltip" {...props}>
         Kliknij, aby skopiować link do pokoju
       </Tooltip>
-    )
+    );
   }
+
+  console.log(user);
 
   return (
     <>
@@ -114,52 +125,75 @@ const WaitingRoom: React.FC = () => {
             <div className={styles.mainBox}>
               <div className={styles.mainText}>Poczekalnia</div>
               <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
-                {["ending", "copied"].includes(copyAnimationStage) ?
-                  <><FaCheck/> Skopiowano!</>
-                  : <OverlayTrigger
+                {["ending", "copied"].includes(copyAnimationStage) ? (
+                  <>
+                    <FaCheck /> Skopiowano!
+                  </>
+                ) : (
+                  <OverlayTrigger
                     placement="right"
                     delay={{ show: 250, hide: 400 }}
                     overlay={renderTooltip}
                   >
-                    <span onClick={copyId}>Kod: {game?.id} <FaLink/></span>
+                    <span onClick={copyId}>
+                      Kod: {game?.id} <FaLink />
+                    </span>
                   </OverlayTrigger>
-                }
+                )}
               </div>
               <hr className={styles.line} />
               <div className={styles.playersBox}>
                 <div className={styles.singlePlayer}>
-                  {game?.owner.username}
+                  <span
+                    className={
+                      game?.owner.username === user.username
+                        ? styles.currentPlayer
+                        : ""
+                    }
+                  >
+                    {game?.owner.username}
+                  </span>
                   <LuCrown className={styles.playerAction} />
                 </div>
                 {game?.players && game.players.length > 0 && (
                   <>
-                    {game.players.filter(player => !player.owner).map((player) => (
-                      <div
-                        className={styles.singlePlayer}
-                        key={player.username}
-                      >
-                        {player.username}
-                        {user.username === game.owner.username && (
-                          <div>
-                            <button
-                              className={styles.giveBtn}
-                              onClick={() =>
-                                handleGiveOwnerClick(player.username!)
-                              }
-                            >
-                              <IoMdArrowUp className={styles.playerAction2} />
-                            </button>
+                    {game.players
+                      .filter((player) => !player.owner)
+                      .map((player) => (
+                        <div
+                          className={styles.singlePlayer}
+                          key={player.username}
+                        >
+                          <span
+                            className={
+                              player.username === user.username
+                                ? styles.currentPlayer
+                                : ""
+                            }
+                          >
+                            {player.username}
+                          </span>
+                          {user.username === game.owner.username && (
+                            <div>
+                              <button
+                                className={styles.giveBtn}
+                                onClick={() =>
+                                  handleGiveOwnerClick(player.username!)
+                                }
+                              >
+                                <IoMdArrowUp className={styles.playerAction2} />
+                              </button>
 
-                            <button
-                              className={styles.kickBtn}
-                              onClick={() => kickPlayer(player.username!)}
-                            >
-                              <RxCross2 className={styles.playerAction} />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                              <button
+                                className={styles.kickBtn}
+                                onClick={() => kickPlayer(player.username!)}
+                              >
+                                <RxCross2 className={styles.playerAction} />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                   </>
                 )}
               </div>
