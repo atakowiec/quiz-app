@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../styles/Login.module.scss";
+import styles from "../pages/login/Login.module.scss";
 
 interface CustomInputProps {
   type: string;

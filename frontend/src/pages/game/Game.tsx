@@ -3,11 +3,11 @@ import { State } from "../../store";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import CategoryVotingPhase from "./CategoryVotingPhase.tsx";
-import SelectedCategoryPhase from "./SelectedCategoryPhase.tsx";
-import QuestionPhase from "./QuestionPhase.tsx";
-import LeaderboardPhase from "./LeaderboardPhase.tsx";
-import GameOverPhase from "./GameOverPhase.tsx";
+import CategoryVotingPhase from "./category-phase/CategoryVotingPhase.tsx";
+import SelectedCategoryPhase from "./category-phase/SelectedCategoryPhase.tsx";
+import QuestionPhase from "./question-phase/QuestionPhase.tsx";
+import LeaderboardPhase from "./leaderboard-phase/LeaderboardPhase.tsx";
+import GameOverPhase from "./game-over-phase/GameOverPhase.tsx";
 
 export default function Game() {
   const game = useSelector<State, GameState>((state) => state.game);

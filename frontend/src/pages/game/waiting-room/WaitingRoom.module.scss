@@ -1,0 +1,175 @@
+@import "../../../styles/Global";
+
+.mainBox {
+  left: calc(50% + #{$sidebar-half-width});
+}
+
+.code {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  & > span {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0 10px;
+    border-radius: $button-border-radius;
+    transition: all ease-in-out 0.1s;
+
+    &:hover {
+      background-color: $button-gray;
+      box-shadow: $button-shadow-black;
+    }
+  }
+
+  &.copying,
+  &.ending {
+    opacity: 0;
+  }
+
+  &.copied,
+  &.ending {
+    user-select: none;
+  }
+
+  &.copied,
+  &.none {
+    opacity: 1;
+  }
+}
+
+.line {
+  margin-top: 0.5rem;
+  border-bottom: 1px solid #888;
+}
+
+.playersBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 1rem;
+  background-color: #f0f4f3;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
+  overflow-y: auto;
+}
+
+.singlePlayer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  font-weight: 300;
+  width: 95%;
+}
+
+.playerNickname {
+  font-size: 1rem;
+  font-weight: 300;
+  align-items: center;
+}
+
+.playerAction {
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+.playerAction2 {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 3rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.username {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttonStart {
+  background-color: $green-black;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  cursor: pointer;
+  box-shadow: $button-shadow-black;
+}
+
+.buttonStart:hover {
+  background-color: $button-green-hover;
+}
+
+.buttonLeave {
+  background-color: $button-gray;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  cursor: pointer;
+  box-shadow: $button-shadow-black;
+}
+
+.buttonLeave:hover {
+  background-color: $button-gray-hover;
+}
+
+.kickBtn,
+.giveBtn {
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  background-color: transparent;
+}
+
+.kickBtn:hover,
+.giveBtn:hover {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.modalCenter {
+  left: 45px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.currentPlayer {
+  font-weight: 400;
+  &::after {
+    font-weight: 500;
+    color: $green-black;
+    content: " (Ty)";
+  }
+}
+
+@media (max-width: 500px) {
+  .buttonLeave,
+  .buttonStart {
+    font-size: $button-phone-font-size;
+    padding: $button-phone-padding;
+  }
+
+  .code {
+    font-size: $code-phone-font-size-500;
+  }
+}
+
+@media (max-width: 300px) {
+  .code {
+    font-size: $code-phone-font-size-300;
+  }
+}
