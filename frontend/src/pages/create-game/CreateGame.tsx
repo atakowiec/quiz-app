@@ -18,7 +18,7 @@ import {
   IoLogoGameControllerB,
 } from "react-icons/io";
 import { useUser } from "../../store/userSlice.ts";
-import SetUserNameModal from "../../components/SetUserNameModal/SetUserNameModal.tsx";
+import SetUserNameModal from "../../components/set-username-modal/SetUserNameModal.tsx";
 
 const CreateGame: React.FC = () => {
   const socket = useSocket();

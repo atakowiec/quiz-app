@@ -7,14 +7,20 @@ import { SocketProvider } from "./socket/SocketContext.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
+import AppWrapper from "./components/AppWrapper.tsx";
+import { ReloadApiProvider } from "./api/ReloadApiContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <SocketProvider>
-        <BrowserRouter>
-          <App/>
-        </BrowserRouter>
+        <ReloadApiProvider>
+          <AppWrapper>
+            <BrowserRouter>
+              <App/>
+            </BrowserRouter>
+          </AppWrapper>
+        </ReloadApiProvider>
         <ToastContainer
           position="bottom-right"
           autoClose={2000}

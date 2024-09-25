@@ -5,56 +5,20 @@ import Login from "./pages/login/Login.tsx";
 import Register from "./pages/login/Register.tsx";
 import CreateGame from "./pages/create-game/CreateGame.tsx";
 import Profile from "./pages/profile/Profile.tsx";
-import { useDispatch } from "react-redux";
 import Logout from "./pages/login/Logout.tsx";
 import WaitingRoom from "./pages/game/waiting-room/WaitingRoom.tsx";
-import { useEffect, useState } from "react";
-import getApi from "./api/axios.ts";
-import { AxiosResponse } from "axios";
-import { UserPacket } from "@shared/user";
-import { userActions } from "./store/userSlice.ts";
-import { useSocket } from "./socket/useSocket.ts";
+import { useEffect } from "react";
 import JoinGame from "./pages/join-game/JoinGame.tsx";
 import Home from "./pages/Home.tsx";
 import Categories from "./pages/admin/questions/Categories.tsx";
 import Game from "./pages/game/Game.tsx";
-import useApi from "./api/useApi.ts";
-import { globalDataActions } from "./store/globalDataSlice.ts";
 import { useGame } from "./store/gameSlice.ts";
 import IsInWaitingRoomLayout from "./components/layouts/IsInWaitingRoomLayout.tsx";
 import Questions from "./pages/admin/questions/Questions.tsx";
 
 function App() {
-  const dispatch = useDispatch();
-  const [loaded, setLoaded] = useState(false);
-  const socket = useSocket();
   const game = useGame();
   const navigate = useNavigate();
-  const categoriesData = useApi("/questions/categories", "get");
-  // on the start of the application fetch the categories and store them in the global state
-  useEffect(() => {
-    dispatch(globalDataActions.setData({ categories: categoriesData.data }));
-  }, [categoriesData]);
-
-  // on start of the application check whether the user has some valid token
-  useEffect(() => {
-    getApi()
-      .post("/auth/verify")
-      .then((response: AxiosResponse<UserPacket>) => {
-        dispatch(userActions.setUser(response.data));
-
-        if (response.data.id) {
-          socket.connect();
-        }
-
-        setLoaded(true);
-      })
-      .catch(() => {
-        dispatch(userActions.setUser(null));
-
-        setLoaded(true);
-      });
-  }, []);
 
   useEffect(() => {
     if (!game?.status || game.status === "waiting_for_players") return;
@@ -63,9 +27,6 @@ function App() {
       navigate("/game");
     }
   }, [window.location.pathname, game?.status]);
-
-  // wait for the request to finish before rendering the app - this way we can avoid flickering
-  if (!loaded) return null;
 
   // this totally blocks other routes if the game already started
   if (game && game.status !== "waiting_for_players") {

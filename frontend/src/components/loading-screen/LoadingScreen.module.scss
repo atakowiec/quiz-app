@@ -1,0 +1,54 @@
+@import "../../styles/Global";
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  background-color: $blue;
+  text-align: center;
+
+  .logo {
+    margin-top: 20dvh;
+    font-size: 50px;
+    font-weight: bold;
+    color: $gray;
+  }
+
+  .loadingInfo {
+    font-size: 18px;
+    color: $gray;
+    display: flex;
+    align-items: center;
+
+    .line {
+      width: 50px;
+      height: 1px;
+      background-color: $gray;
+      margin: 0 10px;
+    }
+  }
+
+  .additionalInfo {
+    @extend .loadingInfo;
+    margin-top: 10dvh;
+    color: $button-gray;
+  }
+
+  .loadingAnimation {
+    margin-top: 10dvh;
+    color: $gray;
+    line-height: 0;
+    font-size: 50px;
+    animation: spin 1s linear infinite;
+  }
+}

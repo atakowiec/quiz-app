@@ -14,7 +14,7 @@ import {
 } from "react-icons/io";
 import { useUser } from "../../store/userSlice.ts";
 import useQueryParam from "../../hooks/useQueryParam.ts";
-import SetUserNameModal from "../../components/SetUserNameModal/SetUserNameModal.tsx";
+import SetUserNameModal from "../../components/set-username-modal/SetUserNameModal.tsx";
 
 const JoinGame: React.FC = () => {
   const gameIdRef = useRef<HTMLInputElement>(null);
