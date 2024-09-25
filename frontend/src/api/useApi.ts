@@ -1,17 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import getApi from './axios.ts';
 import { ReloadApiContext } from './ReloadApiContext.tsx';
+import { AxiosError } from "axios";
 
 export interface ApiData<T> {
     data: T | null | undefined
     loaded: boolean
-    error: boolean | Error
+    error: null | AxiosError
     setData: React.Dispatch<any>
 }
 
 export default function useApi<DataType = any>(path: string, method: string, payload?: any): ApiData<DataType> {
     const [data, setData] = useState<DataType | null | undefined>(undefined);
-    const [error, setError] = useState(false as boolean | Error);
+    const [error, setError] = useState(null as null | AxiosError);
     const reloadToken = useContext(ReloadApiContext)?.reloadToken
 
     const isLoaded = useRef(false);
@@ -22,10 +23,10 @@ export default function useApi<DataType = any>(path: string, method: string, pay
         (getApi() as any)[method.toLowerCase()](path, payload)
             .then((res: any) => {
                 setData(res.data);
-                setError(false)
+                setError(null)
                 isLoaded.current = true;
             })
-            .catch((e: Error) => {
+            .catch((e: AxiosError) => {
                 console.log(e)
                 setData(null)
                 setError(e);
