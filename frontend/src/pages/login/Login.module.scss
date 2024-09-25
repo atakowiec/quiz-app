@@ -1,0 +1,107 @@
+@import "../../styles/Global";
+
+.mainContainer {
+  height: calc(90vh - $sidebar-width);
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.formGroup {
+  margin-top: 1rem;
+}
+
+.formControl {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f4f3;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #666;
+
+  &::placeholder {
+    font-size: 1rem;
+    color: #666;
+  }
+}
+
+.error {
+  color: rgb(172, 24, 24);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  padding-left: 1rem;
+}
+
+.errorMargin {
+  margin-bottom: 0;
+}
+
+.submitButton {
+  align-self: center;
+  background-color: $green-black;
+  border: none;
+  color: #0c1a25;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  font-size: $button-font-size;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+  font-weight: $button-font-weight;
+  box-shadow: $button-shadow-black;
+}
+
+.submitButton:hover {
+  background-color: $button-green-hover;
+  color: $blue;
+}
+
+.registerLink {
+  margin-top: 2rem;
+  align-self: center;
+}
+
+.registerText {
+  text-decoration: underline;
+  color: black;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+@media (max-width: 500px) {
+  .mainContainer {
+    left: 0;
+  }
+
+  .formControl {
+    font-size: $input-phone-font-size;
+    margin-bottom: 0.25rem;
+    padding: $input-phone-padding;
+
+    &::placeholder {
+      font-size: $input-phone-font-size;
+    }
+  }
+
+  .registerText {
+    font-size: 0.75rem;
+  }
+
+  .submitButton {
+    padding: $button-phone-padding;
+    font-size: $button-phone-font-size;
+  }
+
+  .errorMargin {
+    margin-bottom: 0;
+  }
+
+  .error {
+    font-size: $input-phone-font-size;
+  }
+}
