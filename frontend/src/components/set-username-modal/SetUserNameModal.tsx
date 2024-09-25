@@ -1,11 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import styles from "./setUserNameModal.module.scss";
-import getApi from "../../api/axios";
+import getApi from "../../api/axios.ts";
 import { useDispatch } from "react-redux";
-import { useSocket } from "../../socket/useSocket";
-import { userActions, useUser } from "../../store/userSlice";
-import { toast } from "react-toastify";
+import { useSocket } from "../../socket/useSocket.ts";
+import { userActions } from "../../store/userSlice.ts";
 
 interface SetUserNameModalProps {
   confirmBtnText: string;
