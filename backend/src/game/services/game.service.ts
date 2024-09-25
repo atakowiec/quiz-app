@@ -7,6 +7,7 @@ import { Category } from "../../questions/entities/category.model";
 import { QuestionsService } from "../../questions/services/questions/questions.service";
 import { ConfigService } from "@nestjs/config";
 import { log } from "console";
+import { GameMember } from "../classes/game-member";
 
 @Injectable()
 export class GameService {
@@ -51,6 +52,20 @@ export class GameService {
         game.owner.username === username ||
         game.players.some((player) => player.username === username)
     );
+  }
+  public getMemberByName(username: string): GameMember {
+    for (const game of this.games) {
+      if (game.owner.username === username) {
+        return game.owner;
+      }
+      const player = game.players.find(
+        (player) => player.username === username
+      );
+      if (player) {
+        return player;
+      }
+    }
+    return null;
   }
 
   public isUsernameConnected(username: string): boolean {

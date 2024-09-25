@@ -4,11 +4,12 @@ import styles from "../styles/LifeBouy.module.scss";
 
 interface LifeBouyProps {
   icon: IconType;
+  executeAction?: () => void;
 }
 
-const LifeBouy: React.FC<LifeBouyProps> = ({ icon: Icon }) => {
+const LifeBouy: React.FC<LifeBouyProps> = ({ icon: Icon, executeAction }) => {
   return (
-    <div className={styles.lifeBouyContainer}>
+    <div className={styles.lifeBouyContainer} onClick={executeAction}>
       <Icon className={styles.lifeBouyIcon} />
     </div>
   );

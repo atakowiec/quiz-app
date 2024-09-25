@@ -8,6 +8,7 @@ import { MdQueryStats } from "react-icons/md";
 import TimeBar from "../../components/TimeBar.tsx";
 import { useGame } from "../../store/gameSlice.ts";
 import { useSocket } from "../../socket/useSocket.ts";
+import { HelperType } from "@shared/game.js";
 
 const QuestionPhase = () => {
   const game = useGame();
@@ -24,6 +25,12 @@ const QuestionPhase = () => {
     socket.emit("select_answer", answer);
   }
 
+  function executeHelper(helper: HelperType) {
+    if (game?.status !== "question_phase") return;
+
+    socket.emit("use_helper", helper);
+  }
+
   //TODO: make question a component
   //TODO: make answers show correct/incorrect after choice, show what players chose
   //TODO: add timer
@@ -35,7 +42,10 @@ const QuestionPhase = () => {
         <div className={styles.lifebouys}>
           <LifeBouy icon={FaRegEye} />
           <LifeBouy icon={MdOutlineMoreTime} />
-          <LifeBouy icon={MdQueryStats} />
+          <LifeBouy
+            icon={MdQueryStats}
+            executeAction={() => executeHelper("fifty_fifty")}
+          />
         </div>
         <TimeBar />{" "}
         <div className="row justify-content-center">
@@ -56,6 +66,7 @@ const QuestionPhase = () => {
             </div>
             <div className={styles.answersBox}>
               {game.round.question.answers.map((answer) => {
+                const isHidden = game.player.hiddenAnswers.includes(answer);
                 const isSelected = selected === answer;
                 const isCorrect = game?.round?.correctAnswer === answer;
                 const className = resultShown
@@ -66,7 +77,9 @@ const QuestionPhase = () => {
                       : ""
                   : isSelected
                     ? styles.selected
-                    : "";
+                    : isHidden
+                      ? styles.hiddenAnswer
+                      : "";
                 const playersThatAnswered = !resultShown
                   ? []
                   : game?.players

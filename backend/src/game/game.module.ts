@@ -6,11 +6,9 @@ import { GameController } from "./game.controller";
 import { QuestionsModule } from "../questions/questions.module";
 
 @Module({
-  imports: [forwardRef(() => AuthModule),
-    QuestionsModule],
+  imports: [forwardRef(() => AuthModule), QuestionsModule],
   providers: [GameService, GameGateway],
   controllers: [GameController],
   exports: [GameService, GameGateway],
 })
-export class GameModule {
-}
+export class GameModule {}

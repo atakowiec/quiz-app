@@ -32,7 +32,7 @@ export default class Game {
 
     this.settings = {
       number_of_rounds: 1,
-      number_of_questions_per_round: 1,
+      number_of_questions_per_round: 2,
       number_of_categories_per_voting: 3,
       time_for_answer: 30,
       max_number_of_players: 49,
@@ -340,6 +340,12 @@ export default class Game {
     // TODO: save the game to the database
     // TODO: calculate the winner
 
+    this.players.forEach((player) => {
+      if (!player.socket.data.userId) {
+        player.socket.disconnect();
+      }
+    });
+
     setTimeout(() => {
       this.gameService.removeGame(this);
     }, 10000);
@@ -347,5 +353,39 @@ export default class Game {
 
   getAllPlayers() {
     return [this.owner, ...this.players];
+  }
+
+  fiftyFifty(socket: SocketType) {
+    const player = this.getPlayer(socket);
+    if (!player) {
+      return;
+    }
+    if (this.gameStatus !== "question_phase") {
+      player.sendNotification("Nie możesz teraz tego zrobić!");
+      return;
+    }
+    if (player.chosenAnswer || player.answerEndTime <= Date.now()) {
+      player.sendNotification("Nie możesz teraz tego zrobić!");
+      return;
+    }
+    player.availableHelpers = player.availableHelpers.filter(
+      (helper) => helper.name !== "fifty_fifty"
+    );
+
+    player.hiddenAnswers = player.question.answers.filter(
+      (answer) => answer !== this.round.chosenQuestion.correctAnswer
+    );
+    player.hiddenAnswers.splice(
+      Math.floor(Math.random() * player.hiddenAnswers.length),
+      1
+    );
+
+    player.sendGameUpdate({
+      player: {
+        hiddenAnswers: player.hiddenAnswers,
+      },
+    });
+
+    player.sendNotification("Użyłeś 50/50");
   }
 }

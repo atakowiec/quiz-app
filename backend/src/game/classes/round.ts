@@ -37,7 +37,7 @@ export default class Round {
    * Handles ticking the round timer and every players' timers - in question phase
    */
   public async tick() {
-    this.logger.debug("tick, status: " + this.game.gameStatus);
+    //this.logger.debug("tick, status: " + this.game.gameStatus);
     if (this.game.gameStatus === "question_phase") {
       // check if every player answered the question - if so, end the question phase
       const time = Date.now();
@@ -211,7 +211,7 @@ export default class Round {
     this.logger.debug("Starting leaderboard phase");
     this.game.gameStatus = "leaderboard";
 
-    this.setTimer(10, this.endRound.bind(this));
+    this.setTimer(2, this.endRound.bind(this));
 
     this.game.send();
   }

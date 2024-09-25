@@ -13,6 +13,7 @@ import { GameService } from "../services/game.service";
 import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
 import { GameType } from "@shared/game";
+import e from "express";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
@@ -140,9 +141,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
 
-    if (game.gameType !== "single" && game.players.length == 0) {
-      throw new WsException("Nie można rozpocząć gry bez graczy!");
-    }
+    // TODO: Odkomentować to, narazie nie chce mi sie dwóch klientów odpalać
+
+    // if (game.gameType !== "single" && game.players.length == 0) {
+    //   throw new WsException("Nie można rozpocząć gry bez graczy!");
+    // }
 
     await game.start();
   }
@@ -171,5 +174,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     game.selectAnswer(playerSocket, answer);
+  }
+
+  @SubscribeMessage("use_helper")
+  useHelper(
+    @ConnectedSocket() playerSocket: SocketType,
+    @MessageBody() helperName: string
+  ) {
+    const player = this.gameService.getMemberByName(playerSocket.data.username);
+    if (!player) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    try {
+      player.useHelper(helperName);
+    } catch (e) {
+      throw new WsException(e.message);
+    }
   }
 }
