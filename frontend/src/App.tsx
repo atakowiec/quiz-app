@@ -23,6 +23,7 @@ import { globalDataActions } from "./store/globalDataSlice.ts";
 import { useGame } from "./store/gameSlice.ts";
 import IsInWaitingRoomLayout from "./components/IsInWaitingRoomLayout.tsx";
 import Questions from "./pages/Admin/Questions/Questions.tsx";
+import GameOverPhase from "./pages/game/GameOverPhase.tsx";
 
 function App() {
   const dispatch = useDispatch();

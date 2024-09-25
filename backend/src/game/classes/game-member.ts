@@ -1,7 +1,12 @@
 import Game from "./game";
 import { SocketType } from "../game.types";
-import { IAnswer, GameUpdatePacket, HelperType, IGameMember, IQuestion } from "@shared/game";
-
+import {
+  IAnswer,
+  GameUpdatePacket,
+  IGameMember,
+  IQuestion,
+} from "@shared/game";
+import Helper, { CheatFromOthers, ExtendTime, FifyFifty } from "./Helper";
 export class GameMember {
   public username: string;
   public socket: SocketType;
@@ -11,8 +16,8 @@ export class GameMember {
   public score: number;
 
   public question: IQuestion;
-  public answersHistory: boolean[]
-  public availableHelpers: HelperType[];
+  public answersHistory: boolean[];
+  public availableHelpers: Helper[];
   public chosenCategory: number = -1;
   public chosenAnswer: IAnswer;
 
@@ -32,6 +37,13 @@ export class GameMember {
     this.game = game;
     this.username = socket.data.username;
     this.socket = socket;
+
+    // TODO: Implement whitelist for helpers
+    this.availableHelpers = [
+      new FifyFifty(),
+      new ExtendTime(),
+      new CheatFromOthers(),
+    ];
   }
 
   public sendNotification(message: string) {
@@ -43,7 +55,7 @@ export class GameMember {
       username: this.username,
       owner: this.game.owner === this,
       score: this.score,
-      availableHelpers: this.availableHelpers,
+      availableHelpers: this.availableHelpers.map((helper) => helper.name),
       chosenCategory: this.chosenCategory,
       chosenAnswer: this.chosenAnswer,
       hiddenAnswers: this.hiddenAnswers,
@@ -61,7 +73,7 @@ export class GameMember {
   }
 
   setDisconnectTimeout(cb: () => void) {
-    if(this.disconnectTimeout) {
+    if (this.disconnectTimeout) {
       clearTimeout(this.disconnectTimeout);
     }
 
@@ -71,5 +83,17 @@ export class GameMember {
   clearDisconnectTimeout() {
     clearTimeout(this.disconnectTimeout);
     this.disconnectTimeout = null;
+  }
+
+  useHelper(helperName: string) {
+    const helper = this.availableHelpers.find(
+      (helper) => helper.name === helperName
+    );
+    if (!helper) {
+      this.socket.emit("notification", "Już zużyłeś to koło!");
+      return;
+    }
+
+    helper.execute(this.socket, this.game.gameService);
   }
 }
