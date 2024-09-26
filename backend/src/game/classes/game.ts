@@ -32,7 +32,7 @@ export default class Game {
 
     this.settings = {
       number_of_rounds: 1,
-      number_of_questions_per_round: 2,
+      number_of_questions_per_round: 3,
       number_of_categories_per_voting: 3,
       time_for_answer: 30,
       max_number_of_players: 49,
@@ -148,6 +148,13 @@ export default class Game {
     );
   }
 
+  public broadcastUpdateForAllPlayersThatHaveShownAnswers(
+    updatePacket: GameUpdatePacket
+  ) {
+    this.getAllPlayers()
+      .filter((player) => player.showOtherPlayersAnswers)
+      .forEach((player) => player.sendGameUpdate(updatePacket));
+  }
   public broadcastNotification(message: string) {
     this.getAllPlayers().forEach((player) => player.sendNotification(message));
   }
@@ -307,6 +314,15 @@ export default class Game {
       ],
     });
   }
+  getPlayersWithTheirAnswers() {
+    const playersThatAnswered = this.getAllPlayers()
+      .filter((player) => player.chosenAnswer)
+      .map((player) => ({
+        username: player.username,
+        chosenAnswer: player.chosenAnswer,
+      }));
+    return playersThatAnswered;
+  }
 
   selectAnswer(playerSocket: SocketType, answer: string) {
     const player = this.getPlayer(playerSocket);
@@ -329,6 +345,12 @@ export default class Game {
       player: {
         chosenAnswer: player.chosenAnswer,
       },
+    });
+
+    const playersThatAnswered = this.getPlayersWithTheirAnswers();
+
+    this.broadcastUpdateForAllPlayersThatHaveShownAnswers({
+      players: playersThatAnswered,
     });
   }
 
@@ -355,7 +377,7 @@ export default class Game {
     return [this.owner, ...this.players];
   }
 
-  fiftyFifty(socket: SocketType) {
+  checkPlayer(socket: SocketType): GameMember {
     const player = this.getPlayer(socket);
     if (!player) {
       return;
@@ -368,6 +390,10 @@ export default class Game {
       player.sendNotification("Nie możesz teraz tego zrobić!");
       return;
     }
+    return player;
+  }
+  fiftyFifty(socket: SocketType) {
+    const player = this.getPlayer(socket);
     player.availableHelpers = player.availableHelpers.filter(
       (helper) => helper.name !== "fifty_fifty"
     );
@@ -387,5 +413,42 @@ export default class Game {
     });
 
     player.sendNotification("Użyłeś 50/50");
+  }
+  cheatFromOthers(socket: SocketType) {
+    const player = this.getPlayer(socket);
+
+    player.availableHelpers = player.availableHelpers.filter(
+      (helper) => helper.name !== "cheat_from_others"
+    );
+
+    player.showOtherPlayersAnswers = true;
+
+    const playersThatAnswered = this.getPlayersWithTheirAnswers();
+
+    player.sendGameUpdate({
+      player: {
+        showOtherPlayersAnswers: true,
+      },
+      players: playersThatAnswered,
+    });
+
+    player.sendNotification("Ściągasz od innych graczy");
+  }
+
+  extendTime(socket: SocketType) {
+    const player = this.getPlayer(socket);
+
+    player.availableHelpers = player.availableHelpers.filter(
+      (helper) => helper.name !== "extend_time"
+    );
+
+    this.round.extendTime(player);
+
+    player.sendGameUpdate({
+      round: {
+        timerEnd: this.round.timeEnd,
+      },
+    });
+    player.sendNotification("Przedłużono czas na odpowiedź");
   }
 }

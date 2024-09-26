@@ -5,6 +5,7 @@ import { Category } from "../../questions/entities/category.model";
 import { ConfigService } from "@nestjs/config";
 import { GameMember } from "./game-member";
 import { Logger } from "@nestjs/common";
+import { log } from "console";
 
 /**
  * Represents a single round in the game - voting, selecting category, question phase
@@ -140,6 +141,7 @@ export default class Round {
     this.game.getAllPlayers().forEach((player) => {
       player.chosenAnswer = null;
       player.hiddenAnswers = [];
+      player.showOtherPlayersAnswers = false;
       player.question = this.getRandomizedIQuestion();
     });
 
@@ -371,5 +373,9 @@ export default class Round {
     }
 
     return selectedQuestions;
+  }
+
+  extendTime(player: GameMember) {
+    player.answerEndTime += 10 * 1000;
   }
 }
