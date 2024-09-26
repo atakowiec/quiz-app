@@ -25,7 +25,7 @@ export class GameMember {
   public hiddenAnswers: IAnswer[];
 
   // Propably for the "Cheat from others" helper
-  public areAllAnswersHidden: boolean;
+  public showOtherPlayersAnswers: boolean = false;
 
   // For the "Extend time" helper
   public timeToAnswer: number;
@@ -59,7 +59,7 @@ export class GameMember {
       chosenCategory: this.chosenCategory,
       chosenAnswer: this.chosenAnswer,
       hiddenAnswers: this.hiddenAnswers,
-      areAllAnswersHidden: this.areAllAnswersHidden,
+      showOtherPlayersAnswers: this.showOtherPlayersAnswers,
       answerEndTime: this.answerEndTime,
     };
   }

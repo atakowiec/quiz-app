@@ -45,8 +45,9 @@ export interface IGameMember {
   chosenCategory: number;
   chosenAnswer: IAnswer;
   hiddenAnswers: IAnswer[];
-  areAllAnswersHidden: boolean;
+  showOtherPlayersAnswers: boolean;
   answerEndTime: number;
+  cheatedAnswers?: IAnswer[];
 }
 
 export interface GameSettings {

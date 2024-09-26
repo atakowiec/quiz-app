@@ -40,8 +40,14 @@ const QuestionPhase = () => {
       <Breadcrumb title="Question" />
       <Container className={styles.mainContainer}>
         <div className={styles.lifebouys}>
-          <Helper icon={FaRegEye} />
-          <Helper icon={MdOutlineMoreTime} />
+          <Helper
+            icon={FaRegEye}
+            executeAction={() => executeHelper("cheat_from_others")}
+          />
+          <Helper
+            icon={MdOutlineMoreTime}
+            executeAction={() => executeHelper("extend_time")}
+          />
           <Helper
             icon={MdQueryStats}
             executeAction={() => executeHelper("fifty_fifty")}
@@ -69,6 +75,9 @@ const QuestionPhase = () => {
                 const isHidden = game.player.hiddenAnswers.includes(answer);
                 const isSelected = selected === answer;
                 const isCorrect = game?.round?.correctAnswer === answer;
+                const playersChosen = game?.players?.filter(
+                  (player) => player.chosenAnswer === answer
+                );
                 const className = resultShown
                   ? isCorrect
                     ? styles.correctAnswer
@@ -95,6 +104,22 @@ const QuestionPhase = () => {
                     {answer}
                     {playersThatAnswered && (
                       <div>{playersThatAnswered.join(", ")}</div>
+                    )}
+                    {game?.player?.showOtherPlayersAnswers && playersChosen && (
+                      <div className={styles.cheatedAnswers}>
+                        {playersChosen
+                          .filter(
+                            (player) => player.username !== game.player.username
+                          )
+                          .map((player) => (
+                            <span
+                              className={styles.userAnswer}
+                              key={player.username}
+                            >
+                              {player.username}
+                            </span>
+                          ))}
+                      </div>
                     )}
                   </div>
                 );

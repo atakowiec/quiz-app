@@ -30,8 +30,8 @@ class ExtendTime extends Helper {
   constructor() {
     super(HelperEnum.ExtendTime);
   }
-  execute(socket: SocketType) {
-    socket.emit("notification", "Extend time");
+  execute(socket: SocketType, gameService: GameService) {
+    gameService.getGameByNickname(socket.data.username)?.extendTime(socket);
   }
 }
 
@@ -39,8 +39,10 @@ class CheatFromOthers extends Helper {
   constructor() {
     super(HelperEnum.CheatFromOthers);
   }
-  execute(socket: SocketType) {
-    socket.emit("notification", "Cheat from others");
+  execute(socket: SocketType, gameService: GameService) {
+    gameService
+      .getGameByNickname(socket.data.username)
+      ?.cheatFromOthers(socket);
   }
 }
 

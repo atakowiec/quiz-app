@@ -13,7 +13,6 @@ import { GameService } from "../services/game.service";
 import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
 import { GameType } from "@shared/game";
-import e from "express";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
