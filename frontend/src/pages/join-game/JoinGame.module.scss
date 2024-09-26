@@ -16,6 +16,7 @@
   text-align: center;
   margin-top: 1rem;
 }
+
 .createButton button {
   background-color: $green-black;
   color: black;
@@ -25,11 +26,13 @@
   border-radius: $button-border-radius;
   cursor: pointer;
   box-shadow: $button-shadow-black;
+  transition: .15s background-color ease-in-out;
 
   &:hover {
     background-color: $button-green-hover;
   }
 }
+
 .selectionBoxes input {
   border: 1px solid #ccc;
   border-radius: 5px;

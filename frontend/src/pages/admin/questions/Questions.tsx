@@ -111,7 +111,7 @@ export default function Questions() {
   };
 
   return (
-    <div className={`container mx-auto p-4 ${classes.context}`}>
+    <div className={`container mx-auto p-4 ${classes.context} ${classes.questionsBox}`}>
       <h1 className={`text-2xl font-bold mb-4`}>
         Questions from {categoryName}
       </h1>
