@@ -59,8 +59,7 @@ export class GameMember {
       chosenCategory: this.chosenCategory,
       chosenAnswer: this.chosenAnswer,
       hiddenAnswers: this.hiddenAnswers,
-      showOtherPlayersAnswers: this.showOtherPlayersAnswers,
-      answerEndTime: this.answerEndTime,
+      showOtherPlayersAnswers: this.showOtherPlayersAnswers
     };
   }
 

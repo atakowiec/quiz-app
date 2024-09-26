@@ -46,7 +46,6 @@ export interface IGameMember {
   chosenAnswer: IAnswer;
   hiddenAnswers: IAnswer[];
   showOtherPlayersAnswers: boolean;
-  answerEndTime: number;
   cheatedAnswers?: IAnswer[];
 }
 
