@@ -2,13 +2,7 @@ import { GameMember } from "./game-member";
 import { GameService } from "../services/game.service";
 import { SocketType } from "../game.types";
 import { createGameID } from "src/utils/ids";
-import {
-  GameSettings,
-  GameStatus,
-  GameType,
-  GameUpdatePacket,
-  IGamePacket,
-} from "@shared/game";
+import { GameSettings, GameStatus, GameType, GameUpdatePacket, IGamePacket, } from "@shared/game";
 import { Logger } from "@nestjs/common";
 import Round from "./round";
 
@@ -155,6 +149,7 @@ export default class Game {
       .filter((player) => player.showOtherPlayersAnswers)
       .forEach((player) => player.sendGameUpdate(updatePacket));
   }
+
   public broadcastNotification(message: string) {
     this.getAllPlayers().forEach((player) => player.sendNotification(message));
   }
@@ -314,14 +309,14 @@ export default class Game {
       ],
     });
   }
+
   getPlayersWithTheirAnswers() {
-    const playersThatAnswered = this.getAllPlayers()
+    return this.getAllPlayers()
       .filter((player) => player.chosenAnswer)
       .map((player) => ({
         username: player.username,
         chosenAnswer: player.chosenAnswer,
       }));
-    return playersThatAnswered;
   }
 
   selectAnswer(playerSocket: SocketType, answer: string) {
@@ -392,6 +387,7 @@ export default class Game {
     }
     return player;
   }
+
   fiftyFifty(socket: SocketType) {
     const player = this.getPlayer(socket);
     player.availableHelpers = player.availableHelpers.filter(
@@ -414,6 +410,7 @@ export default class Game {
 
     player.sendNotification("Użyłeś 50/50");
   }
+
   cheatFromOthers(socket: SocketType) {
     const player = this.getPlayer(socket);
 
@@ -446,7 +443,7 @@ export default class Game {
 
     player.sendGameUpdate({
       round: {
-        timerEnd: this.round.timeEnd,
+        timerEnd: player.answerEndTime,
       },
     });
     player.sendNotification("Przedłużono czas na odpowiedź");

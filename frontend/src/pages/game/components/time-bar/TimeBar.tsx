@@ -13,16 +13,7 @@ const TimeBar: React.FC<TimeBarProps> = ({ startTime, endTime }) => {
 
   useEffect(() => {
     let start = startTime ?? game?.round?.timerStart;
-    let end =
-      endTime ??
-      (game?.round?.timerEnd === -1 && game?.player?.answerEndTime
-        ? game.player.answerEndTime
-        : game?.round?.timerEnd);
-
-    console.log("start", start);
-    console.log("end", end);
-    console.log("game", game?.player.answerEndTime);
-    console.log("game", game?.round?.timerEnd);
+    let end = endTime ?? game?.round?.timerEnd;
 
     if (!start || !end) {
       return;
