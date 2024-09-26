@@ -25,6 +25,22 @@
   text-decoration: none;
 }
 
+.fancyLogo {
+  display: flex;
+
+  div {
+    transition: color 0.1s ease, padding 0.1s ease, margin 0.1s ease;
+
+    &.space {
+      width: 0.5rem;
+    }
+  }
+
+  span:hover {
+    color: $green;
+  }
+}
+
 .iconContainer {
   display: flex;
 }
@@ -43,7 +59,7 @@
   cursor: pointer;
   background-color: $blue;
   border: none;
-  padding: 0rem;
+  padding: 0;
 }
 
 .loginButton {
@@ -55,6 +71,7 @@
   font-weight: $button-font-weight;
   font-size: $button-font-size;
   box-shadow: $button-shadow-green;
+  transition: .15s background-color ease-in-out;
 }
 
 .loginButton:hover {

@@ -1,6 +1,6 @@
 import React from "react";
 import Meta from "../components/Meta";
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Breadcrumb } from "react-bootstrap";
 import Sidebar, { SidebarItem } from "../components/SideBar";
 import { IoStatsChartSharp } from "react-icons/io5";
 import styles from "../styles/Home.module.scss";
@@ -64,7 +64,7 @@ const Home: React.FC = () => {
               <path
                 d="M433.5 187.098C433.5 283.744 340.15 364.697 221.5 364.697C102.85 364.697 9.5 283.744 9.5 187.098C9.5 90.4532 102.85 9.5 221.5 9.5C340.15 9.5 433.5 90.4532 433.5 187.098Z"
                 stroke="black"
-                stroke-width="19"
+                strokeWidth="19"
               />
               <path
                 d="M229.76 273.884L288.768 279.622L407.937 407.074L342.717 400.731L229.76 273.884Z"
@@ -78,7 +78,7 @@ const Home: React.FC = () => {
           </div>
           <div className={styles.imageWrapper}>
             <img
-              src="../public/assets/categories/homePhoto.png"
+              src="/assets/homePhoto.png"
               alt="1"
               className={`img-fluid ${styles.img1}`}
             />

@@ -16,7 +16,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
     <div className={styles.sidebar}>
       <ul>
         {items.map((item, index) => (
-          <li key={index} className={styles.sidebarItem}>
+          <li key={index} className={`${styles.sidebarItem}`}>
             <Link to={item.href} className={styles.sidebarLink}>
               <div className={styles.sidebarIcon}>{<item.icon />}</div>
               <div className={styles.sidebarLabel}>{item.label}</div>

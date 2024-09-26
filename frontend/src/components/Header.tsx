@@ -8,7 +8,8 @@ import { State } from "../store";
 import { useNavigate } from "react-router-dom";
 import { UserState } from "../store/userSlice.ts";
 import { Dropdown } from "react-bootstrap";
-import { GameState, useGame } from "../store/gameSlice.ts";
+import { useGame } from "../store/gameSlice.ts";
+import FancyLogo from "./FancyLogo.tsx";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -42,13 +43,12 @@ const Header = () => {
     navigate("/logout");
   };
 
+
   return (
     <>
       <header className={`${styles.headerTopStrip} p-1`}>
         <div className={styles.headerContent}>
-          <Link to="/" className={styles.logo}>
-            Quiz
-          </Link>
+          <FancyLogo />
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
               <Link to="/" className={`info ${styles.gap15}`}>
