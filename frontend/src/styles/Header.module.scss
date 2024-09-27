@@ -29,7 +29,7 @@
   display: flex;
 
   div {
-    transition: color 0.1s ease, padding 0.1s ease, margin 0.1s ease;
+    transition: color 0.1s ease, padding 0.2s ease-in-out, margin 0.2s ease-in-out;
 
     &.space {
       width: 0.5rem;

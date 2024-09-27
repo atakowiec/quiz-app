@@ -16,7 +16,7 @@ export default function FancyLogo() {
         clearInterval(intervalRef.current);
 
       incrementCounter();
-    }, 200);
+    }, 150);
   }
 
   function onMouseLeave() {
@@ -34,8 +34,9 @@ export default function FancyLogo() {
 
     let color = [6, 165, 59];
     color[(counter - index) % 3] = 255;
+    const distance = Math.abs(counter % 9 - index);
 
-    const tranlate = counter % 9 == index ? 10 : 0;
+    const tranlate = [15, 10, 5][distance] ?? 0;
 
     return {
       color: `rgb(${color.join(",")})`,
