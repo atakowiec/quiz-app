@@ -1,5 +1,5 @@
 import Meta from "../../../components/Meta.tsx";
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Breadcrumb } from "react-bootstrap";
 import styles from "./Question.module.scss";
 import Helper from "../components/helper/Helper.tsx";
 import { FaRegEye } from "react-icons/fa";
@@ -9,6 +9,9 @@ import TimeBar from "../components/time-bar/TimeBar.tsx";
 import { useGame } from "../../../store/gameSlice.ts";
 import { useSocket } from "../../../socket/useSocket.ts";
 import { HelperType } from "@shared/game";
+import MainContainer from "../../../components/MainContainer.tsx";
+import MainBox from "../../../components/MainBox.tsx";
+import MainTitle from "../../../components/MainTitle.tsx";
 
 const QuestionPhase = () => {
   const game = useGame();
@@ -33,12 +36,12 @@ const QuestionPhase = () => {
 
   //TODO: make question a component
   //TODO: make answers show correct/incorrect after choice, show what players chose
-  //TODO: add timer
+  //TODO: fix helpers position
   return (
     <>
-      <Meta title={"Question"} />
-      <Breadcrumb title="Question" />
-      <Container className={styles.mainContainer}>
+      <Meta title={"Question"}/>
+      <Breadcrumb title="Question"/>
+      <MainContainer>
         <div className={styles.lifebouys}>
           <Helper
             icon={FaRegEye}
@@ -53,81 +56,78 @@ const QuestionPhase = () => {
             executeAction={() => executeHelper("fifty_fifty")}
           />
         </div>
-        <TimeBar />{" "}
-        <div className="row justify-content-center">
-          <div className={styles.mainBox}>
-            <div className={styles.mainText}>
-              Pytanie #{game.round.questionNumber}
-            </div>
-            <div className={styles.question}>
-              {" "}
-              {game.round.question.text}{" "}
-              {game.round.question.photo && (
-                <img
-                  src={game.round.question.photo}
-                  alt={game.round.question.text}
-                  className={styles.questionImage}
-                />
-              )}
-            </div>
-            <div className={styles.answersBox}>
-              {game.round.question.answers.map((answer) => {
-                const isHidden = game.player.hiddenAnswers.includes(answer);
-                const isSelected = selected === answer;
-                const isCorrect = game?.round?.correctAnswer === answer;
-                const playersChosen = game?.players?.filter(
-                  (player) => player.chosenAnswer === answer
-                );
-                const className = resultShown
-                  ? isCorrect
-                    ? styles.correctAnswer
-                    : isSelected
-                      ? styles.incorrectAnswer
-                      : ""
+        <MainBox before={<TimeBar/>}>
+          <MainTitle>
+            Pytanie #{game.round.questionNumber}
+          </MainTitle>
+          <div className={styles.question}>
+            {" "}
+            {game.round.question.text}{" "}
+            {game.round.question.photo && (
+              <img
+                src={game.round.question.photo}
+                alt={game.round.question.text}
+                className={styles.questionImage}
+              />
+            )}
+          </div>
+          <div className={styles.answersBox}>
+            {game.round.question.answers.map((answer) => {
+              const isHidden = game.player.hiddenAnswers.includes(answer);
+              const isSelected = selected === answer;
+              const isCorrect = game?.round?.correctAnswer === answer;
+              const playersChosen = game?.players?.filter(
+                (player) => player.chosenAnswer === answer
+              );
+              const className = resultShown
+                ? isCorrect
+                  ? styles.correctAnswer
                   : isSelected
-                    ? styles.selected
-                    : isHidden
-                      ? styles.hiddenAnswer
-                      : "";
-                const playersThatAnswered = !resultShown
-                  ? []
-                  : game?.players
-                      ?.filter((player) => player.chosenAnswer === answer)
-                      .map((player) => player.username);
+                    ? styles.incorrectAnswer
+                    : ""
+                : isSelected
+                  ? styles.selected
+                  : isHidden
+                    ? styles.hiddenAnswer
+                    : "";
+              const playersThatAnswered = !resultShown
+                ? []
+                : game?.players
+                  ?.filter((player) => player.chosenAnswer === answer)
+                  .map((player) => player.username);
 
-                return (
-                  <div
-                    className={`${styles.answerBox} ${className}`}
-                    key={answer}
-                    onClick={() => selectAnswer(answer)}
-                  >
-                    {answer}
-                    {playersThatAnswered && (
-                      <div>{playersThatAnswered.join(", ")}</div>
-                    )}
-                    {game?.player?.showOtherPlayersAnswers && playersChosen && (
-                      <div className={styles.cheatedAnswers}>
-                        {playersChosen
-                          .filter(
-                            (player) => player.username !== game.player.username
-                          )
-                          .map((player) => (
-                            <span
-                              className={styles.userAnswer}
-                              key={player.username}
-                            >
+              return (
+                <div
+                  className={`${styles.answerBox} ${className}`}
+                  key={answer}
+                  onClick={() => selectAnswer(answer)}
+                >
+                  {answer}
+                  {playersThatAnswered && (
+                    <div>{playersThatAnswered.join(", ")}</div>
+                  )}
+                  {game?.player?.showOtherPlayersAnswers && playersChosen && (
+                    <div className={styles.cheatedAnswers}>
+                      {playersChosen
+                        .filter(
+                          (player) => player.username !== game.player.username
+                        )
+                        .map((player) => (
+                          <span
+                            className={styles.userAnswer}
+                            key={player.username}
+                          >
                               {player.username}
                             </span>
-                          ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </div>
-      </Container>
+        </MainBox>
+      </MainContainer>
     </>
   );
 };

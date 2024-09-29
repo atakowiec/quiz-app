@@ -30,9 +30,9 @@ $button-shadow-black: 0 2px 4px rgba(0, 0, 0, 0.2);
 $button-shadow-green: 0 4px 8px rgba(63, 155, 55, 0.26);
 $button-border-radius: 10px;
 
-//max 500px buttons
+// phone buttons - width max 768px
 $button-phone-padding: 0.5rem 0.75rem;
-$button-phone-font-size: 0.75rem;
+$button-phone-font-size: 0.9rem;
 
 //container
 $container-border-radius: 10px;
@@ -47,28 +47,31 @@ $code-phone-font-size-300: 0.5rem;
 $input-phone-font-size: 0.8rem;
 $input-phone-padding: 0.5rem;
 
+// breakpoints
+$small-phone-breakpoint: 320px; // maximum width for a small phone screen
+$phone-breakpoint: 768px; // maximum width for a phone screen
+$desktop-breakpoint: 769px; // minimum width for a desktop screen
+$large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (4k)
+
 .mainContainer {
-  position: relative;
-  height: calc(90vh - $sidebar-width);
-  margin-top: 8rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .mainBox {
   background-color: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 80vw;
   max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  max-height: 100%;
 }
 
 .mainText {
@@ -83,25 +86,18 @@ $input-phone-padding: 0.5rem;
   position: sticky;
 }
 
-@media (max-width: 1000px) {
-  .mainContainer {
-    max-width: 800px;
-  }
-}
-
-@media (max-width: 500px) {
+@media (max-width: $phone-breakpoint) {
   body {
     font-size: 12px;
   }
 
-  .mainBox {
-    left: 50% !important;
-    width: 90vw;
-    max-width: 500px;
+  .mainContainer {
+    align-content: flex-start;
+    padding-top: clamp(5rem, 10vh, 20vh);
   }
 
-  .mainContainer {
-    height: calc(90vh - 2 * $sidebar-width);
+  .mainBox {
+    width: 90vw;
   }
 
   .mainText {
@@ -119,18 +115,15 @@ $input-phone-padding: 0.5rem;
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: $phone-breakpoint) {
   .mainText {
     font-size: 1rem;
     margin-bottom: 0;
   }
 }
 
-@media (min-width: 2000px) and (min-height: 1000px) {
+@media (min-width: $large-desktop-breakpoint) {
   .mainBox {
     scale: 1.2;
-    top: calc(50% + 6rem); /* Uwzględniamy wysokość headera (3rem) */
-    left: calc(50% + 3.4rem);
-    transform: translate(-50%, -50%);
   }
 }

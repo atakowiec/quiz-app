@@ -1,3 +1,5 @@
+@import "Global";
+
 .picturesContainer {
   display: flex;
   justify-content: center;
@@ -39,7 +41,7 @@
   height: auto;
 }
 
-@media (max-width: 500px) {
+@media (max-width: $phone-breakpoint) {
   .picturesContainer {
     width: 100%;
     margin-left: 0;

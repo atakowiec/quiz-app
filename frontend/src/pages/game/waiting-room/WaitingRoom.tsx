@@ -5,7 +5,6 @@ import Meta from "../../../components/Meta.tsx";
 import {
   Breadcrumb,
   Button,
-  Container,
   Modal,
   OverlayTrigger,
   Tooltip,
@@ -20,7 +19,10 @@ import { useSocket } from "../../../socket/useSocket.ts";
 import { IoMdArrowUp } from "react-icons/io";
 import { GameState } from "../../../store/gameSlice.ts";
 import { UserState } from "../../../store/userSlice.ts";
-import { FaCheck, FaLink } from "react-icons/fa6";
+import { FaCheck, FaLink, FaPeopleGroup } from "react-icons/fa6";
+import MainContainer from "../../../components/MainContainer.tsx";
+import MainBox from "../../../components/MainBox.tsx";
+import MainTitle from "../../../components/MainTitle.tsx";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -81,13 +83,13 @@ const WaitingRoom: React.FC = () => {
     setShowModal(false);
   }
 
-  function copyId() {
+  async function copyId() {
     const id = game?.id;
     if (!id || copyAnimationStage !== "none") {
       return;
     }
 
-    navigator.clipboard.writeText(`http://localhost:5173/join-game?code=${id}`);
+    await navigator.clipboard.writeText(`http://localhost:5173/join-game?code=${id}`); // todo change to production url some day
 
     setCopyAnimationStage("copying");
 
@@ -112,38 +114,37 @@ const WaitingRoom: React.FC = () => {
     );
   }
 
-  console.log(user);
-
   return (
     <>
-      <Meta title={"Poczekalnia"} />
-      <Breadcrumb title="Poczekalnia" />
-      <Sidebar items={sidebarItems} />
-      <Container className={styles.mainContainer}>
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-8 col-lg-4">
-            <div className={styles.mainBox}>
-              <div className={styles.mainText}>Poczekalnia</div>
-              <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
-                {["ending", "copied"].includes(copyAnimationStage) ? (
-                  <>
-                    <FaCheck /> Skopiowano!
-                  </>
-                ) : (
-                  <OverlayTrigger
-                    placement="right"
-                    delay={{ show: 250, hide: 400 }}
-                    overlay={renderTooltip}
-                  >
+      <Meta title={"Poczekalnia"}/>
+      <Breadcrumb title="Poczekalnia"/>
+      <Sidebar items={sidebarItems}/>
+      <MainContainer>
+        <MainBox>
+          <MainTitle>
+            <FaPeopleGroup className="mb-2 fs-2"/>
+            Poczekalnia
+          </MainTitle>
+          <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
+            {["ending", "copied"].includes(copyAnimationStage) ? (
+              <>
+                <FaCheck/> Skopiowano!
+              </>
+            ) : (
+              <OverlayTrigger
+                placement="right"
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderTooltip}
+              >
                     <span onClick={copyId}>
-                      Kod: {game?.id} <FaLink />
+                      Kod: {game?.id} <FaLink/>
                     </span>
-                  </OverlayTrigger>
-                )}
-              </div>
-              <hr className={styles.line} />
-              <div className={styles.playersBox}>
-                <div className={styles.singlePlayer}>
+              </OverlayTrigger>
+            )}
+          </div>
+          <hr className={styles.line}/>
+          <div className={styles.playersBox}>
+            <div className={styles.singlePlayer}>
                   <span
                     className={
                       game?.owner.username === user.username
@@ -153,17 +154,17 @@ const WaitingRoom: React.FC = () => {
                   >
                     {game?.owner.username}
                   </span>
-                  <LuCrown className={styles.playerAction} />
-                </div>
-                {game?.players && game.players.length > 0 && (
-                  <>
-                    {game.players
-                      .filter((player) => !player.owner)
-                      .map((player) => (
-                        <div
-                          className={styles.singlePlayer}
-                          key={player.username}
-                        >
+              <LuCrown className={styles.playerAction}/>
+            </div>
+            {game?.players && game.players.length > 0 && (
+              <>
+                {game.players
+                  .filter((player) => !player.owner)
+                  .map((player) => (
+                    <div
+                      className={styles.singlePlayer}
+                      key={player.username}
+                    >
                           <span
                             className={
                               player.username === user.username
@@ -173,45 +174,43 @@ const WaitingRoom: React.FC = () => {
                           >
                             {player.username}
                           </span>
-                          {user.username === game.owner.username && (
-                            <div>
-                              <button
-                                className={styles.giveBtn}
-                                onClick={() =>
-                                  handleGiveOwnerClick(player.username!)
-                                }
-                              >
-                                <IoMdArrowUp className={styles.playerAction2} />
-                              </button>
+                      {user.username === game.owner.username && (
+                        <div>
+                          <button
+                            className={styles.giveBtn}
+                            onClick={() =>
+                              handleGiveOwnerClick(player.username!)
+                            }
+                          >
+                            <IoMdArrowUp className={styles.playerAction2}/>
+                          </button>
 
-                              <button
-                                className={styles.kickBtn}
-                                onClick={() => kickPlayer(player.username!)}
-                              >
-                                <RxCross2 className={styles.playerAction} />
-                              </button>
-                            </div>
-                          )}
+                          <button
+                            className={styles.kickBtn}
+                            onClick={() => kickPlayer(player.username!)}
+                          >
+                            <RxCross2 className={styles.playerAction}/>
+                          </button>
                         </div>
-                      ))}
-                  </>
-                )}
+                      )}
+                    </div>
+                  ))}
+              </>
+            )}
+          </div>
+          <div className={styles.actionButtons}>
+            {user.username === game.owner.username && (
+              <div className={styles.buttonStart} onClick={startGame}>
+                Rozpocznij grę
               </div>
-              <div className={styles.actionButtons}>
-                {user.username === game.owner.username && (
-                  <div className={styles.buttonStart} onClick={startGame}>
-                    Rozpocznij grę
-                  </div>
-                )}
+            )}
 
-                <div className={styles.buttonLeave} onClick={leaveGame}>
-                  Opuść grę
-                </div>
-              </div>
+            <div className={styles.buttonLeave} onClick={leaveGame}>
+              Opuść grę
             </div>
           </div>
-        </div>
-      </Container>
+        </MainBox>
+      </MainContainer>
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}

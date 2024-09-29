@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import Meta from "../../components/Meta.tsx";
-import { Breadcrumb, Container, Button } from "react-bootstrap";
+import { Breadcrumb, Button } from "react-bootstrap";
 import * as yup from "yup";
 import styles from "./Login.module.scss";
 import CustomInput from "../../components/CustomInput.tsx";
@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { userActions, UserState } from "../../store/userSlice.ts";
 import { State } from "../../store";
 import { useSocket } from "../../socket/useSocket.ts";
+import MainContainer from "../../components/MainContainer.tsx";
+import MainBox from "../../components/MainBox.tsx";
+import MainTitle from "../../components/MainTitle.tsx";
 
 const Register = () => {
   const socket = useSocket();
@@ -83,115 +86,111 @@ const Register = () => {
 
   return (
     <>
-      <Meta title={"Rejestracja"} />
-      <Breadcrumb title="Rejestracja" />
-      <Container className={styles.mainContainer}>
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-8 col-lg-4">
-            <div className={styles.mainBox}>
-              <div className={styles.mainText}>Rejestracja</div>
-              <form onSubmit={formik.handleSubmit} className={styles.loginForm}>
-                <div className={styles.formGroup}>
-                  <CustomInput
-                    type="email"
-                    name="email"
-                    placeholder="Wprowadź email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={
-                      formik.touched.email && formik.errors.email
-                        ? `${styles.error} ${styles.errorMargin}`
-                        : ""
-                    }
-                    autoComplete="off"
-                  />
-                  {formik.touched.email && formik.errors.email && (
-                    <div className={`${styles.error} ${styles.errorMargin}`}>
-                      {formik.errors.email}
-                    </div>
-                  )}
+      <Meta title={"Rejestracja"}/>
+      <Breadcrumb title="Rejestracja"/>
+      <MainContainer>
+        <MainBox>
+          <MainTitle>Rejestracja</MainTitle>
+          <form onSubmit={formik.handleSubmit} className={styles.loginForm}>
+            <div className={styles.formGroup}>
+              <CustomInput
+                type="email"
+                name="email"
+                placeholder="Wprowadź email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={
+                  formik.touched.email && formik.errors.email
+                    ? `${styles.error} ${styles.errorMargin}`
+                    : ""
+                }
+                autoComplete="off"
+              />
+              {formik.touched.email && formik.errors.email && (
+                <div className={`${styles.error} ${styles.errorMargin}`}>
+                  {formik.errors.email}
                 </div>
-                <div className={styles.formGroup}>
-                  <CustomInput
-                    type="text"
-                    name="username"
-                    placeholder="Wprowadź login"
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={
-                      formik.touched.username && formik.errors.username
-                        ? `${styles.error} ${styles.errorMargin}`
-                        : ""
-                    }
-                    autoComplete="off"
-                  />
-                  {formik.touched.username && formik.errors.username && (
-                    <div className={`${styles.error} ${styles.errorMargin}`}>
-                      {formik.errors.username}
-                    </div>
-                  )}
-                </div>
-                <div className={styles.formGroup}>
-                  <CustomInput
-                    type="password"
-                    name="password"
-                    placeholder="Wprowadź hasło"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={
-                      formik.touched.password && formik.errors.password
-                        ? `${styles.error} ${styles.errorMargin}`
-                        : ""
-                    }
-                    autoComplete="off"
-                  />
-                  {formik.touched.password && formik.errors.password && (
-                    <div className={`${styles.error} ${styles.errorMargin}`}>
-                      {formik.errors.password}
-                    </div>
-                  )}
-                </div>
-                <div className={styles.formGroup}>
-                  <CustomInput
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Potwierdź hasło"
-                    value={formik.values.confirmPassword}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={
-                      formik.touched.confirmPassword &&
-                      formik.errors.confirmPassword
-                        ? `${styles.error} ${styles.errorMargin}`
-                        : ""
-                    }
-                    autoComplete="off"
-                  />
-                  {formik.touched.confirmPassword &&
-                    formik.errors.confirmPassword && (
-                      <div className={`${styles.error} ${styles.errorMargin}`}>
-                        {formik.errors.confirmPassword}
-                      </div>
-                    )}
-                </div>
-                {error && <div className="error p-0 text-center">{error}</div>}
-                <Button type="submit" className={styles.submitButton}>
-                  Zarejestruj się
-                </Button>
-              </form>
-              <div className={styles.registerLink}>
-                Masz już konto?{" "}
-                <Link to="/login" className={styles.registerText}>
-                  Zaloguj się
-                </Link>
-              </div>
+              )}
             </div>
+            <div className={styles.formGroup}>
+              <CustomInput
+                type="text"
+                name="username"
+                placeholder="Wprowadź login"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={
+                  formik.touched.username && formik.errors.username
+                    ? `${styles.error} ${styles.errorMargin}`
+                    : ""
+                }
+                autoComplete="off"
+              />
+              {formik.touched.username && formik.errors.username && (
+                <div className={`${styles.error} ${styles.errorMargin}`}>
+                  {formik.errors.username}
+                </div>
+              )}
+            </div>
+            <div className={styles.formGroup}>
+              <CustomInput
+                type="password"
+                name="password"
+                placeholder="Wprowadź hasło"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={
+                  formik.touched.password && formik.errors.password
+                    ? `${styles.error} ${styles.errorMargin}`
+                    : ""
+                }
+                autoComplete="off"
+              />
+              {formik.touched.password && formik.errors.password && (
+                <div className={`${styles.error} ${styles.errorMargin}`}>
+                  {formik.errors.password}
+                </div>
+              )}
+            </div>
+            <div className={styles.formGroup}>
+              <CustomInput
+                type="password"
+                name="confirmPassword"
+                placeholder="Potwierdź hasło"
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                    ? `${styles.error} ${styles.errorMargin}`
+                    : ""
+                }
+                autoComplete="off"
+              />
+              {formik.touched.confirmPassword &&
+                formik.errors.confirmPassword && (
+                  <div className={`${styles.error} ${styles.errorMargin}`}>
+                    {formik.errors.confirmPassword}
+                  </div>
+                )}
+            </div>
+            {error && <div className="error p-0 text-center">{error}</div>}
+            <Button type="submit" className={styles.submitButton}>
+              Zarejestruj się
+            </Button>
+          </form>
+          <div className={styles.registerLink}>
+            Masz już konto?{" "}
+            <Link to="/login" className={styles.registerText}>
+              Zaloguj się
+            </Link>
           </div>
-        </div>
-      </Container>
+        </MainBox>
+      </MainContainer>
     </>
   );
 };
