@@ -1,9 +1,5 @@
 @import "../../styles/Global";
 
-.mainContainer {
-  left: $sidebar-width;
-}
-
 .profileBox {
   display: flex;
   flex-direction: row;
@@ -127,11 +123,7 @@
   font-weight: 300;
 }
 
-@media (max-width: 500px) {
-  .mainContainer {
-    left: 0;
-  }
-
+@media (max-width: $phone-breakpoint) {
   .personIcon {
     font-size: 3rem;
   }
@@ -171,7 +163,7 @@
   }
 }
 
-@media (max-width: 300px) {
+@media (max-width: $small-phone-breakpoint) {
   .addFriends {
     font-size: 0.5rem;
   }

@@ -1,4 +1,4 @@
-@import "./Global.scss";
+@import "Global";
 
 .headerTopStrip {
   background-color: $blue;
@@ -7,6 +7,7 @@
   z-index: 1000;
   position: fixed;
   width: 100%;
+  top: 0;
 }
 
 .headerContent {
@@ -86,14 +87,12 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: $phone-breakpoint) {
   .loginButton {
     padding: $button-phone-padding;
     font-size: $button-phone-font-size;
   }
-}
 
-@media (max-width: 300px) {
   .headerTopStrip {
     width: 100%;
     padding: 0.5rem;
@@ -103,11 +102,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0;
+    padding: 0 0.3rem;
   }
 
   .logo {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .iconContainer {
@@ -119,13 +118,9 @@
   .iconSize {
     font-size: 1.5rem;
   }
-
-  .loginButton {
-    font-size: 0.5rem;
-  }
 }
 
-@media (min-width: 2000px) and (min-height: 1000px) {
+@media (min-width: $large-desktop-breakpoint) {
   .logo {
     font-size: 3.5rem;
   }

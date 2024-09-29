@@ -3,10 +3,10 @@ import Header from '../Header.tsx';
 
 const Layout = () => {
   return (
-    <div>
+    <>
         <Header />
         <Outlet />
-    </div>
+    </>
   )
 }
 

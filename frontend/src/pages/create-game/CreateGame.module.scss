@@ -1,8 +1,5 @@
-@import "../../styles/Global.scss";
+@import "../../styles/Global";
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
-.mainContainer {
-  left: $sidebar-width;
-}
 
 .createText {
   background-color: #0c1a25;
@@ -104,10 +101,7 @@ a {
   }
 }
 
-@media (max-width: 500px) {
-  .mainContainer {
-    left: 0;
-  }
+@media (max-width: $phone-breakpoint) {
   .selectionBoxes .singlePlayer,
   .selectionBoxes .multiPlayer,
   .selectionBoxes .ranked {

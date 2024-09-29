@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import Meta from "../../components/Meta.tsx";
-import { Breadcrumb, Container, Button } from "react-bootstrap";
+import { Breadcrumb, Button } from "react-bootstrap";
 import * as yup from "yup";
 import styles from "./Login.module.scss";
 import CustomInput from "../../components/CustomInput.tsx";
@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../store";
 import { userActions, UserState } from "../../store/userSlice.ts";
 import { useSocket } from "../../socket/useSocket.ts";
+import MainContainer from "../../components/MainContainer.tsx";
+import MainBox from "../../components/MainBox.tsx";
+import MainTitle from "../../components/MainTitle.tsx";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -48,7 +51,7 @@ const Login = () => {
             return setError("Niepoprawny login lub hasło");
           }
 
-          if(error.status == 409) {
+          if (error.status == 409) {
             return setError("Użytkownik jest już połączony na innym urządzeniu");
           }
 
@@ -65,71 +68,67 @@ const Login = () => {
 
   return (
     <>
-      <Meta title={"Logowanie"} />
-      <Breadcrumb title="Logowanie" />
-      <Container className={styles.mainContainer}>
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-8 col-lg-4">
-            <div className={styles.mainBox}>
-              <div className={styles.mainText}>Logowanie</div>
-              <form onSubmit={formik.handleSubmit} className={styles.loginForm}>
-                <div className={styles.formGroup}>
-                  <CustomInput
-                    type="text"
-                    name="username"
-                    placeholder="Wprowadź login"
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={
-                      formik.touched.username && formik.errors.username
-                        ? `${styles.error} ${styles.errorMargin}`
-                        : ""
-                    }
-                    autoComplete="off"
-                  />
-                  {formik.touched.username && formik.errors.username && (
-                    <div className={styles.error}>{formik.errors.username}</div>
-                  )}
-                </div>
-                <div className={styles.formGroup}>
-                  <CustomInput
-                    type="password"
-                    name="password"
-                    placeholder="Wprowadź hasło"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={
-                      formik.touched.password && formik.errors.password
-                        ? `${styles.error} ${styles.errorMargin}`
-                        : ""
-                    }
-                    autoComplete="off"
-                  />
-                  {formik.touched.password && formik.errors.password && (
-                    <div className={styles.error}>{formik.errors.password}</div>
-                  )}
-                </div>
-                {error && (
-                  <div className={`${styles.error} p-0 text-center`}>
-                    {error}
-                  </div>
-                )}
-                <Button type="submit" className={styles.submitButton}>
-                  Zaloguj się
-                </Button>
-              </form>
-              <div className={styles.registerLink}>
-                Nie masz jeszcze konta?{" "}
-                <Link to="/register" className={styles.registerText}>
-                  Zarejestruj się
-                </Link>
-              </div>
+      <Meta title={"Logowanie"}/>
+      <Breadcrumb title="Logowanie"/>
+      <MainContainer>
+        <MainBox>
+          <MainTitle>Logowanie</MainTitle>
+          <form onSubmit={formik.handleSubmit} className={styles.loginForm}>
+            <div className={styles.formGroup}>
+              <CustomInput
+                type="text"
+                name="username"
+                placeholder="Wprowadź login"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={
+                  formik.touched.username && formik.errors.username
+                    ? `${styles.error} ${styles.errorMargin}`
+                    : ""
+                }
+                autoComplete="off"
+              />
+              {formik.touched.username && formik.errors.username && (
+                <div className={styles.error}>{formik.errors.username}</div>
+              )}
             </div>
+            <div className={styles.formGroup}>
+              <CustomInput
+                type="password"
+                name="password"
+                placeholder="Wprowadź hasło"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={
+                  formik.touched.password && formik.errors.password
+                    ? `${styles.error} ${styles.errorMargin}`
+                    : ""
+                }
+                autoComplete="off"
+              />
+              {formik.touched.password && formik.errors.password && (
+                <div className={styles.error}>{formik.errors.password}</div>
+              )}
+            </div>
+            {error && (
+              <div className={`${styles.error} p-0 text-center`}>
+                {error}
+              </div>
+            )}
+            <Button type="submit" className={styles.submitButton}>
+              Zaloguj się
+            </Button>
+          </form>
+          <div className={styles.registerLink}>
+            Nie masz jeszcze konta?{" "}
+            <Link to="/register" className={styles.registerText}>
+              Zarejestruj się
+            </Link>
           </div>
-        </div>
-      </Container>
+        </MainBox>
+      </MainContainer>
     </>
   );
 };

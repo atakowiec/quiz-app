@@ -23,20 +23,22 @@ export default function SingleCategory({ categoryId }: { categoryId: number }) {
   );
 
   return (
-    <div
-      className={`${styles.choice} ${voted ? styles.selected : ""}`}
-      onClick={voteForCategory}
-    >
-      <img src={"https://via.placeholder.com/250"} alt={category.name} />
-      {category.name}
-      {/* todo display players that voted on current category */}
-      {playersVoted && (
-        <ul>
-          {playersVoted.map((player) => (
-            <li key={player.username}>{player.username}</li>
-          ))}
-        </ul>
-      )}
+    <div> {/* we need this wrapper to apply gap between categories*/}
+      <div
+        className={`${styles.choice} ${voted ? styles.selected : ""}`}
+        onClick={voteForCategory}
+      >
+        <img src={"https://via.placeholder.com/250"} alt={category.name}/>
+        {category.name}
+        {/* todo display players that voted on current category */}
+        {playersVoted && playersVoted.length > 0 && (
+          <ul>
+            {playersVoted.map((player) => (
+              <li key={player.username}>{player.username}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

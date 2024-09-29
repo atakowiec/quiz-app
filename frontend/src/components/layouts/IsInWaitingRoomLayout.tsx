@@ -10,9 +10,9 @@ const IsInWaitingRoomLayout = ({ isInLobby }: IsInWaitingRoomLayoutProps) => {
   }
 
   return (
-    <div>
+    <>
       <Outlet />
-    </div>
+    </>
   );
 };
 

@@ -1,9 +1,5 @@
 @import "../../styles/Global";
 
-.mainContainer {
-  left: $sidebar-width;
-}
-
 .selectionBoxes {
   display: flex;
   flex-wrap: wrap;
@@ -40,10 +36,4 @@
   font-size: 1rem;
   width: 50%;
   transition: border-color 0.3s ease;
-}
-
-@media (max-width: 500px) {
-  .mainContainer {
-    left: 0;
-  }
 }

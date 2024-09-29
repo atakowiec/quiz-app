@@ -1,9 +1,5 @@
 @import "../../styles/Global";
 
-.mainContainer {
-  height: calc(90vh - $sidebar-width);
-}
-
 .loginForm {
   display: flex;
   flex-direction: column;
@@ -63,7 +59,7 @@
 
 .registerLink {
   margin-top: 2rem;
-  align-self: center;
+  text-align: center;
 }
 
 .registerText {
@@ -73,11 +69,7 @@
   font-weight: 400;
 }
 
-@media (max-width: 500px) {
-  .mainContainer {
-    left: 0;
-  }
-
+@media (max-width: $phone-breakpoint) {
   .formControl {
     font-size: $input-phone-font-size;
     margin-bottom: 0.25rem;

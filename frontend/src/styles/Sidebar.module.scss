@@ -1,3 +1,5 @@
+@import "Global";
+
 .sidebar {
   width: fit-content;
   background-color: #0c1a25;
@@ -6,12 +8,7 @@
   height: calc(100vh - 2.5rem);
   position: fixed;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  border: none;
-  box-shadow: none;
-  z-index: 1;
-  top: 0;
+  z-index: 100;
   margin-top: 2.5rem;
   overflow-y: auto;
 
@@ -49,7 +46,7 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: $phone-breakpoint) {
   .sidebar {
     position: fixed;
     top: auto;
@@ -83,11 +80,11 @@
   }
 
   .sidebarIcon {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }
 
-@media (min-width: 501px) {
+@media (min-width: $desktop-breakpoint) {
   .sidebar {
     width: 5rem;
 

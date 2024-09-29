@@ -1,9 +1,5 @@
 @import "../../../styles/Global";
 
-.mainBox {
-  left: calc(50% + #{$sidebar-half-width});
-}
-
 .code {
   text-align: center;
   font-size: 1.25rem;
@@ -156,7 +152,7 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: $phone-breakpoint) {
   .buttonLeave,
   .buttonStart {
     font-size: $button-phone-font-size;
@@ -168,7 +164,7 @@
   }
 }
 
-@media (max-width: 300px) {
+@media (max-width: $small-phone-breakpoint) {
   .code {
     font-size: $code-phone-font-size-300;
   }
