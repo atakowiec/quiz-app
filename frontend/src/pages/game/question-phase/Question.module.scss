@@ -67,12 +67,14 @@
 .lifebouys {
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: absolute;
+  left: 25px;
   z-index: 999;
   cursor: pointer;
   height: 30px;
   top: 25%;
 }
+
 .question {
   display: flex;
   flex-direction: column;
@@ -102,7 +104,7 @@
   margin-top: 0.5rem;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: $phone-breakpoint) {
   .lifebouys {
     display: flex;
     flex-direction: row;
@@ -110,7 +112,8 @@
     gap: 1rem;
     justify-content: center;
     margin-top: 3rem;
-    top: 100%;
+    top: -50px;
+    left: 0;
   }
 
   .questionImage {
@@ -118,11 +121,5 @@
     max-height: 10rem;
     height: auto;
     vertical-align: middle;
-  }
-}
-
-@media (min-height: 1100px) {
-  .mainContainer {
-    height: 60vh;
   }
 }
