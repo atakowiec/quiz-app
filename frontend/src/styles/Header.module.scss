@@ -30,7 +30,10 @@
   display: flex;
 
   div {
-    transition: color 0.1s ease, padding 0.2s ease-in-out, margin 0.2s ease-in-out;
+    transition:
+      color 0.1s ease,
+      padding 0.2s ease-in-out,
+      margin 0.2s ease-in-out;
 
     &.space {
       width: 0.5rem;
@@ -72,7 +75,7 @@
   font-weight: $button-font-weight;
   font-size: $button-font-size;
   box-shadow: $button-shadow-green;
-  transition: .15s background-color ease-in-out;
+  transition: 0.15s background-color ease-in-out;
 }
 
 .loginButton:hover {

@@ -49,3 +49,80 @@
   font-size: 4rem;
   margin-bottom: 0.5rem;
 }
+
+.voteIcons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.voteCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ccc;
+}
+
+.voteIcon {
+  color: black;
+  font-size: 12px;
+}
+
+.extraVotes {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #555;
+}
+
+.categoryChosen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.categoryChosenImage {
+  max-width: 250px;
+  max-height: 250px;
+  margin-top: 1rem;
+}
+
+.categoryTitle {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.circlesContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.voteCircle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $gray; // Domyślny kolor tła (szary)
+  border: 2px solid #9999; // Domyślny kolor obramowania
+}
+
+@media (max-width: $phone-breakpoint) {
+  .voteCircle {
+    width: 15px;
+    height: 15px;
+  }
+
+  .voteIcon {
+    font-size: 8px;
+  }
+}
