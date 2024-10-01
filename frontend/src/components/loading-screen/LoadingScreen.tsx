@@ -1,21 +1,32 @@
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
 import styles from "./LoadingScreen.module.scss"
+import { CSSProperties, useEffect, useState } from "react";
 
 type LoadingScreenProps = {
   attempt: number
-  empty: boolean // this is used to omit the loading screen when the app is loading for the first time - to prevent flashing
+  visible?: boolean
 }
 
-export default function LoadingScreen({ attempt, empty }: LoadingScreenProps) {
-  if (empty) {
-    return (
-      <div className={styles.loadingScreen}>
-      </div>
-    )
+export default function LoadingScreen({ attempt, visible }: LoadingScreenProps) {
+  const [display, setDisplay] = useState(true)
+
+  useEffect(() => {
+    if(!visible && display)
+      setTimeout(() => setDisplay(false), 500)
+
+  }, [visible]);
+
+  if(!display) return null
+
+  function getStyle(): CSSProperties {
+    return {
+      opacity: visible ? 1 : 0,
+      pointerEvents: visible ? "all" : "none"
+    }
   }
 
   return (
-    <div className={styles.loadingScreen}>
+    <div className={styles.loadingScreen} style={getStyle()}>
       <div className={styles.logo}>
         Quiz Base
       </div>

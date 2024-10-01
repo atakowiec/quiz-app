@@ -20,6 +20,8 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<AxiosError | null>(null);
 
+  const everythingLoaded = categoriesData.loaded && loaded && (!error || !isNaN(parseInt(error.code ?? "")));
+
   // on start of the application check whether the user has some valid token
   useEffect(() => {
     getApi()
@@ -58,17 +60,14 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
     dispatch(globalDataActions.setData({ categories: categoriesData.data }));
   }, [categoriesData]);
 
-  if (!loaded) {
-    return <LoadingScreen empty={true} attempt={0}/>
-  }
-
-  // check if there was an error and if it's a network error - server errors have a number code
-  if (error && isNaN(parseInt(error.code ?? ""))) {
-    return <LoadingScreen empty={false} attempt={refreshToken}/>
-  }
-
-  if (!categoriesData.loaded)
+  if(!everythingLoaded && refreshToken == 1) {
     return null;
+  }
 
-  return children;
+  return (
+    <>
+      {everythingLoaded && children}
+      <LoadingScreen visible={!everythingLoaded} attempt={refreshToken}/>
+    </>
+  );
 }
