@@ -20,8 +20,8 @@ $button-green-hover: #17b42c;
 $button-gray-hover: #d9d9d9;
 
 //SideBar
-$sidebar-width: 68px;
-$sidebar-half-width: 34px;
+$sidebar-width: 72px;
+$sidebar-half-width: 36px;
 
 //Buttons
 $button-padding: 0.5rem 1rem;
@@ -126,11 +126,5 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 @media (min-width: $large-desktop-breakpoint) {
   .mainBox {
     scale: 1.2;
-  }
-}
-
-@media (max-height: 950px) {
-  .mainContainer {
-    padding-top: 6rem;
   }
 }

@@ -15,6 +15,7 @@ import Game from "./pages/game/Game.tsx";
 import { useGame } from "./store/gameSlice.ts";
 import IsInWaitingRoomLayout from "./components/layouts/IsInWaitingRoomLayout.tsx";
 import Questions from "./pages/admin/questions/Questions.tsx";
+import Settings from "./pages/game/waiting-room/Settings.tsx";
 
 function App() {
   const game = useGame();
@@ -66,6 +67,7 @@ function App() {
           >
             <Route path="create-game" element={<CreateGame />} />
             <Route path="join-game" element={<JoinGame />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Route>
       </Routes>
