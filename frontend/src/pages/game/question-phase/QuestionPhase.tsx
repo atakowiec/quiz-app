@@ -13,6 +13,22 @@ import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
 
+// Generowanie unikalnej palety kolorów dla każdej kategorii
+function generateColors(numberOfCategories: number) {
+  const colors = [];
+  for (let i = 0; i < numberOfCategories * 5; i++) {
+    const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    colors.push(color);
+  }
+  return colors;
+}
+
+const helperIcons = {
+  cheat_from_others: FaRegEye,
+  extend_time: MdOutlineMoreTime,
+  fifty_fifty: MdQueryStats,
+};
+
 const QuestionPhase = () => {
   const game = useGame();
   const socket = useSocket();
@@ -21,6 +37,9 @@ const QuestionPhase = () => {
 
   const resultShown = game.status === "question_result_phase";
   const selected = game.player.chosenAnswer;
+
+  const numberOfCategories = game.round.question.answers.length; // Liczba kategorii/pytania
+  const colors = generateColors(numberOfCategories); // Generowanie kolorów
 
   function selectAnswer(answer: string) {
     if (game?.status !== "question_phase" || game?.player.chosenAnswer) return;
@@ -34,32 +53,28 @@ const QuestionPhase = () => {
     socket.emit("use_helper", helper);
   }
 
-  //TODO: make question a component
-  //TODO: make answers show correct/incorrect after choice, show what players chose
-  //TODO: fix helpers position
+  // Filtrujemy tylko dostępne koła ratunkowe na podstawie availableHelpers
+  const availableHelpers = game.player.availableHelpers;
+
   return (
     <>
-      <Meta title={"Question"}/>
-      <Breadcrumb title="Question"/>
+      <Meta title={"Question"} />
+      <Breadcrumb title="Question" />
       <MainContainer>
         <div className={styles.lifebouys}>
-          <Helper
-            icon={FaRegEye}
-            executeAction={() => executeHelper("cheat_from_others")}
-          />
-          <Helper
-            icon={MdOutlineMoreTime}
-            executeAction={() => executeHelper("extend_time")}
-          />
-          <Helper
-            icon={MdQueryStats}
-            executeAction={() => executeHelper("fifty_fifty")}
-          />
+          {availableHelpers.map((helper: HelperType) => {
+            const IconComponent = helperIcons[helper]; // Pobranie odpowiedniej ikony na podstawie helpera
+            return (
+              <Helper
+                key={helper}
+                icon={IconComponent} // Ustawienie ikony dla danego koła ratunkowego
+                executeAction={() => executeHelper(helper)} // Akcja po kliknięciu
+              />
+            );
+          })}
         </div>
-        <MainBox before={<TimeBar/>}>
-          <MainTitle>
-            Pytanie #{game.round.questionNumber}
-          </MainTitle>
+        <MainBox before={<TimeBar />}>
+          <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
           <div className={styles.question}>
             {" "}
             {game.round.question.text}{" "}
@@ -72,13 +87,15 @@ const QuestionPhase = () => {
             )}
           </div>
           <div className={styles.answersBox}>
-            {game.round.question.answers.map((answer) => {
+            {game.round.question.answers.map((answer, answerIndex) => {
               const isHidden = game.player.hiddenAnswers.includes(answer);
               const isSelected = selected === answer;
               const isCorrect = game?.round?.correctAnswer === answer;
-              const playersChosen = game?.players?.filter(
-                (player) => player.chosenAnswer === answer
-              );
+              const playersChosen =
+                game?.players?.filter(
+                  (player) => player.chosenAnswer === answer
+                ) ?? [];
+
               const className = resultShown
                 ? isCorrect
                   ? styles.correctAnswer
@@ -90,11 +107,12 @@ const QuestionPhase = () => {
                   : isHidden
                     ? styles.hiddenAnswer
                     : "";
-              const playersThatAnswered = !resultShown
-                ? []
-                : game?.players
-                  ?.filter((player) => player.chosenAnswer === answer)
-                  .map((player) => player.username);
+
+              const maxDisplayedPlayers = 5;
+              const extraPlayers =
+                playersChosen.length > maxDisplayedPlayers
+                  ? playersChosen.length - maxDisplayedPlayers
+                  : 0;
 
               return (
                 <div
@@ -103,23 +121,31 @@ const QuestionPhase = () => {
                   onClick={() => selectAnswer(answer)}
                 >
                   {answer}
-                  {playersThatAnswered && (
-                    <div>{playersThatAnswered.join(", ")}</div>
-                  )}
-                  {game?.player?.showOtherPlayersAnswers && playersChosen && (
-                    <div className={styles.cheatedAnswers}>
+                  {playersChosen.length > 0 && (
+                    <div className={styles.voteIcons}>
                       {playersChosen
-                        .filter(
-                          (player) => player.username !== game.player.username
-                        )
-                        .map((player) => (
-                          <span
-                            className={styles.userAnswer}
+                        .slice(0, maxDisplayedPlayers)
+                        .map((player, playerIndex) => (
+                          <div
                             key={player.username}
+                            className={styles.voteCircle}
+                            style={{
+                              backgroundColor:
+                                colors[answerIndex * 5 + playerIndex], // Kolor przypisany na podstawie kategorii i indeksu gracza
+                            }}
                           >
-                              {player.username}
+                            <span className={styles.playerIcon}>
+                              {player.username
+                                ? player.username[0].toUpperCase()
+                                : "?"}{" "}
                             </span>
+                          </div>
                         ))}
+                      {extraPlayers > 0 && (
+                        <span className={styles.extraVotes}>
+                          +{extraPlayers}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>

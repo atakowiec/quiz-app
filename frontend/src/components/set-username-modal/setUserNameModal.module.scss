@@ -1,6 +1,73 @@
+@import "../../styles/Global.scss";
+
 .error {
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
+  color: rgb(172, 24, 24);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
   text-align: center;
+}
+
+.modalTitle {
+  display: flex;
+  justify-content: center;
+}
+
+.inputBox {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input {
+  border: 1px solid $button-gray;
+  border-radius: 5px;
+  width: auto;
+  text-align: center;
+  padding: 0.2rem;
+
+  &::placeholder {
+    font-size: 1rem;
+  }
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: $button-padding;
+}
+
+.confirmButton {
+  background-color: $green;
+  border: none;
+  color: white;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  font-size: $button-font-size;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: $button-font-weight;
+  box-shadow: $button-shadow-black;
+
+  &:hover {
+    background-color: $button-green-hover;
+  }
+}
+
+.cancelButton {
+  background-color: #999;
+  border: none;
+  color: white;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  font-size: $button-font-size;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: $button-font-weight;
+  box-shadow: $button-shadow-black;
+
+  &:hover {
+    background-color: #888;
+  }
 }

@@ -6,6 +6,7 @@
   align-items: center;
   width: calc(100% - 5rem);
   margin-left: 5rem;
+  margin-top: 2rem;
 }
 
 .pictureWrapper {
@@ -32,20 +33,41 @@
 }
 
 .svgImage {
-  max-width: 80%;
+  margin-left: 10%;
+  max-width: 70%;
   height: auto;
 }
 
 .img1 {
-  max-width: 100%;
+  max-width: 80%;
   height: auto;
+}
+
+@media (max-width: 1000px) and (min-width: $phone-breakpoint) {
+  .picturesContainer {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 5rem;
+  }
+
+  .pictureWrapper {
+    flex-direction: column;
+    position: relative;
+  }
+
+  .imageWrapper {
+    max-width: 80%;
+    order: 2;
+    display: flex;
+    justify-content: center;
+    left: 36px;
+  }
 }
 
 @media (max-width: $phone-breakpoint) {
   .picturesContainer {
     width: 100%;
     margin-left: 0;
-    overflow: auto;
     margin-bottom: 5rem;
   }
 
@@ -57,5 +79,7 @@
   .imageWrapper {
     max-width: 100%;
     order: 2;
+    display: flex;
+    justify-content: center;
   }
 }

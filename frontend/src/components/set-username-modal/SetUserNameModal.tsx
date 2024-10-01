@@ -52,10 +52,10 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
           Ustaw nick w grze
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className={styles.inputBox}>
         <input
           type={"text"}
-          placeholder={"nickname"}
+          placeholder={"Nickname"}
           className={styles.input}
           ref={userNameRef}
         />
@@ -64,6 +64,7 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
       <Modal.Footer className={styles.modalButtons}>
         <Button
           variant="primary"
+          className={styles.confirmButton}
           onClick={() => {
             if (userNameRef.current?.value) {
               saveUserName();
@@ -74,7 +75,11 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
         >
           {props.confirmBtnText}
         </Button>
-        <Button variant="secondary" onClick={props.onClose}>
+        <Button
+          variant="secondary"
+          onClick={props.onClose}
+          className={styles.cancelButton}
+        >
           Anuluj
         </Button>
       </Modal.Footer>

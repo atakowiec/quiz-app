@@ -1,0 +1,126 @@
+@import "../../../styles/Global";
+
+.line {
+  margin-top: 3rem;
+  border-bottom: 1px solid #888;
+  margin-bottom: 3rem;
+}
+
+.playersBox {
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  padding: 1rem;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  overflow-y: auto;
+}
+
+.singlePlayer {
+  padding: 0.5rem 1rem;
+  border-radius: $container-border-radius;
+  background-color: white;
+  transition: background-color 0.3s;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  align-items: center;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.medal {
+  font-size: 1.3rem;
+}
+
+.points {
+  color: $blue;
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  padding: 0.2rem;
+}
+
+.currentPlayer {
+  border: 1px solid $green;
+}
+
+.helpersPoints {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.usedHelpers {
+  display: flex;
+  align-items: flex-end;
+  font-size: 1rem;
+}
+
+.helperIcon {
+  background-color: $gray;
+  max-height: 30px;
+  max-width: 30px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.buttons {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  color: black;
+}
+
+.playButton {
+  background-color: $green-black;
+  border: none;
+  box-shadow: $button-shadow-green;
+  color: black;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+
+  &:hover {
+    background-color: $button-green-hover;
+    color: black;
+  }
+
+  &:after {
+  }
+}
+
+.cancelButton {
+  background-color: $button-gray;
+  border: none;
+  box-shadow: $button-shadow-black;
+  color: black;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+
+  &:hover {
+    background-color: $button-gray-hover;
+    color: black;
+  }
+}
+
+@media (max-width: $phone-breakpoint) {
+  .singlePlayer {
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+  }
+  .playButton {
+    padding: $button-phone-padding;
+    font-size: $button-phone-font-size;
+  }
+
+  .cancelButton {
+    padding: $button-phone-padding;
+    font-size: $button-phone-font-size;
+  }
+}

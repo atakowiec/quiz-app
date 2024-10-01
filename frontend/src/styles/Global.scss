@@ -13,6 +13,7 @@ body {
 $green: #06a53b;
 $blue: #0c1a25;
 $gray: #f0f4f3;
+$red: #ff4949;
 $green-black: #2bc440;
 $button-gray: #e6e3e3;
 $button-green-hover: #17b42c;
@@ -125,5 +126,11 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 @media (min-width: $large-desktop-breakpoint) {
   .mainBox {
     scale: 1.2;
+  }
+}
+
+@media (max-height: 950px) {
+  .mainContainer {
+    padding-top: 6rem;
   }
 }

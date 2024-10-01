@@ -104,6 +104,39 @@
   margin-top: 0.5rem;
 }
 
+.voteIcons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.voteCircle {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.5rem;
+  color: white;
+  border: 2px solid $gray;
+}
+
+.playerIcon {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 0;
+  color: black;
+}
+
+.extraVotes {
+  margin-left: 0.3rem;
+  font-size: 0.9rem;
+  color: gray;
+}
+
 @media (max-width: $phone-breakpoint) {
   .lifebouys {
     display: flex;

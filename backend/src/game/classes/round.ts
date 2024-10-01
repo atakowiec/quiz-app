@@ -213,7 +213,7 @@ export default class Round {
     this.logger.debug("Starting leaderboard phase");
     this.game.gameStatus = "leaderboard";
 
-    this.setTimer(2, this.endRound.bind(this));
+    this.setTimer(60, this.endRound.bind(this));
 
     this.game.send();
   }

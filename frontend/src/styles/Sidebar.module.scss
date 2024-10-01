@@ -28,7 +28,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    transition: .2s ease-in-out background-color;
+    transition: 0.2s ease-in-out background-color;
     width: 100%;
 
     &:hover {
@@ -86,7 +86,7 @@
 
 @media (min-width: $desktop-breakpoint) {
   .sidebar {
-    width: 5rem;
+    width: 4.5rem;
 
     & > ul {
       gap: 0.8rem;
