@@ -367,7 +367,7 @@ export default class Game {
     // If player still has helpers give him 100 point per not used helper
     this.getAllPlayers().forEach((player) => {
       player.availableHelpers.forEach((helper) => {
-        if (!this.settings.blackListedHelpers.includes(helper.name)) {
+        if (!this.settings.blackListedHelpers?.includes(helper.name)) {
           player.score += 100;
           log(
             `Player ${player.username} got 100 points for not using ${helper.name}`
