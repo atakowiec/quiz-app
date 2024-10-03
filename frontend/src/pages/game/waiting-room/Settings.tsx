@@ -1,4 +1,4 @@
-import { Breadcrumb, Modal, ModalBody } from "react-bootstrap";
+import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../../components/Meta";
 import Sidebar, { SidebarItem } from "../../../components/SideBar";
 import MainContainer from "../../../components/MainContainer";
@@ -7,14 +7,11 @@ import MainTitle from "../../../components/MainTitle";
 import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import styles from "./Settings.module.scss";
 import { useEffect, useRef, useState } from "react";
-import { FaCheckSquare } from "react-icons/fa";
-import { FaSquare } from "react-icons/fa";
-import { FaRegEye } from "react-icons/fa";
-import { MdOutlineMoreTime } from "react-icons/md";
-import { MdQueryStats } from "react-icons/md";
 import { GameSettings, HelperType } from "@shared/game";
 import { useSocket } from "../../../socket/useSocket";
 import { useGlobalData } from "../../../store/globalDataSlice";
+import CategoriesModal from "./CategoriesModal";
+import HelpersModal from "./HelpersModal";
 
 const Settings: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -80,7 +77,10 @@ const Settings: React.FC = () => {
   const handleLifelineModalShow = () => setShowLifelineModal(true);
   const handleLifelineModalHide = () => setShowLifelineModal(false);
 
-  const categories = useGlobalData().categories;
+  const categories = useGlobalData().categories.map((category) => ({
+    ...category,
+    img: category.img || "",
+  }));
 
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 
@@ -288,108 +288,23 @@ const Settings: React.FC = () => {
         </MainBox>
       </MainContainer>
       {/* Modal Kategorii */}
-      <Modal
+      <CategoriesModal
         show={showModal}
-        onHide={handleModalHide}
-        centered
-        className={styles.customModal}
-      >
-        <ModalBody className={styles.settModal}>
-          <MainTitle>Wybór kategorii</MainTitle>
-          <div className={styles.categoryModalBox}>
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className={`${styles.categoriesChoice} ${
-                  selectedCategories.includes(category.id) ? styles.active : ""
-                }`}
-                onClick={() => handleCategoryClick(category.id)}
-              >
-                <img
-                  src={`/assets/categories/${category.img}`}
-                  alt={category.name}
-                  className={styles.categoryImage}
-                />
-                <div className={styles.categoryName}>{category.name}</div>
-              </div>
-            ))}
-          </div>
-          <div className={styles.settButtons}>
-            <button className={styles.saveBut} onClick={handleModalHide}>
-              Zapisz
-            </button>
-            <div className={styles.markButtons}>
-              <button className={styles.markBut} onClick={selectAllCategories}>
-                <FaCheckSquare />
-              </button>
-              <button
-                className={styles.markBut}
-                onClick={deselectAllCategories}
-              >
-                <FaSquare />
-              </button>
-            </div>
-          </div>
-        </ModalBody>
-      </Modal>
-      {/* Modal Ustawień Kół Ratunkowych ~ TODO: Trzeba by to rozdzielić jakoś bo strasznie dużo jak na ten plik, w osobne komponenty te modale */}
-      <Modal
-        show={showLifelineModal}
-        onHide={handleLifelineModalHide}
-        size="lg"
-        centered
-        className={styles.customModal}
-      >
-        <ModalBody className={styles.settModal}>
-          <MainTitle>Koła ratunkowe</MainTitle>
-          <div className={styles.helpers}>
-            {helperStates.map((isEnabled, index) => (
-              <div key={index} className={styles.singleHelper}>
-                {/* Różne ikony dla każdego pomocnika */}
-                {index === 0 && <FaRegEye className={styles.helperIcon} />}
-                {index === 1 && (
-                  <MdOutlineMoreTime className={styles.helperIcon} />
-                )}
-                {index === 2 && <MdQueryStats className={styles.helperIcon} />}
+        handleClose={handleModalHide}
+        categories={categories}
+        selectedCategories={selectedCategories}
+        handleCategoryClick={handleCategoryClick}
+        selectAllCategories={selectAllCategories}
+        deselectAllCategories={deselectAllCategories}
+      />
 
-                <div className={styles.helper}>
-                  <div className={styles.helperName}>
-                    {index === 0 && "Zobacz odpowiedzi innych"}
-                    {index === 1 && "Wydłuż czas na odpowiedź"}
-                    {index === 2 && "50/50"}
-                  </div>
-                  <div className={styles.helperDesc}>
-                    {index === 0 &&
-                      "Użyte przed wybraniem odpowiedzi, pozwala graczowi na wgląd w odpowiedzi udzielone przez innych graczy."}
-                    {index === 1 &&
-                      "Użyte przed wybraniem odpowiedzi, pozwala graczowi na wydłużenie czasu na odpowiedź."}
-                    {index === 2 &&
-                      "Użyte przed wybraniem odpowiedzi, pozwala graczowi na wyeliminowanie dwóch błędnych odpowiedzi."}
-                  </div>
-                </div>
-                <div className={styles.toggleContainer}>
-                  <label className={styles.switch}>
-                    <input
-                      type="checkbox"
-                      checked={isEnabled}
-                      onChange={() => handleToggle(index)}
-                    />
-                    <span className={styles.slider}></span>
-                  </label>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className={styles.settButtons}>
-            <button
-              className={styles.saveBut}
-              onClick={handleLifelineModalHide}
-            >
-              Zapisz
-            </button>
-          </div>
-        </ModalBody>
-      </Modal>
+      {/* Modal Ustawień Kół Ratunkowych */}
+      <HelpersModal
+        show={showLifelineModal}
+        handleClose={handleLifelineModalHide}
+        helperStates={helperStates}
+        handleToggle={handleToggle}
+      />
     </>
   );
 };
