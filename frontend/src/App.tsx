@@ -57,16 +57,28 @@ function App() {
             path="/admin/categories/:categoryName/"
             element={<Questions />}
           />
+          {}
 
           <Route
             element={
               <IsInWaitingRoomLayout
                 isInLobby={game?.status === "waiting_for_players"}
+                ifHasToBeNavigatedTo={true}
               />
             }
           >
             <Route path="create-game" element={<CreateGame />} />
             <Route path="join-game" element={<JoinGame />} />
+          </Route>
+
+          <Route
+            element={
+              <IsInWaitingRoomLayout
+                ifHasToBeNavigatedTo={false}
+                isInLobby={game?.status === "waiting_for_players"}
+              />
+            }
+          >
             <Route path="settings" element={<Settings />} />
           </Route>
         </Route>

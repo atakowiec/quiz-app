@@ -1,4 +1,10 @@
-import { GameUpdatePacket, IGamePacket } from "./game";
+import {
+  CategoryId,
+  GameSettings,
+  GameUpdatePacket,
+  HelperType,
+  IGamePacket,
+} from "./game";
 
 export interface ServerToClientEvents {
   send_message: (message: string) => void;
@@ -20,6 +26,9 @@ export interface ClientToServerEvents {
   select_category: (categoryId: number) => void;
   select_answer: (answer: string) => void;
   use_helper: (helperName: string) => void;
+  change_settings: (settings: Partial<GameSettings>) => void;
+  change_settings_helpers: (blackListedHelpers: HelperType[]) => void;
+  change_settings_categories: (whiteListedCategories: CategoryId[]) => void;
 }
 
 export type ClientToServerEventsKeys = keyof ClientToServerEvents;

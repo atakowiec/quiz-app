@@ -169,7 +169,7 @@ export default class Round {
     // todo calculate the scores
     this.game.getAllPlayers().forEach((player) => {
       const correct = player.chosenAnswer == this.chosenQuestion.correctAnswer;
-      player.score += correct ? 1 : 0;
+      player.score += correct ? 100 : 0;
 
       player.answersHistory.push(correct);
     });
@@ -213,7 +213,8 @@ export default class Round {
     this.logger.debug("Starting leaderboard phase");
     this.game.gameStatus = "leaderboard";
 
-    this.setTimer(60, this.endRound.bind(this));
+    // Fixed time
+    this.setTimer(5, this.endRound.bind(this));
 
     this.game.send();
   }
@@ -290,7 +291,10 @@ export default class Round {
     let availableCategories = allCategories;
 
     // if whitelist is set, only use the categories from the whitelist
-    if (this.game.settings.category_whitelist) {
+    if (
+      this.game.settings.category_whitelist &&
+      this.game.settings.category_whitelist.length > 0
+    ) {
       availableCategories = allCategories.filter((category) =>
         this.game.settings.category_whitelist.includes(category.id)
       );

@@ -5,6 +5,7 @@ import {
   GameUpdatePacket,
   IGameMember,
   IQuestion,
+  HelperType,
 } from "@shared/game";
 import Helper, { CheatFromOthers, ExtendTime, FifyFifty } from "./Helper";
 export class GameMember {
@@ -13,7 +14,7 @@ export class GameMember {
   public game: Game;
   public disconnectTimeout: NodeJS.Timeout;
 
-  public score: number;
+  public score: number = 0;
 
   public question: IQuestion;
   public answersHistory: boolean[];
@@ -59,7 +60,7 @@ export class GameMember {
       chosenCategory: this.chosenCategory,
       chosenAnswer: this.chosenAnswer,
       hiddenAnswers: this.hiddenAnswers,
-      showOtherPlayersAnswers: this.showOtherPlayersAnswers
+      showOtherPlayersAnswers: this.showOtherPlayersAnswers,
     };
   }
 
@@ -84,7 +85,11 @@ export class GameMember {
     this.disconnectTimeout = null;
   }
 
-  useHelper(helperName: string) {
+  useHelper(helperName: HelperType) {
+    if (this.game.settings.blackListedHelpers.includes(helperName)) {
+      this.socket.emit("notification", "Ten pomocnik jest wyłączony!");
+      return;
+    }
     const helper = this.availableHelpers.find(
       (helper) => helper.name === helperName
     );

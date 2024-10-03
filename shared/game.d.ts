@@ -20,6 +20,8 @@ export interface ICategory {
   img?: string;
 }
 
+export type CategoryId = number;
+
 /**
  * Represents a question object that is sent to the client
  */
@@ -53,10 +55,11 @@ export interface GameSettings {
   number_of_rounds: number;
   number_of_questions_per_round: number;
   number_of_categories_per_voting: number;
-  category_whitelist?: number[];
+  category_whitelist?: CategoryId[];
   time_for_answer: number;
   helpers_whitelist?: HelperType[];
   max_number_of_players: number;
+  blackListedHelpers?: HelperType[];
 }
 
 export type SettingType = keyof GameSettings;
@@ -74,7 +77,7 @@ export interface IGamePacket {
   owner: IGameMember;
   player: IGameMember;
   players?: Partial<IGameMember>[];
-  winner?: Partial<IGameMember>;
+  winners?: string[];
 }
 
 /**
@@ -87,7 +90,7 @@ export interface GameUpdatePacket {
   round?: GameRoundPacket;
   answersHistory?: boolean[];
   players?: Partial<IGameMember>[];
-  winner?: Partial<IGameMember>;
+  winners?: string[];
   settings?: Partial<GameSettings>;
 }
 
