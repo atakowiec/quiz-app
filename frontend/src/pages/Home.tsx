@@ -33,7 +33,7 @@ const Home: React.FC = () => {
           {
             icon: IoLogoGameControllerB,
             label: "Historia Gier",
-            href: "/games",
+            href: "/history",
           },
           { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
         ]

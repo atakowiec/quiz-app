@@ -1,0 +1,82 @@
+@import "../../styles/Global.scss";
+
+.gameHistoryBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.titleRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0rem 2rem;
+}
+
+.leftTitles {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+}
+
+.rightTitles {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+}
+
+.line {
+  margin-top: 0.5rem;
+  border-bottom: 1px solid #888;
+}
+
+.grayHistoryBox {
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-height: 600px;
+}
+
+.singleHistory {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: $container-border-radius;
+  font-size: 1.2rem;
+  align-items: center;
+  font-weight: 500;
+  padding: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+@media (max-width: $phone-breakpoint) {
+  .titleRow {
+    font-size: 1rem;
+    overflow-y: auto;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .singleHistory {
+    font-size: 1rem;
+    overflow-y: auto;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}
+
+@media (max-width: 470px) {
+  .titleRow {
+    justify-content: center;
+  }
+
+  .singleHistory {
+    justify-content: center;
+  }
+}
