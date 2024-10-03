@@ -1,6 +1,10 @@
 @import "../../styles/Global";
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
+.sidebarContainer {
+  padding-left: $sidebar-width;
+}
+
 .createText {
   background-color: #0c1a25;
   border-radius: 10px;
@@ -102,6 +106,10 @@ a {
 }
 
 @media (max-width: $phone-breakpoint) {
+  .sidebarContainer {
+    padding-left: 0;
+  }
+
   .selectionBoxes .singlePlayer,
   .selectionBoxes .multiPlayer,
   .selectionBoxes .ranked {

@@ -59,7 +59,7 @@ const JoinGame: React.FC = () => {
       <Meta title={"Dołącz do gry"} />
       <Breadcrumb title="Dołącz do gry" />
       <Sidebar items={sidebarItems} />
-      <MainContainer>
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>
             <FaWrench className="mb-2 fs-2" /> Dołącz do gry

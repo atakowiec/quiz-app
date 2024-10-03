@@ -66,7 +66,7 @@ const CreateGame: React.FC = () => {
       <Meta title={"Stwórz grę"} />
       <Breadcrumb title="Stwórz grę" />
       <Sidebar items={sidebarItems} />
-      <MainContainer>
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>
             <FaWrench className="mb-2 fs-2" /> Stwórz Grę

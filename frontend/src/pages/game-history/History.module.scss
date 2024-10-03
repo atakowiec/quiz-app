@@ -1,5 +1,9 @@
 @import "../../styles/Global.scss";
 
+.sidebarContainer {
+  padding-left: $sidebar-width;
+}
+
 .gameHistoryBox {
   display: flex;
   flex-direction: column;
@@ -66,6 +70,10 @@
 }
 
 @media (max-width: $phone-breakpoint) {
+  .sidebarContainer {
+    padding-left: 0;
+  }
+
   .titleRow {
     font-size: 1rem;
     overflow-y: auto;

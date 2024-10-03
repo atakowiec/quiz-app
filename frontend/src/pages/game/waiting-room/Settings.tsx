@@ -62,9 +62,9 @@ const Settings: React.FC = () => {
       <Meta title={"Ustawienia"} />
       <Breadcrumb title="Ustawienia" />
       <Sidebar items={sidebarItems} />
-      <MainContainer>
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
-          <MainTitle>Ustawienia gry</MainTitle>
+          <MainTitle className={styles.Title}>Ustawienia gry</MainTitle>
           <div className={styles.settingsBox}>
             <div className={styles.singleSetting}>
               <div className={styles.settingsTitle}>Liczba rund</div>
