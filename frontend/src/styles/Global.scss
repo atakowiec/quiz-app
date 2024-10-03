@@ -87,6 +87,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   position: sticky;
 }
 
+.modal,
 .sidebarContainer {
   padding-left: $sidebar-width;
 }
@@ -101,6 +102,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
     padding-top: clamp(5rem, 10vh, 20vh);
   }
 
+  .modal,
   .sidebarContainer {
     padding-left: 0;
   }
@@ -112,15 +114,6 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   .mainText {
     font-size: 1.5rem;
     margin-bottom: 0;
-  }
-
-  .selectionBoxes {
-    overflow-y: hidden;
-  }
-
-  .inputBox::placeholder {
-    font-size: 0.8rem;
-    text-overflow: ellipsis;
   }
 }
 
