@@ -260,4 +260,17 @@ input:checked + .slider:before {
   .Title {
     margin-bottom: 1rem;
   }
+
+  .choiceValue {
+    font-size: 0.9rem;
+    min-width: 30px;
+  }
+
+  .settingsTitle {
+    font-size: 0.9rem;
+  }
+
+  .settings {
+    font-size: 0.9rem;
+  }
 }
