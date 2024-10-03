@@ -87,6 +87,10 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   position: sticky;
 }
 
+.sidebarContainer {
+  padding-left: $sidebar-width;
+}
+
 @media (max-width: $phone-breakpoint) {
   body {
     font-size: 12px;
@@ -95,6 +99,10 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   .mainContainer {
     align-content: flex-start;
     padding-top: clamp(5rem, 10vh, 20vh);
+  }
+
+  .sidebarContainer {
+    padding-left: 0;
   }
 
   .mainBox {
