@@ -1,0 +1,21 @@
+.view {
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  height: 0;
+}
+
+.view-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.view-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+}
+.view-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+.view-exit-active {
+  transform: translateX(-100%);
+  opacity: 0;
+}
