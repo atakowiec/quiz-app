@@ -21,8 +21,9 @@ class FifyFifty extends Helper {
   constructor() {
     super(HelperEnum.FiftyFifty);
   }
+
   execute(socket: SocketType, gameService: GameService) {
-    gameService.getGameByNickname(socket.data.username)?.fiftyFifty(socket);
+    gameService.getGameByUsername(socket.data.username)?.fiftyFifty(socket);
   }
 }
 
@@ -30,8 +31,9 @@ class ExtendTime extends Helper {
   constructor() {
     super(HelperEnum.ExtendTime);
   }
+
   execute(socket: SocketType, gameService: GameService) {
-    gameService.getGameByNickname(socket.data.username)?.extendTime(socket);
+    gameService.getGameByUsername(socket.data.username)?.extendTime(socket);
   }
 }
 
@@ -39,10 +41,9 @@ class CheatFromOthers extends Helper {
   constructor() {
     super(HelperEnum.CheatFromOthers);
   }
+
   execute(socket: SocketType, gameService: GameService) {
-    gameService
-      .getGameByNickname(socket.data.username)
-      ?.cheatFromOthers(socket);
+    gameService.getGameByUsername(socket.data.username)?.cheatFromOthers(socket);
   }
 }
 

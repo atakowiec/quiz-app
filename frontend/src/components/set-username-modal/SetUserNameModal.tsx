@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import styles from "./setUserNameModal.module.scss";
 import getApi from "../../api/axios.ts";
@@ -14,16 +14,16 @@ interface SetUserNameModalProps {
 }
 export default function SetUserNameModal(props: SetUserNameModalProps) {
   const userNameRef = useRef<HTMLInputElement>(null);
-  const [nicknameError, setNicknameError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const dispatch = useDispatch();
   const socket = useSocket();
 
   function saveUserName() {
-    const nickName = userNameRef.current?.value;
+    const username = userNameRef.current?.value;
     getApi()
-      .post("/auth/nickname", { nickname: nickName })
+      .post("/auth/username", { username: username })
       .then((response) => {
-        setNicknameError("");
+        setUsernameError("");
 
         if (response.status !== 200) {
           return;
@@ -36,7 +36,7 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
       })
       .catch((err) => {
         console.error(err);
-        setNicknameError(err.response.data.message);
+        setUsernameError(err.response.data.message);
       });
   }
 
@@ -55,11 +55,11 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
       <Modal.Body className={styles.inputBox}>
         <input
           type={"text"}
-          placeholder={"Nickname"}
+          placeholder={"Twoja nazwa"}
           className={styles.input}
           ref={userNameRef}
         />
-        {nicknameError && <div className={styles.error}>{nicknameError}</div>}
+        {usernameError && <div className={styles.error}>{usernameError}</div>}
       </Modal.Body>
       <Modal.Footer className={styles.modalButtons}>
         <Button
@@ -69,7 +69,7 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
             if (userNameRef.current?.value) {
               saveUserName();
             } else {
-              setNicknameError("Nick jest wymagany");
+              setUsernameError("Nick jest wymagany");
             }
           }}
         >

@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class SetNicknameDto {
+export class SetUsernameDto {
   @IsNotEmpty()
   @IsString()
-  nickname: string;
+  username: string;
 }

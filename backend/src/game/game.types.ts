@@ -13,6 +13,6 @@ export type SocketServerType = SocketIOServer<
 >;
 
 export interface SocketData {
-  nickname: string;
+  username: string;
   gameId?: string;
 }

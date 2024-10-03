@@ -5,8 +5,7 @@ import { Response } from "express";
 import { Request } from "../app";
 import { LoginDto } from "./dto/login.dto";
 import { UserPacket } from "@shared/user";
-import { SetNicknameDto } from "./dto/set-nickname.dto";
-import { log } from "console";
+import { SetUsernameDto } from "./dto/set-username.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -41,13 +40,12 @@ export class AuthController {
     return this.authService.verify(req);
   }
 
-  @Post("nickname")
+  @Post("username")
   @HttpCode(200)
-  async setNickname(
-    @Body() { nickname }: SetNicknameDto,
-    @Req() request: Request,
+  async setUsername(
+    @Body() { username }: SetUsernameDto,
     @Res({ passthrough: true }) response: Response
   ) {
-    return this.authService.setNickname(nickname, request, response);
+    return this.authService.setUsername(username, response);
   }
 }

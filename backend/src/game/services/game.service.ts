@@ -46,13 +46,14 @@ export class GameService {
     game.destroy();
   }
 
-  public getGameByNickname(username: string): Game {
+  public getGameByUsername(username: string): Game {
     return this.games.find(
       (game) =>
         game.owner.username === username ||
         game.players.some((player) => player.username === username)
     );
   }
+
   public getMemberByName(username: string): GameMember {
     for (const game of this.games) {
       if (game.owner.username === username) {
