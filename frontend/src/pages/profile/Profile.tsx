@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
       <Meta title={"Profil"} />
       <Breadcrumb title="Profil" />
       <Sidebar items={sidebarItems} />
-      <MainContainer className={"sidebarContainer"}>
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <div className={styles.profileBox}>
             <div className={styles.profilePic}>

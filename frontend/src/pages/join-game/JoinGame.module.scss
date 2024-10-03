@@ -5,7 +5,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
-  margin-top: 1rem;
+  margin: 2rem 0;
 }
 
 .createButton {
@@ -30,10 +30,16 @@
 }
 
 .selectionBoxes input {
-  border: 1px solid #ccc;
+  border: 1px solid $button-gray;
   border-radius: 5px;
   padding: 0.5rem;
   font-size: 1rem;
   width: 50%;
   transition: border-color 0.3s ease;
+  outline: none;
+
+  &:hover,
+  &:focus {
+    border: 1px solid #bbb;
+  }
 }
