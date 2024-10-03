@@ -14,7 +14,6 @@ import { UserPacket } from "@shared/user";
 import { SocketType } from "src/game/game.types";
 import { parse } from "cookie";
 import { GameService } from "../game/services/game.service";
-import { log } from "console";
 
 @Injectable()
 export class AuthService {
@@ -130,6 +129,54 @@ export class AuthService {
     return {}; // I guess I have to return something here
   }
 
+  async verify(req: Request) {
+    if (!req.user?.username) {
+      return {};
+    }
+
+    if (this.gameService.isUsernameConnected(req.user.username)) {
+      this.clearTokenFromResponse(req.res);
+      throw new ConflictException("Użytkownik jest już połączony");
+    }
+
+    // if user is not logged check if the username has a game to reconnect - if not, clear nickname from the token
+    if (!req.user.id) {
+      const game = this.gameService.getGameByUsername(req.user.username);
+      if (!game) {
+        this.clearTokenFromResponse(req.res);
+
+        return {};
+      }
+    }
+
+    // regenerate token when user is verified
+    this.appendTokenToResponse(req.res, await this.createJwt(req.user));
+
+    return req.user;
+  }
+
+  async setUsername(username: string, response: Response) {
+    const user = await this.userRepository.findOne({
+      where: { username: username },
+    });
+
+    if (user) {
+      throw new ConflictException("Nazwa użytkownika jest już zajęta");
+    }
+
+    if (this.gameService.isUsernameConnected(username)) {
+      throw new ConflictException("Gracz z tą nazwą jest już połączony");
+    }
+
+    const tokenPayload: TokenPayload = { username };
+    const token = await this.jwtService.signAsync(tokenPayload);
+    this.appendTokenToResponse(response, token);
+
+    return {
+      username: username,
+    };
+  }
+
   async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
   }
@@ -187,43 +234,5 @@ export class AuthService {
   public extractTokenPayloadFromSocket(socket: SocketType): TokenPayload {
     const token = parse(socket.handshake.headers.cookie).access_token;
     return this.extractPayloadFromToken(token);
-  }
-
-  async verify(req: Request) {
-    if (!req.user?.username) {
-      return {};
-    }
-
-    if (this.gameService.isUsernameConnected(req.user.username)) {
-      this.clearTokenFromResponse(req.res);
-      throw new ConflictException("Użytkownik jest już połączony");
-    }
-
-    // regenerate token when user is verified
-    this.appendTokenToResponse(req.res, await this.createJwt(req.user));
-
-    return req.user;
-  }
-
-  async setNickname(username: string, request: Request, Response: Response) {
-    const user = await this.userRepository.findOne({
-      where: { username: username },
-    });
-
-    if (user) {
-      throw new ConflictException("Nazwa użytkownika jest już zajęta");
-    }
-
-    if (this.gameService.isUsernameConnected(username)) {
-      throw new ConflictException("Gracz z tą nazwą jest już połączony");
-    }
-
-    const tokenPayload: TokenPayload = { username };
-    const token = await this.jwtService.signAsync(tokenPayload);
-    this.appendTokenToResponse(Response, token);
-
-    return {
-      username: username,
-    };
   }
 }

@@ -30,7 +30,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: SocketType) {
     this.logger.log(`Client connected: ${client.data.username} [${client.id}]`);
 
-    this.gameService.getGameByNickname(client.data.username)?.reconnect(client);
+    this.gameService.getGameByUsername(client.data.username)?.reconnect(client);
   }
 
   handleDisconnect(client: SocketType) {
@@ -39,7 +39,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     );
 
     this.gameService
-      .getGameByNickname(client.data.username)
+      .getGameByUsername(client.data.username)
       ?.onPlayerDisconnect(client);
   }
 
@@ -92,7 +92,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage("leave_game")
   leaveGame(@ConnectedSocket() playerSocket: SocketType) {
-    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -104,7 +104,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() ownerSocket: SocketType,
     @MessageBody() username: string
   ) {
-    const game = this.gameService.getGameByNickname(ownerSocket.data.username);
+    const game = this.gameService.getGameByUsername(ownerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -119,7 +119,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() ownerSocket: SocketType,
     @MessageBody() username: string
   ) {
-    const game = this.gameService.getGameByNickname(ownerSocket.data.username);
+    const game = this.gameService.getGameByUsername(ownerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -131,7 +131,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage("start_game")
   async startGame(@ConnectedSocket() ownerSocket: SocketType) {
-    const game = this.gameService.getGameByNickname(ownerSocket.data.username);
+    const game = this.gameService.getGameByUsername(ownerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -154,7 +154,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() playerSocket: SocketType,
     @MessageBody() categoryId: number
   ) {
-    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -167,7 +167,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() playerSocket: SocketType,
     @MessageBody() answer: string
   ) {
-    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -196,7 +196,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() playerSocket: SocketType,
     @MessageBody() settings: Partial<GameSettings>
   ) {
-    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -213,7 +213,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() playerSocket: SocketType,
     @MessageBody() blackListedHelpers: HelperType[]
   ) {
-    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
@@ -230,7 +230,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() playerSocket: SocketType,
     @MessageBody() whiteListedCategories: CategoryId[]
   ) {
-    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
     if (!game) {
       throw new WsException("Nie jesteś w żadnej grze!");
     }

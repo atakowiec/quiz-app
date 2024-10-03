@@ -82,6 +82,8 @@ export default class Game {
       player.socket.leave(this.id);
       delete player.socket.data.gameId;
     });
+
+    this.logger.log("Game destroyed");
   }
 
   /**
@@ -176,12 +178,12 @@ export default class Game {
     }
     this.logger.log(`Player ${playerSocket.data.username} has left the game`);
 
-    const playerOrOwner = this.getPlayer(playerSocket);
-    if (!playerOrOwner) {
+    const player = this.getPlayer(playerSocket);
+    if (!player) {
       return;
     }
 
-    this.removePlayer(playerOrOwner);
+    this.removePlayer(player);
   }
 
   /**
@@ -236,6 +238,11 @@ export default class Game {
       this.broadcastNotification(`${gameMember.username} opuścił grę.`);
 
       this.send();
+    }
+
+    // we need to disconnect the socket when the player was not logged in
+    if (!gameMember.socket.data.userId) {
+      gameMember.socket.disconnect();
     }
   }
 

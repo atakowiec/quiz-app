@@ -5,7 +5,6 @@ import { Category } from "../../questions/entities/category.model";
 import { ConfigService } from "@nestjs/config";
 import { GameMember } from "./game-member";
 import { Logger } from "@nestjs/common";
-import { log } from "console";
 
 /**
  * Represents a single round in the game - voting, selecting category, question phase

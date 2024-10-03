@@ -21,16 +21,14 @@ const userSlice = createSlice({
       if (!action.payload?.id) {
         return {
           loggedIn: false,
-          username: !action.payload?.username
-            ? undefined
-            : action.payload.username,
+          username: action.payload?.username
         };
       }
 
       const userPacket = action.payload as UserPacket;
 
       return {
-        loggedIn: true,
+        loggedIn: !!userPacket.id,
         id: userPacket.id,
         username: userPacket.username,
         email: userPacket.email,
