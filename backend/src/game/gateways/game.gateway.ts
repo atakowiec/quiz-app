@@ -12,7 +12,7 @@ import { SocketServerType, SocketType } from "../game.types";
 import { GameService } from "../services/game.service";
 import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
-import { GameType } from "@shared/game";
+import { CategoryId, GameSettings, GameType, HelperType } from "@shared/game";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
@@ -178,7 +178,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("use_helper")
   useHelper(
     @ConnectedSocket() playerSocket: SocketType,
-    @MessageBody() helperName: string
+    @MessageBody() helperName: HelperType
   ) {
     const player = this.gameService.getMemberByName(playerSocket.data.username);
     if (!player) {
@@ -189,5 +189,56 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     } catch (e) {
       throw new WsException(e.message);
     }
+  }
+
+  @SubscribeMessage("change_settings")
+  changeSettings(
+    @ConnectedSocket() playerSocket: SocketType,
+    @MessageBody() settings: Partial<GameSettings>
+  ) {
+    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+
+    if (game.owner.username !== playerSocket.data.username) {
+      throw new WsException("Nie jesteś właścicielem gry!");
+    }
+
+    game.changeSettings(settings);
+  }
+
+  @SubscribeMessage("change_settings_helpers")
+  changeSettingsHelpers(
+    @ConnectedSocket() playerSocket: SocketType,
+    @MessageBody() blackListedHelpers: HelperType[]
+  ) {
+    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+
+    if (game.owner.username !== playerSocket.data.username) {
+      throw new WsException("Nie jesteś właścicielem gry!");
+    }
+
+    game.changeSettingsHelpers(blackListedHelpers);
+  }
+
+  @SubscribeMessage("change_settings_categories")
+  changeSettingsCategories(
+    @ConnectedSocket() playerSocket: SocketType,
+    @MessageBody() whiteListedCategories: CategoryId[]
+  ) {
+    const game = this.gameService.getGameByNickname(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+
+    if (game.owner.username !== playerSocket.data.username) {
+      throw new WsException("Nie jesteś właścicielem gry!");
+    }
+
+    game.changeSettingsCategories(whiteListedCategories);
   }
 }

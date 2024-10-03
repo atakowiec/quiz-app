@@ -2,9 +2,18 @@ import { GameMember } from "./game-member";
 import { GameService } from "../services/game.service";
 import { SocketType } from "../game.types";
 import { createGameID } from "src/utils/ids";
-import { GameSettings, GameStatus, GameType, GameUpdatePacket, IGamePacket, } from "@shared/game";
+import {
+  CategoryId,
+  GameSettings,
+  GameStatus,
+  GameType,
+  GameUpdatePacket,
+  HelperType,
+  IGamePacket,
+} from "@shared/game";
 import { Logger } from "@nestjs/common";
 import Round from "./round";
+import { log } from "console";
 
 export default class Game {
   readonly logger: Logger;
@@ -25,9 +34,9 @@ export default class Game {
     this.gameService = gameService;
 
     this.settings = {
-      number_of_rounds: 1,
-      number_of_questions_per_round: 3,
-      number_of_categories_per_voting: 3,
+      number_of_rounds: 2,
+      number_of_questions_per_round: 5,
+      number_of_categories_per_voting: 5,
       time_for_answer: 30,
       max_number_of_players: 49,
     };
@@ -267,11 +276,6 @@ export default class Game {
     this.round = new Round(this);
     this.roundNumber++;
 
-    // todo here we should get stats from GameMember and save somewhere, for now I am just clearing it
-    this.getAllPlayers().forEach((player) => {
-      player.score = 0;
-    });
-
     this.round.start();
   }
 
@@ -352,10 +356,31 @@ export default class Game {
   public endGame() {
     this.logger.log(`Game with id ${this.id} ended`);
     this.gameStatus = "game_over";
-    this.broadcastUpdate({ status: "game_over" });
+
+    // If player still has helpers give him 100 point per not used helper
+    this.getAllPlayers().forEach((player) => {
+      player.availableHelpers.forEach((helper) => {
+        if (!this.settings.blackListedHelpers.includes(helper.name)) {
+          player.score += 100;
+          log(
+            `Player ${player.username} got 100 points for not using ${helper.name}`
+          );
+        }
+      });
+    });
+
+    const ranking = this.getAllPlayers().sort((a, b) => b.score - a.score);
+    const winners = ranking.filter(
+      (player) => player.score === ranking[0].score
+    );
+
+    this.broadcastUpdate({
+      status: "game_over",
+      players: ranking.map((player) => player.getPacket()),
+      winners: winners.map((player) => player.username),
+    });
 
     // TODO: save the game to the database
-    // TODO: calculate the winner
 
     this.players.forEach((player) => {
       if (!player.socket.data.userId) {
@@ -447,5 +472,38 @@ export default class Game {
       },
     });
     player.sendNotification("Przedłużono czas na odpowiedź");
+  }
+
+  changeSettings(settings: Partial<GameSettings>) {
+    if (this.gameStatus !== "waiting_for_players") {
+      return;
+    }
+
+    this.settings = { ...this.settings, ...settings };
+    this.broadcastUpdate({
+      settings: this.settings,
+    });
+  }
+
+  changeSettingsHelpers(blackListedHelpers: HelperType[]) {
+    if (this.gameStatus !== "waiting_for_players") {
+      return;
+    }
+
+    this.settings.blackListedHelpers = blackListedHelpers;
+    this.broadcastUpdate({
+      settings: this.settings,
+    });
+  }
+  changeSettingsCategories(whiteListedCategories: CategoryId[]) {
+    if (this.gameStatus !== "waiting_for_players") {
+      return;
+    }
+
+    this.settings.category_whitelist = whiteListedCategories;
+
+    this.broadcastUpdate({
+      settings: this.settings,
+    });
   }
 }

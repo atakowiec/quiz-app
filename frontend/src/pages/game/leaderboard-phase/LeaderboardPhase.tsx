@@ -34,6 +34,12 @@ const LeaderboardPhase = () => {
       }, game.players[0])
     : null;
 
+  const topPlayers = game?.players?.filter(
+    (player) => (player.score ?? 0) === topPlayer?.score
+  );
+
+  const topPlayersUsernames = topPlayers?.map((player) => player.username);
+
   return (
     <div>
       <Meta title={"Leaderboard"} />
@@ -50,7 +56,7 @@ const LeaderboardPhase = () => {
                 >
                   <div>
                     {index + 1}. {player.username}
-                    {player.username === topPlayer?.username && (
+                    {topPlayersUsernames?.includes(player.username) && (
                       <PiMedalFill
                         style={{ color: "gold", marginLeft: "8px" }}
                         className={styles.medal}
@@ -83,10 +89,6 @@ const LeaderboardPhase = () => {
             ) : (
               <p>Brak graczy</p>
             )}
-          </div>
-          <div className={styles.buttons}>
-            <button className={styles.playButton}>Zagraj ponownie</button>
-            <button className={styles.cancelButton}>Opuść grę</button>
           </div>
         </MainBox>
       </MainContainer>
