@@ -7,6 +7,7 @@ body {
   background-color: #f0f4f3;
   color: #0c1a25;
   font-size: 16px;
+  overflow-x: clip;
 }
 
 //colors
@@ -55,11 +56,11 @@ $desktop-breakpoint: 769px; // minimum width for a desktop screen
 $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (4k)
 
 .mainContainer {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -73,6 +74,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 80vw;
   max-width: 600px;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
 .mainText {
