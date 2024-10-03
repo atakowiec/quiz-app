@@ -1,9 +1,5 @@
 @import "../../../styles/Global.scss";
 
-.sidebarContainer {
-  padding-left: $sidebar-width;
-}
-
 .settingsBox {
   display: flex;
   flex-direction: column;
@@ -265,10 +261,6 @@ input:checked + .slider:before {
 }
 
 @media (max-width: $phone-breakpoint) {
-  .sidebarContainer {
-    padding-left: 0;
-  }
-
   .Title {
     margin-bottom: 1rem;
   }

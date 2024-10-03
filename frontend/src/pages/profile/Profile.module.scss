@@ -1,9 +1,5 @@
 @import "../../styles/Global";
 
-.sidebarContainer {
-  padding-left: $sidebar-width;
-}
-
 .profileBox {
   display: flex;
   flex-direction: row;
@@ -128,10 +124,6 @@
 }
 
 @media (max-width: $phone-breakpoint) {
-  .sidebarContainer {
-    padding-left: 0;
-  }
-
   .personIcon {
     font-size: 3rem;
   }

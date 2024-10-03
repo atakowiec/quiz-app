@@ -1,9 +1,5 @@
 @import "../../styles/Global";
 
-.sidebarContainer {
-  padding-left: $sidebar-width;
-}
-
 .selectionBoxes {
   display: flex;
   flex-wrap: wrap;
@@ -40,10 +36,4 @@
   font-size: 1rem;
   width: 50%;
   transition: border-color 0.3s ease;
-}
-
-@media (max-width: $phone-breakpoint) {
-  .sidebarContainer {
-    padding-left: 0;
-  }
 }

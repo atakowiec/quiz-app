@@ -1,9 +1,5 @@
 @import "../../styles/Global.scss";
 
-.sidebarContainer {
-  padding-left: $sidebar-width;
-}
-
 .gameHistoryBox {
   display: flex;
   flex-direction: column;
@@ -30,6 +26,7 @@
   flex-direction: row;
   gap: 4rem;
 }
+
 .trybMargin {
   margin-right: 1rem;
 }
@@ -70,9 +67,6 @@
 }
 
 @media (max-width: $phone-breakpoint) {
-  .sidebarContainer {
-    padding-left: 0;
-  }
 
   .titleRow {
     font-size: 1rem;
@@ -87,6 +81,7 @@
     align-items: center;
   }
 }
+
 @media (max-width: 520px) {
   .titleRow {
     justify-content: center;

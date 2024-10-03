@@ -121,7 +121,7 @@ const WaitingRoom: React.FC = () => {
       <Meta title={"Poczekalnia"} />
       <Breadcrumb title="Poczekalnia" />
       <Sidebar items={sidebarItems} />
-      <MainContainer className={styles.sidebarContainer}>
+      <MainContainer className={"sidebarContainer"}>
         <MainBox>
           <MainTitle>
             <FaPeopleGroup className="mb-2 fs-2" />
