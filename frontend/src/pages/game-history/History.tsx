@@ -26,7 +26,7 @@ const History: React.FC = () => {
       <Meta title={"Historia Gier"} />
       <Breadcrumb title="Historia Gier" />
       <Sidebar items={sidebarItems} />
-      <MainContainer>
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>Historia Gier</MainTitle>
           <div className={styles.gameHistoryBox}>

@@ -89,7 +89,9 @@ const WaitingRoom: React.FC = () => {
       return;
     }
 
-    await navigator.clipboard.writeText(`http://localhost:5173/join-game?code=${id}`); // todo change to production url some day
+    await navigator.clipboard.writeText(
+      `http://localhost:5173/join-game?code=${id}`
+    ); // todo change to production url some day
 
     setCopyAnimationStage("copying");
 
@@ -116,19 +118,19 @@ const WaitingRoom: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Poczekalnia"}/>
-      <Breadcrumb title="Poczekalnia"/>
-      <Sidebar items={sidebarItems}/>
-      <MainContainer>
+      <Meta title={"Poczekalnia"} />
+      <Breadcrumb title="Poczekalnia" />
+      <Sidebar items={sidebarItems} />
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>
-            <FaPeopleGroup className="mb-2 fs-2"/>
+            <FaPeopleGroup className="mb-2 fs-2" />
             Poczekalnia
           </MainTitle>
           <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
             {["ending", "copied"].includes(copyAnimationStage) ? (
               <>
-                <FaCheck/> Skopiowano!
+                <FaCheck /> Skopiowano!
               </>
             ) : (
               <OverlayTrigger
@@ -136,44 +138,41 @@ const WaitingRoom: React.FC = () => {
                 delay={{ show: 250, hide: 400 }}
                 overlay={renderTooltip}
               >
-                    <span onClick={copyId}>
-                      Kod: {game?.id} <FaLink/>
-                    </span>
+                <span onClick={copyId}>
+                  Kod: {game?.id} <FaLink />
+                </span>
               </OverlayTrigger>
             )}
           </div>
-          <hr className={styles.line}/>
+          <hr className={styles.line} />
           <div className={styles.playersBox}>
             <div className={styles.singlePlayer}>
-                  <span
-                    className={
-                      game?.owner.username === user.username
-                        ? styles.currentPlayer
-                        : ""
-                    }
-                  >
-                    {game?.owner.username}
-                  </span>
-              <LuCrown className={styles.playerAction}/>
+              <span
+                className={
+                  game?.owner.username === user.username
+                    ? styles.currentPlayer
+                    : ""
+                }
+              >
+                {game?.owner.username}
+              </span>
+              <LuCrown className={styles.playerAction} />
             </div>
             {game?.players && game.players.length > 0 && (
               <>
                 {game.players
                   .filter((player) => !player.owner)
                   .map((player) => (
-                    <div
-                      className={styles.singlePlayer}
-                      key={player.username}
-                    >
-                          <span
-                            className={
-                              player.username === user.username
-                                ? styles.currentPlayer
-                                : ""
-                            }
-                          >
-                            {player.username}
-                          </span>
+                    <div className={styles.singlePlayer} key={player.username}>
+                      <span
+                        className={
+                          player.username === user.username
+                            ? styles.currentPlayer
+                            : ""
+                        }
+                      >
+                        {player.username}
+                      </span>
                       {user.username === game.owner.username && (
                         <div>
                           <button
@@ -182,14 +181,14 @@ const WaitingRoom: React.FC = () => {
                               handleGiveOwnerClick(player.username!)
                             }
                           >
-                            <IoMdArrowUp className={styles.playerAction2}/>
+                            <IoMdArrowUp className={styles.playerAction2} />
                           </button>
 
                           <button
                             className={styles.kickBtn}
                             onClick={() => kickPlayer(player.username!)}
                           >
-                            <RxCross2 className={styles.playerAction}/>
+                            <RxCross2 className={styles.playerAction} />
                           </button>
                         </div>
                       )}
