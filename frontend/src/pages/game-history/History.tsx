@@ -36,7 +36,7 @@ const History: React.FC = () => {
                 <div>Miejsce</div>
               </div>
               <div className={styles.rightTitles}>
-                <div>Tryb</div>
+                <div className={styles.trybMargin}>Tryb</div>
                 <div>Punkty</div>
               </div>
             </div>
@@ -49,7 +49,17 @@ const History: React.FC = () => {
                 </div>
                 <div className={styles.rightTitles}>
                   <div>Wieloosobowy</div>
-                  <div>540</div>
+                  <div className={styles.pointsMargin}>540</div>
+                </div>
+              </div>
+              <div className={styles.singleHistory}>
+                <div className={styles.leftTitles}>
+                  <div>12.12.2021</div>
+                  <div>3.</div>
+                </div>
+                <div className={styles.rightTitles}>
+                  <div>Wieloosobowy</div>
+                  <div className={styles.pointsMargin}>540</div>
                 </div>
               </div>
             </div>
