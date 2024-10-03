@@ -33,13 +33,13 @@ const JoinGame: React.FC = () => {
     { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
     ...(user.loggedIn
       ? [
-        {
-          icon: IoLogoGameControllerB,
-          label: "Historia Gier",
-          href: "/games",
-        },
-        { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-      ]
+          {
+            icon: IoLogoGameControllerB,
+            label: "Historia Gier",
+            href: "/history",
+          },
+          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
+        ]
       : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
   ];
 
@@ -56,13 +56,13 @@ const JoinGame: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Dołącz do gry"}/>
-      <Breadcrumb title="Dołącz do gry"/>
-      <Sidebar items={sidebarItems}/>
-      <MainContainer>
+      <Meta title={"Dołącz do gry"} />
+      <Breadcrumb title="Dołącz do gry" />
+      <Sidebar items={sidebarItems} />
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>
-            <FaWrench className="mb-2 fs-2"/> Dołącz do gry
+            <FaWrench className="mb-2 fs-2" /> Dołącz do gry
           </MainTitle>
           <div className={styles.selectionBoxes}>
             <input

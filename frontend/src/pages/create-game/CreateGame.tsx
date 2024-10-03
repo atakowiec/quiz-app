@@ -36,13 +36,13 @@ const CreateGame: React.FC = () => {
     { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
     ...(user.loggedIn
       ? [
-        {
-          icon: IoLogoGameControllerB,
-          label: "Historia Gier",
-          href: "/games",
-        },
-        { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-      ]
+          {
+            icon: IoLogoGameControllerB,
+            label: "Historia Gier",
+            href: "/history",
+          },
+          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
+        ]
       : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
   ];
 
@@ -63,28 +63,28 @@ const CreateGame: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Stwórz grę"}/>
-      <Breadcrumb title="Stwórz grę"/>
-      <Sidebar items={sidebarItems}/>
-      <MainContainer>
+      <Meta title={"Stwórz grę"} />
+      <Breadcrumb title="Stwórz grę" />
+      <Sidebar items={sidebarItems} />
+      <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>
-            <FaWrench className="mb-2 fs-2"/> Stwórz Grę
+            <FaWrench className="mb-2 fs-2" /> Stwórz Grę
           </MainTitle>
           <div className={styles.modeText}>Wybierz tryb gry</div>
           <div className={styles.selectionBoxes}>
             <div className={styles.modeSelectionText}>
-              Jednoosobowy <IoPersonSharp className={styles.singlePlayer}/>
+              Jednoosobowy <IoPersonSharp className={styles.singlePlayer} />
             </div>
             <div
               className={styles.modeSelectionText}
               onClick={() => onNewGame("multi")}
             >
-              Wieloosobowy <IoPeopleSharp className={styles.multiPlayer}/>
+              Wieloosobowy <IoPeopleSharp className={styles.multiPlayer} />
             </div>
 
             <div className={styles.modeSelectionText}>
-              Rankingowy <IoPodiumSharp className={styles.ranked}/>
+              Rankingowy <IoPodiumSharp className={styles.ranked} />
             </div>
           </div>
         </MainBox>
