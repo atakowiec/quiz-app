@@ -102,7 +102,7 @@
 .categoryModalBox {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   background-color: $gray;
   border-radius: $container-border-radius;
   overflow-y: auto;
@@ -110,6 +110,7 @@
   justify-content: center;
   gap: 1rem;
   margin-top: 1rem;
+  max-height: 400px;
 }
 
 .categoriesChoice {

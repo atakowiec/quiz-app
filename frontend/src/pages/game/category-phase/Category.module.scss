@@ -10,9 +10,12 @@
 .categoryChoiceBox {
   display: flex;
   justify-content: center;
+  align-items: center;
   border-radius: 10px;
   flex-wrap: wrap;
   overflow-y: auto;
+  margin: 2rem;
+  max-height: 500px;
 }
 
 .choice {
@@ -29,6 +32,7 @@
   transition: 0.15s border ease-in-out;
   margin: 1rem 0 0.5rem 0;
   text-align: center;
+  min-height: 220px;
 
   img {
     width: 100%;
@@ -124,5 +128,20 @@
 
   .voteIcon {
     font-size: 8px;
+  }
+
+  .categoryTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: $small-phone-breakpoint) {
+  .categoryTitle {
+    font-size: 1.2rem;
+  }
+
+  .categoryChosenImage {
+    max-width: 150px;
+    max-height: 150px;
   }
 }
