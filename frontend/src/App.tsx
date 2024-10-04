@@ -17,6 +17,7 @@ import IsInWaitingRoomLayout from "./components/layouts/IsInWaitingRoomLayout.ts
 import Questions from "./pages/admin/questions/Questions.tsx";
 import Settings from "./pages/game/waiting-room/Settings.tsx";
 import History from "./pages/game-history/History.tsx";
+import Stats from "./pages/game-stats/Stats.tsx";
 
 function App() {
   const game = useGame();
@@ -81,8 +82,9 @@ function App() {
             }
           >
             <Route path="settings" element={<Settings />} />
-            <Route path="history" element={<History />} />
           </Route>
+          <Route path="history" element={<History />} />
+          <Route path="stats" element={<Stats />} />
         </Route>
       </Routes>
     </>
