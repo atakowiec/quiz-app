@@ -154,12 +154,6 @@
 }
 
 @media (max-width: 450px) {
-  .statsBox {
-    overflow-y: auto;
-    flex-wrap: nowrap;
-    max-height: 400px;
-  }
-
   .container {
     height: 120px;
     gap: 0.25rem;
@@ -170,7 +164,7 @@
   }
 
   .rankBar {
-    width: 5rem;
+    width: 6rem;
     padding: 0.2rem;
   }
 
