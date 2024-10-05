@@ -308,7 +308,7 @@ export default class Game {
 
     // if everyone selected the category, we can move to the next phase
     if (this.players.every((player) => player.chosenCategory !== -1)) {
-      this.round.setTimer(2, this.round.endVoting.bind(this.round));
+      this.round.setTimer(0, this.round.endVoting.bind(this.round));
     }
 
     this.broadcastUpdate({
