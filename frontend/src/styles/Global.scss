@@ -52,6 +52,7 @@ $input-phone-padding: 0.5rem;
 // breakpoints
 $small-phone-breakpoint: 320px; // maximum width for a small phone screen
 $phone-breakpoint: 768px; // maximum width for a phone screen
+$rotated-phone-breakpoint: 720px; //max height for a rotated phone screen
 $desktop-breakpoint: 769px; // minimum width for a desktop screen
 $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (4k)
 
@@ -74,7 +75,9 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 80vw;
   max-width: 600px;
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
 }
 
 .mainText {
@@ -129,5 +132,19 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 @media (min-width: $large-desktop-breakpoint) {
   .mainBox {
     scale: 1.2;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 1024px) {
+  .mainContainer {
+    scale: 0.6;
+    margin-top: 0rem;
+    padding: 0px;
+    border-bottom-width: 0px;
+    position: relative;
+  }
+
+  .mainBox {
+    margin-bottom: 9rem;
   }
 }

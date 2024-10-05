@@ -86,7 +86,7 @@ export class GameMember {
   }
 
   useHelper(helperName: HelperType) {
-    if (this.game.settings.blackListedHelpers.includes(helperName)) {
+    if (this.game.settings.blackListedHelpers?.includes(helperName)) {
       this.socket.emit("notification", "Ten pomocnik jest wyłączony!");
       return;
     }
