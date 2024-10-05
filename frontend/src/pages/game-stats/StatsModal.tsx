@@ -17,7 +17,7 @@ const StatsModal: React.FC<StatsModalProps> = ({ show, handleClose }) => {
     setActiveButton(buttonType);
   };
 
-  //TODO: poprawić by obrazki sie pporawnie wyświetlały, zrobić by sie statystyki wyswietlały i sortowały
+  //TODO: zrobić by sie statystyki wyswietlały i sortowały
   return (
     <Modal
       show={show}
@@ -47,7 +47,7 @@ const StatsModal: React.FC<StatsModalProps> = ({ show, handleClose }) => {
               <div className={styles.imgName}>
                 <img
                   className={styles.categoryImage}
-                  src={stat.img}
+                  src={`/assets/categories/${stat.img || "default.jpg"}`}
                   alt={stat.name}
                 />
                 <div className={styles.categoryName}>{stat.name}</div>
