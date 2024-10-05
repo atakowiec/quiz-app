@@ -19,10 +19,11 @@
 - [x] naprawic czas w wyborze kategorii
 - [x] czas responsywność
 - [x] naprawić responsywność dla ekranów większych niż 2500 x 1080
-- [ ] poprawic kategorie, odpowiedzi. ustawic max rozmiar zdjecia. wzorowac sie na question html i scss.
+- [x] poprawic kategorie, odpowiedzi. ustawic max rozmiar zdjecia. wzorowac sie na question html i scss.
 - [x] responsywność ipad
 - [ ] dodac komponenty placeholdery do brakujacych stron - ustawienia, staty itp
 - [x] mocno przetestowac responsywnosc i naprawic
+- [x] naprawic responsywność rotowanie urządzenia (jakies overflow itd dodać)
 
 ## Ficzery
 
