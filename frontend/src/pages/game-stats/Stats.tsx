@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
 import {
   IoIosAddCircleOutline,
@@ -15,6 +15,7 @@ import MainTitle from "../../components/MainTitle.tsx";
 import styles from "./Stats.module.scss";
 import RankingVisualization from "./RankingVisualization.tsx";
 import { IoIosStats } from "react-icons/io";
+import StatsModal from "./StatsModal.tsx";
 
 const Stats: React.FC = () => {
   const user = useUser();
@@ -34,13 +35,17 @@ const Stats: React.FC = () => {
       : []),
   ];
 
+  const [showModal, setShowModal] = useState(false);
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
+
   return (
     <>
       <Meta title={"Dołącz do gry"} />
       <Breadcrumb title="Dołącz do gry" />
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
-        <MainBox>
+        <MainBox className={styles.sBox}>
           <MainTitle>Statystyki</MainTitle>
           <div className={styles.statsBox}>
             <RankingVisualization />
@@ -81,9 +86,10 @@ const Stats: React.FC = () => {
               </button>
             </div>
             <div className={styles.rankingButtons}>
-              <button className={styles.rankingButton}>
+              <button className={styles.rankingButton} onClick={openModal}>
                 Statystyki kategorii
               </button>
+              <StatsModal show={showModal} handleClose={closeModal} />
               <button className={styles.rankingButton}>
                 Statystyki jakies
               </button>
