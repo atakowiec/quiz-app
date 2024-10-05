@@ -371,6 +371,13 @@ export default class Round {
     for (let i = 0; i < this.game.settings.number_of_questions_per_round; i++) {
       const randomIndex = Math.floor(Math.random() * questions.length);
       const question = questions[randomIndex];
+
+      // prevent duplicates
+      if(selectedQuestions.some(q => q.id === question.id)) {
+        i--;
+        continue;
+      }
+
       selectedQuestions.push(question);
       questions.splice(randomIndex, 1);
     }
