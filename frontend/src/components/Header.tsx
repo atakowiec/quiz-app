@@ -46,18 +46,18 @@ const Header = () => {
 
   return (
     <>
-      <header className={`${styles.headerTopStrip} p-1`}>
+      <header className={`${styles.headerTopStrip}`}>
         <div className={styles.headerContent}>
-          <FancyLogo />
+          <FancyLogo/>
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
-              <Link to="/" className={`info ${styles.gap15}`}>
+              <Link to="/" className={`${styles.gap15}`}>
                 <IoInformationCircleOutline
                   color="white"
                   className={styles.iconSize}
                 />
               </Link>
-              <Link to="/" className={`notifications ${styles.gap15}`}>
+              <Link to="/" className={`${styles.gap15}`}>
                 <IoMdNotificationsOutline
                   color="white"
                   className={styles.iconSize}
@@ -104,6 +104,7 @@ const Header = () => {
             </div>
           )}
         </div>
+        {/*<Notifications/>*/}
       </header>
     </>
   );
