@@ -16,4 +16,7 @@ export class User {
 
   @Column()
   permission: number;
+
+  @Column({ default: true })
+  acvite: boolean;
 }

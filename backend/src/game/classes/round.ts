@@ -166,7 +166,11 @@ export default class Round {
     // todo calculate the scores
     this.game.getAllPlayers().forEach((player) => {
       const correct = player.chosenAnswer == this.chosenQuestion.correctAnswer;
-      player.score += correct ? 100 : 0;
+
+      if (correct) {
+        player.score += 100 + ((player.answerEndTime - Date.now()) / (player.timeToAnswer * 1000)) * 100; // todo check if this is correct
+        player.score = Math.round(player.score)
+      }
 
       player.answersHistory.push(correct);
     });
@@ -385,5 +389,6 @@ export default class Round {
 
   extendTime(player: GameMember) {
     player.answerEndTime += 10 * 1000;
+    player.timeToAnswer += 10;
   }
 }

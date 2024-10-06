@@ -6,12 +6,15 @@
 .view-enter {
   transform: translateX(100%);
 }
+
 .view-enter-active {
   transform: translateX(0);
 }
+
 .view-exit {
   transform: translateX(0);
 }
+
 .view-exit-active {
   transform: translateX(-100%);
 }
