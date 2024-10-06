@@ -28,7 +28,17 @@ export class GameService {
     this.games.forEach((game) => game.tick());
   }
 
-  public createGame(owner: SocketType, gameType: GameType) {
+  public createGame(owner: SocketType | null, gameType: GameType) {
+    owner =
+      owner ||
+      ({
+        id: "server",
+        data: {
+          username: "server",
+          isServer: true,
+        },
+      } as SocketType);
+
     const game = new Game(owner, this, gameType);
     this.games.push(game);
     return game;
@@ -93,5 +103,14 @@ export class GameService {
         (socket) => socket.data.username
       )
     );
+  }
+
+  public getLengthOfTheQueue() {
+    return this.gameGateway.server.sockets.adapter.rooms.get("queue").size;
+  }
+  public getPlayersFromQueue(): SocketType[] {
+    return Array.from(
+      this.gameGateway.server.sockets.adapter.rooms.get("queue").values()
+    ).map((id) => this.gameGateway.server.sockets.sockets.get(id));
   }
 }

@@ -23,6 +23,7 @@ import { FaCheck, FaLink, FaPeopleGroup } from "react-icons/fa6";
 import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
+import TimeBar from "../components/time-bar/TimeBar.tsx";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -122,7 +123,7 @@ const WaitingRoom: React.FC = () => {
       <Breadcrumb title="Poczekalnia" />
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
-        <MainBox>
+        <MainBox before={game?.owner.username === "server" && <TimeBar />}>
           <MainTitle>
             <FaPeopleGroup className="mb-2 fs-2" />
             Poczekalnia
@@ -146,18 +147,20 @@ const WaitingRoom: React.FC = () => {
           </div>
           <hr className={styles.line} />
           <div className={styles.playersBox}>
-            <div className={styles.singlePlayer}>
-              <span
-                className={
-                  game?.owner.username === user.username
-                    ? styles.currentPlayer
-                    : ""
-                }
-              >
-                {game?.owner.username}
-              </span>
-              <LuCrown className={styles.playerAction} />
-            </div>
+            {game?.owner.username != "server" && (
+              <div className={styles.singlePlayer}>
+                <span
+                  className={
+                    game?.owner.username === user.username
+                      ? styles.currentPlayer
+                      : ""
+                  }
+                >
+                  {game?.owner.username}
+                </span>
+                <LuCrown className={styles.playerAction} />
+              </div>
+            )}
             {game?.players && game.players.length > 0 && (
               <>
                 {game.players

@@ -22,6 +22,7 @@ import SetUserNameModal from "../../components/set-username-modal/SetUserNameMod
 import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
+import { toast } from "react-toastify";
 
 const CreateGame: React.FC = () => {
   const socket = useSocket();
@@ -53,8 +54,26 @@ const CreateGame: React.FC = () => {
       setShowModal(true);
       return;
     }
-
-    socket.emit("create_game", gameType, () => navigate("/waiting-room"));
+    newGame(gameType);
+  }
+  function newGame(gameType: string) {
+    if (gameType === "matchmaking") {
+      toast.promise(
+        new Promise<void>((resolve) => {
+          socket.emit("join_queue", () => {
+            navigate("/waiting-room");
+            resolve();
+          });
+        }),
+        {
+          pending: "Dołączanie do kolejki...",
+          success: "Dołączono do kolejki!",
+          error: "Błąd dołączania do kolejki",
+        }
+      );
+    } else {
+      socket.emit("create_game", gameType, () => navigate("/waiting-room"));
+    }
   }
 
   /*
@@ -83,8 +102,11 @@ const CreateGame: React.FC = () => {
               Wieloosobowy <IoPeopleSharp className={styles.multiPlayer} />
             </div>
 
-            <div className={styles.modeSelectionText}>
-              Rankingowy <IoPodiumSharp className={styles.ranked} />
+            <div
+              className={styles.modeSelectionText}
+              onClick={() => onNewGame("matchmaking")}
+            >
+              Matchmaking <IoPodiumSharp className={styles.ranked} />
             </div>
           </div>
         </MainBox>
@@ -94,7 +116,8 @@ const CreateGame: React.FC = () => {
         confirmBtnText="Stwórz grę"
         onClose={() => setShowModal(false)}
         onConfirm={() => {
-          socket.emit("create_game", gameType, () => navigate("/waiting-room"));
+          setShowModal(false);
+          newGame(gameType);
         }}
       />
     </>

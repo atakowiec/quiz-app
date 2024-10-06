@@ -30,22 +30,34 @@ export default class Game {
   public round: Round;
   public roundNumber = 0;
 
+  // For Matchmaking
+  private intervalId: NodeJS.Timeout | null = null;
+  public timeStart: number = -1;
+  public timeEnd: number = -1;
+  public onTimerEnd?: () => void;
+
   constructor(owner: SocketType, gameService: GameService, gameType: GameType) {
     this.gameService = gameService;
 
     this.settings = {
-      number_of_rounds: 2,
-      number_of_questions_per_round: 5,
+      number_of_rounds: 1,
+      number_of_questions_per_round: 1,
       number_of_categories_per_voting: 5,
-      time_for_answer: 30,
+      time_for_answer: 2,
       max_number_of_players: 49,
     };
 
     this.id = createGameID();
     this.owner = new GameMember(owner, this);
     this.gameType = gameType;
-    this.owner.socket.join(this.id);
-    this.owner.socket.data.gameId = this.id;
+
+    if (!owner.data.isServer) {
+      this.owner.socket.join(this.id);
+      this.owner.socket.data.gameId = this.id;
+    } else {
+      this.setTimer(5, this.start.bind(this));
+      this.intervalId = setInterval(() => this.tickTimer(), 1000);
+    }
 
     this.logger = new Logger(`game-${this.id}`);
   }
@@ -68,6 +80,8 @@ export default class Game {
       player: member.getPacket(),
       round: this.round?.getPacket(member),
       players: this.getAllPlayers().map((player) => player.getPacket()),
+      timerEnd: this.timeEnd,
+      timerStart: this.timeStart,
     };
   }
 
@@ -79,8 +93,11 @@ export default class Game {
 
   public destroy() {
     this.getAllPlayers().forEach((player) => {
-      player.socket.leave(this.id);
-      delete player.socket.data.gameId;
+      if (!player.socket.data.isServer) {
+        player.socket.leave(this.id);
+        delete player.socket.data.gameId;
+        player.socket.emit("set_game", null);
+      }
     });
 
     this.logger.log("Game destroyed");
@@ -276,6 +293,14 @@ export default class Game {
 
   async start() {
     this.logger.log("Game started");
+    if (this.intervalId) this.clearTimer();
+    if (this.gameType === "matchmaking") {
+      if (this.players.length < 2) {
+        this.broadcastNotification("Za mało graczy, gra kończy się");
+        this.endGame();
+        return;
+      }
+    }
     this.nextRound();
   }
 
@@ -512,5 +537,29 @@ export default class Game {
     this.broadcastUpdate({
       settings: this.settings,
     });
+  }
+
+  public setTimer(time: number, callback: () => void) {
+    time = parseInt(time.toString());
+
+    this.timeStart = Date.now();
+    this.timeEnd = this.timeStart + time * 1000;
+    this.onTimerEnd = callback;
+  }
+  public tickTimer() {
+    if (this.timeEnd === -1) {
+      return;
+    }
+
+    if (this.timeEnd <= Date.now()) {
+      this.timeEnd = -1;
+      this.onTimerEnd();
+    }
+  }
+  private clearTimer() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   }
 }

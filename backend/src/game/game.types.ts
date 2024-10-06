@@ -15,4 +15,5 @@ export type SocketServerType = SocketIOServer<
 export interface SocketData {
   username: string;
   gameId?: string;
+  isServer?: boolean;
 }
