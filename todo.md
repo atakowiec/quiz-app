@@ -1,57 +1,38 @@
-## Poprawki frontend
+## Poprawki
+- [ ] na telefonie szersze leaderboard 
+- [ ] na telefonie szerszy input do wpisywania kodu gry
+- [ ] zmienic modal do przekazywania wlasciciela - tak aby byl taki jak inne modale
+- [ ] mniejsze paddingi w statach
+- [ ] ŁUKASZ - przerobic ownera na nullable zamiast 'server'
+- [ ] w ustawieniac kategorii domyslnie border transparent zeby uniknac przesuwania sie elementow po kliknieciu
+- [ ] ustawienia jako modal
+- [ ] wywalic wszystkie ikonki z title albo dodac wszedzie
+- [ ] naprawic settingsy - na froncie sie nie aktualizuje po zmianie
+- [ ] w SelectedCategoryPhase uzyc tego samego zielonego i czerwonego co w reszcie apki
+- [ ] sprawdzic i naprawic i dodac zaokraglenia punktow w grze
+- [ ] odswiezenie gry jako niezalogowany przywraca do gry
+- [ ] osoba niezalogowana nie ma w ogole powiadomien
 
-- [x] w trakcie gry - usunac z navbara profil
-- [x] zdjęcia w folderze public/assets i wtedy dostęp src={`/assets/categories/`}
-- [x] strona główna - jakeis grafiki
-- [x] niezalogowany nie widzi historie gier i statystyk
-- [x] po wejdziu w np stworz gre, sidebar ma zostac bez zmian - ten element nie znika
-- [x] przy małych ekranach sidebar z ikonkami przechodzi na dół
-- [x] ujednolicic przyciski - te same paddingi, cienie itp
-- [x] ujednolicić przyciski- responsywność
-- [x] ujednolicic tytuły stron - rozmiary, w sensie ten box np z POCZEKALNIA, Logowanie
-- [x] w grze jak ktos sie wyloguje to go wywala z gry
-- [x] logowanie i rejestracja za duzy margin top błędu przy inpucie
-- [x] header `z-index` na 1000, ogarnac sidebar tak zeby strona sie nie scrollowala, na header dac `position: relative`
-- [x] logo font-size zmniejszyc
-- [x] globalny scss - https://github.com/atakowiec/bricks-battle-game/blob/master/bricks-battle-app/src/style/globals.module.scss
-- [x] zablokować zalogowanie się na konto na które ktoś jest juz zalogowany - socket połączony - /auth/verify
-- [x] w poczekalni można pedałować po całej apce, sidebar - stwórz/dolacz zmienia się na zielony przycisk "wroc do gry", /create-game itp przenosi do gry
-- [x] naprawic czas w wyborze kategorii
-- [x] czas responsywność
-- [x] naprawić responsywność dla ekranów większych niż 2500 x 1080
-- [x] poprawic kategorie, odpowiedzi. ustawic max rozmiar zdjecia. wzorowac sie na question html i scss.
-- [x] responsywność ipad
-- [ ] dodac komponenty placeholdery do brakujacych stron - ustawienia, staty itp
-- [x] mocno przetestowac responsywnosc i naprawic
-- [x] naprawic responsywność rotowanie urządzenia (jakies overflow itd dodać)
-
-## Ficzery
-
-- [x] nie mozna zmieniac wybranej kategorii
-- [x] jak gra sie zaczela to nie mozna zmieniac routow, na navbarze byc moze wywalamy ikonki - zalezy czy powiadomienia beda potrzebne
-- [ ] dodajemy losowe ikonki dla niezalogowanych osob
-- [ ] dodajemy podglad tego kto jaka kategorie wybral - figma
+## Co jeszcze trzeba zrobic
+- [ ] po kliknieciu w zdjecie pytania w grze - powieksza sie zdjecie
+- [ ] tryb jednoosobowy - nie zapisuja sie pierwsze miejsca itp
+- [ ] zapis do bazy gry dla zalogowanych
+- [ ] skonczyc admina - zmiana stylow, zrobic ladne i dzialajace i spójne z reszta aplikacji
+- [ ] dodac sprawdzanie permisji/autoryzacji np na profilu lub adminie
+- [ ] zrobic od nowa profil
+- [ ] zrobic modal z profilem innych graczy (figma)
+- [ ] zrobic zapraszanie do gry z poziomu poczekalni (sidebar) (modal z lista znajomych)
+- [ ] kolory avatarow na backendzie (avatar ma pierwsza litere nicku) (figma - kolory)
+- [ ] skonczyc znajomych i zaprosznia do gry
+- [ ] przycisk "zagraj ponownie" po zakonczeniu gry - na razie nie dziala wcale
+  - [ ] w matchmakingu - zagraj kolejna gre - dolacza do kolejki na nowo
+- [ ] w historii - sortowanie po kolumnach - po kliknieciu nic sie nie dzieje
+- [ ] zmiana maila i hasla
+- [ ] banowanie kont przez admina
+- [ ] na profilu opcja do wyszukiwania graczy po nicku
+- [ ] w adminie wyszukiwanie graczy, banowanie i usuwanie kont
 - [ ] po 10 minutach bezczynnosci w lobby - gra usunieta
 - [ ] limit czlonkow w grze
-- [ ] kola ratunkowe sa na cala gre, na cala serie kategori
-- [x] cała gra - kategorie - pytania itp pod /game z ktorego nie da sie wyjsc
-- [ ] w przyszlosci - powiadomienia - zaproszenia itp
+- [ ] muzyka w trakcie gry - Łukasz
+- [ ] w "zapros znajomych" w grze wyswietlenie kto jest "online" lub "w grze" aka "zajęty"
 
-## Przebieg gry
-
-- wybor kategorii - dlugosc i liczba w settingsach
-- widok z wybrana kategoria i "Pytanie #1" - dłuższy - ok 6s.
-- pytanie - dlusgosc w setingsach
-  - nie widac poprawnej odpowiedzi
-  - zanim nie pojawi sie poprawna odpowiedz to nie widac kto co wybral
-  - jak konczy sie czas pojawia sie poprawna odpowiedz i kto co wybral i to zostaje na kilka sekund - 5
-- widok wybranek kategorii - 2 i kolejne razy z tym widokiem krotsze - 3s
-- jak koncza sie pytania w kategorii - tablica wynikow - 10s
-- po tablicy wynikow - wybor kategorii - po n kategoriach - tablica wynikow ktora zostaje na stałe, gracze moga "Opuść gre" i "Zagraj ponownie", 10s cooldownu na rozpoczecie kolejnej gry, admin rozpoczyna kolejna gre i kazdy kto jest (nawet w tablicy wynikow) w nia gra
-- jeśli wszyscy wyszli to gra jest usuwana
-
-## jakies pomysly
-
-- jak ktos nie wykorzysta supermocy to dostaje +100 pkt
-- liczba zdobytych pucharkow na profilu
-- w "zapros znajomych" w grze wyswietlenie kto jest "online" lub "w grze" aka "zajęty"
