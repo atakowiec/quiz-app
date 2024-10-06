@@ -41,12 +41,10 @@ export default class Round {
     if (this.game.gameStatus === "question_phase") {
       // check if every player answered the question - if so, end the question phase
       const time = Date.now();
-      const allAnswered = this.game
-        .getAllPlayers()
-        .every(
-          (player) =>
-            player.chosenAnswer != null || player.answerEndTime <= time
-        );
+      const allAnswered = this.game.getAllPlayers().every((player) => {
+        if (player.username === "server") return true;
+        return player.chosenAnswer != null || player.answerEndTime <= time;
+      });
 
       if (allAnswered) {
         this.endQuestionPhase();
@@ -373,7 +371,7 @@ export default class Round {
       const question = questions[randomIndex];
 
       // prevent duplicates
-      if(selectedQuestions.some(q => q.id === question.id)) {
+      if (selectedQuestions.some((q) => q.id === question.id)) {
         i--;
         continue;
       }

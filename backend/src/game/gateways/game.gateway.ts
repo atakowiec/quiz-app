@@ -13,6 +13,8 @@ import { GameService } from "../services/game.service";
 import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
 import { CategoryId, GameSettings, GameType, HelperType } from "@shared/game";
+import { MatchmakingService } from "src/matchmaking/services/matchmaking.service";
+import { log } from "console";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
@@ -24,7 +26,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
     @Inject(forwardRef(() => GameService))
-    private readonly gameService: GameService
+    private readonly gameService: GameService,
+    private readonly matchMakingService: MatchmakingService
   ) {}
 
   handleConnection(client: SocketType) {
@@ -37,6 +40,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log(
       `Client disconnected: ${client.data.username} [${client.id}]`
     );
+    this.matchMakingService.tryRemovePlayerFromQueue(client);
 
     this.gameService
       .getGameByUsername(client.data.username)
@@ -51,6 +55,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (ownerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
+    this.matchMakingService.tryRemovePlayerFromQueue(ownerSocket);
 
     const game = this.gameService.createGame(ownerSocket, createGameData);
     game.send(ownerSocket);
@@ -74,6 +79,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (playerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
+    this.matchMakingService.tryRemovePlayerFromQueue(playerSocket);
     const game = this.gameService.getGameById(gameId);
     if (!game) {
       throw new WsException("Gra nie istnieje!");
@@ -240,5 +246,22 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     game.changeSettingsCategories(whiteListedCategories);
+  }
+
+  @SubscribeMessage("join_queue")
+  joinQueue(@ConnectedSocket() playerSocket: SocketType) {
+    if (playerSocket.data.gameId) {
+      throw new WsException("Jesteś już w grze!");
+    }
+    this.logger.log(`Player ${playerSocket.data.username} joined the queue`);
+
+    const game = this.matchMakingService.queuePlayer(playerSocket);
+    if (game) {
+      return game.id;
+    } else {
+      return new Promise<void>((resolve) => {
+        resolve();
+      });
+    }
   }
 }

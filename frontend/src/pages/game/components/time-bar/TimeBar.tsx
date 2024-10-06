@@ -12,8 +12,8 @@ const TimeBar: React.FC<TimeBarProps> = ({ startTime, endTime }) => {
   const [percentage, setPercentage] = useState(0);
 
   useEffect(() => {
-    let start = startTime ?? game?.round?.timerStart;
-    let end = endTime ?? game?.round?.timerEnd;
+    let start = startTime ?? game?.round?.timerStart ?? game?.timerStart;
+    let end = endTime ?? game?.round?.timerEnd ?? game?.timerEnd;
 
     if (!start || !end) {
       return;

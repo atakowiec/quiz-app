@@ -8,7 +8,9 @@ export type GameStatus =
   | "game_over";
 export type HelperType = "fifty_fifty" | "extend_time" | "cheat_from_others";
 
-export type GameType = "single" | "multi" | "ranked";
+export type GameType = "single" | "multi" | "matchmaking";
+
+export type GameId = string;
 
 /**
  * Represents a category object that is sent to the client
@@ -78,6 +80,8 @@ export interface IGamePacket {
   player: IGameMember;
   players?: Partial<IGameMember>[];
   winners?: string[];
+  timerStart?: number;
+  timerEnd?: number;
 }
 
 /**
