@@ -29,7 +29,7 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
       .then((response: AxiosResponse<UserPacket>) => {
         dispatch(userActions.setUser(response.data));
 
-        if (response.data.id) {
+        if (response.data.username) {
           socket.connect();
         }
 

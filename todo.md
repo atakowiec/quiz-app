@@ -12,6 +12,7 @@
 - [ ] sprawdzic i naprawic i dodac zaokraglenia punktow w grze
 - [ ] odswiezenie gry jako niezalogowany przywraca do gry
 - [ ] osoba niezalogowana nie ma w ogole powiadomien
+- [ ] info ze ktos inny uzyl kola ratunkowego
 
 ## Co jeszcze trzeba zrobic
 - [ ] po kliknieciu w zdjecie pytania w grze - powieksza sie zdjecie
