@@ -133,13 +133,46 @@
   color: rgba(0, 0, 0, 0.6);
 }
 
-.modalCenter {
-  left: 45px;
+.modalBody {
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 1rem;
 }
 
 .modalButtons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.modalConfirmBut {
+  background-color: $green;
+  border: none;
+  padding: $button-padding;
+  box-shadow: $button-shadow-green;
+  color: white;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+
+  &:hover {
+    background-color: $button-green-hover;
+    color: white;
+  }
+}
+
+.modalCancelBut {
+  background-color: #999;
+  border: none;
+  color: white;
+  padding: $button-padding;
+  box-shadow: $button-shadow-black;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+
+  &:hover {
+    background-color: #888;
+    color: white;
+  }
 }
 
 .currentPlayer {
@@ -160,6 +193,16 @@
 
   .code {
     font-size: $code-phone-font-size-500;
+  }
+
+  .modalConfirmBut {
+    font-size: $button-phone-font-size;
+    padding: $button-phone-padding;
+  }
+
+  .modalCancelBut {
+    font-size: $button-phone-font-size;
+    padding: $button-phone-padding;
   }
 }
 

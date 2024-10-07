@@ -37,9 +37,18 @@
   width: 50%;
   transition: border-color 0.3s ease;
   outline: none;
+  text-align: center;
 
   &:hover,
   &:focus {
     border: 1px solid #bbb;
+  }
+}
+
+@media (max-width: $phone-breakpoint) {
+  .selectionBoxes input {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
   }
 }

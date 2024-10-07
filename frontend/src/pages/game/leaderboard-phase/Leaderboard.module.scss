@@ -1,18 +1,11 @@
 @import "../../../styles/Global";
 
-.line {
-  margin-top: 3rem;
-  border-bottom: 1px solid #888;
-  margin-bottom: 3rem;
-}
-
 .playersBox {
   background-color: $gray;
   border-radius: $container-border-radius;
   padding: 1rem;
-  margin-left: 3rem;
-  margin-right: 3rem;
   overflow-y: auto;
+  margin-top: 1rem;
 }
 
 .singlePlayer {

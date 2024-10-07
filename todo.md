@@ -1,17 +1,17 @@
 ## Poprawki
-- [ ] na telefonie szersze leaderboard 
-- [ ] na telefonie szerszy input do wpisywania kodu gry
-- [ ] zmienic modal do przekazywania wlasciciela - tak aby byl taki jak inne modale
-- [ ] mniejsze paddingi w statach
+- [x] na telefonie szersze leaderboard 
+- [x] na telefonie szerszy input do wpisywania kodu gry
+- [x] zmienic modal do przekazywania wlasciciela - tak aby byl taki jak inne modale
+- [x] mniejsze paddingi w statach
 - [ ] ŁUKASZ - przerobic ownera na nullable zamiast 'server'
-- [ ] w ustawieniac kategorii domyslnie border transparent zeby uniknac przesuwania sie elementow po kliknieciu
+- [x] w ustawieniac kategorii domyslnie border transparent zeby uniknac przesuwania sie elementow po kliknieciu
 - [ ] ustawienia jako modal
-- [ ] wywalic wszystkie ikonki z title albo dodac wszedzie
+- [x] wywalic wszystkie ikonki z title albo dodac wszedzie
 - [ ] naprawic settingsy - na froncie sie nie aktualizuje po zmianie
-- [ ] w SelectedCategoryPhase uzyc tego samego zielonego i czerwonego co w reszcie apki
+- [x] w SelectedCategoryPhase uzyc tego samego zielonego i czerwonego co w reszcie apki
 - [ ] sprawdzic i naprawic i dodac zaokraglenia punktow w grze
 - [ ] odswiezenie gry jako niezalogowany przywraca do gry
-- [ ] osoba niezalogowana nie ma w ogole powiadomien
+- [x] osoba niezalogowana nie ma w ogole powiadomien
 - [ ] info ze ktos inny uzyl kola ratunkowego
 
 ## Co jeszcze trzeba zrobic

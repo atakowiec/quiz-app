@@ -61,9 +61,7 @@ const JoinGame: React.FC = () => {
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
         <MainBox>
-          <MainTitle>
-            <FaWrench className="mb-2 fs-2" /> Dołącz do gry
-          </MainTitle>
+          <MainTitle>Dołącz do gry</MainTitle>
           <div className={styles.selectionBoxes}>
             <input
               className={styles.inputBox}

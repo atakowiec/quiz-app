@@ -43,12 +43,11 @@ const Header = () => {
     navigate("/logout");
   };
 
-
   return (
     <>
       <header className={`${styles.headerTopStrip}`}>
         <div className={styles.headerContent}>
-          <FancyLogo/>
+          <FancyLogo />
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
               <Link to="/" className={`${styles.gap15}`}>
@@ -57,12 +56,14 @@ const Header = () => {
                   className={styles.iconSize}
                 />
               </Link>
-              <Link to="/" className={`${styles.gap15}`}>
-                <IoMdNotificationsOutline
-                  color="white"
-                  className={styles.iconSize}
-                />
-              </Link>
+              {user.loggedIn ? (
+                <Link to="/" className={`${styles.gap15}`}>
+                  <IoMdNotificationsOutline
+                    color="white"
+                    className={styles.iconSize}
+                  />
+                </Link>
+              ) : null}
               {user.loggedIn ? (
                 <Dropdown align="end">
                   <Dropdown.Toggle

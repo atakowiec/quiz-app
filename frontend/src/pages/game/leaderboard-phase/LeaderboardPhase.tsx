@@ -47,7 +47,6 @@ const LeaderboardPhase = () => {
       <MainContainer>
         <MainBox before={<TimeBar />}>
           <MainTitle>Tablica Wyników</MainTitle>
-          <hr className={styles.line} />
           <div className={styles.playersBox}>
             {game?.players && game.players.length > 0 ? (
               game.players.map((player, index) => (
