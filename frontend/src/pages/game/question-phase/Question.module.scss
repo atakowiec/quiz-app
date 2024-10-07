@@ -52,15 +52,15 @@
 
   &.selected {
     box-sizing: border-box;
-    border: 1px solid #2bc440;
+    border: 1px solid $green;
   }
 
   &.correctAnswer {
-    background-color: #2bc440;
+    background-color: $green;
   }
 
   &.incorrectAnswer {
-    background-color: #ff4949;
+    background-color: $red;
   }
 }
 
@@ -89,10 +89,10 @@
   border-radius: 10px;
 }
 .hiddenAnswer {
-  background-color: #ff4949;
+  background-color: $red;
 }
 .userAnswer {
-  background-color: #2bc440;
+  background-color: $green;
   color: black;
   font-weight: 600;
   border-radius: 10px;

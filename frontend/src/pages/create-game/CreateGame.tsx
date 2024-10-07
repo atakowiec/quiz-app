@@ -87,9 +87,7 @@ const CreateGame: React.FC = () => {
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
         <MainBox>
-          <MainTitle>
-            <FaWrench className="mb-2 fs-2" /> Stwórz Grę
-          </MainTitle>
+          <MainTitle>Stwórz Grę</MainTitle>
           <div className={styles.modeText}>Wybierz tryb gry</div>
           <div className={styles.selectionBoxes}>
             <div className={styles.modeSelectionText}>

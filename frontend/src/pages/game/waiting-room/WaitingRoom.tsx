@@ -124,10 +124,7 @@ const WaitingRoom: React.FC = () => {
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
         <MainBox before={game?.owner.username === "server" && <TimeBar />}>
-          <MainTitle>
-            <FaPeopleGroup className="mb-2 fs-2" />
-            Poczekalnia
-          </MainTitle>
+          <MainTitle>Poczekalnia</MainTitle>
           <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
             {["ending", "copied"].includes(copyAnimationStage) ? (
               <>
@@ -220,16 +217,28 @@ const WaitingRoom: React.FC = () => {
         className={styles.modalCenter}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Zmiana właściciela pokoju</Modal.Title>
+          <Modal.Title className={styles.modalOwnerTitle}>
+            Zmiana właściciela pokoju
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Czy na pewno chcesz zmienić właściciela pokoju na {selectedPlayer}?
+          <div className={styles.modalBody}>
+            Czy na pewno chcesz zmienić właściciela pokoju na {selectedPlayer}?
+          </div>
         </Modal.Body>
         <Modal.Footer className={styles.modalButtons}>
-          <Button variant="primary" onClick={confirmGiveOwner}>
+          <Button
+            variant="primary"
+            onClick={confirmGiveOwner}
+            className={styles.modalConfirmBut}
+          >
             Tak, zmień właściciela
           </Button>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowModal(false)}
+            className={styles.modalCancelBut}
+          >
             Anuluj
           </Button>
         </Modal.Footer>
