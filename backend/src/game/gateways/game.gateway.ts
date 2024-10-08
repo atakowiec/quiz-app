@@ -14,7 +14,6 @@ import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
 import { CategoryId, GameSettings, GameType, HelperType } from "@shared/game";
 import { MatchmakingService } from "src/matchmaking/services/matchmaking.service";
-import { log } from "console";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()

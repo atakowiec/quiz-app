@@ -156,8 +156,6 @@ export class AuthService {
   }
 
   async setUsername(username: string, response: Response) {
-    if (username === "server")
-      throw new ConflictException("Nazwa użytkownika jest zarezerwowana");
     const user = await this.userRepository.findOne({
       where: { username: username },
     });

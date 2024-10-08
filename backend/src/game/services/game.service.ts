@@ -29,16 +29,6 @@ export class GameService {
   }
 
   public createGame(owner: SocketType | null, gameType: GameType) {
-    owner =
-      owner ||
-      ({
-        id: "server",
-        data: {
-          username: "server",
-          isServer: true,
-        },
-      } as SocketType);
-
     const game = new Game(owner, this, gameType);
     this.games.push(game);
     return game;
@@ -59,14 +49,14 @@ export class GameService {
   public getGameByUsername(username: string): Game {
     return this.games.find(
       (game) =>
-        game.owner.username === username ||
+        game.owner?.username === username ||
         game.players.some((player) => player.username === username)
     );
   }
 
   public getMemberByName(username: string): GameMember {
     for (const game of this.games) {
-      if (game.owner.username === username) {
+      if (game.owner?.username === username) {
         return game.owner;
       }
       const player = game.players.find(

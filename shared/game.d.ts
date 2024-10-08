@@ -76,7 +76,7 @@ export interface IGamePacket {
   settings: GameSettings;
   round?: GameRoundPacket;
   answersHistory: boolean[];
-  owner: IGameMember;
+  owner?: IGameMember;
   player: IGameMember;
   players?: Partial<IGameMember>[];
   winners?: string[];
