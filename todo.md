@@ -20,8 +20,8 @@
 - [ ] zapis do bazy gry dla zalogowanych
 - [ ] skonczyc admina - zmiana stylow, zrobic ladne i dzialajace i spójne z reszta aplikacji
 - [ ] dodac sprawdzanie permisji/autoryzacji np na profilu lub adminie
-- [ ] zrobic od nowa profil
-- [ ] zrobic modal z profilem innych graczy (figma)
+- [x] zrobic od nowa profil
+- [x] zrobic modal z profilem innych graczy (figma)
 - [ ] zrobic zapraszanie do gry z poziomu poczekalni (sidebar) (modal z lista znajomych)
 - [ ] kolory avatarow na backendzie (avatar ma pierwsza litere nicku) (figma - kolory)
 - [ ] skonczyc znajomych i zaprosznia do gry
