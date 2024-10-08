@@ -123,7 +123,7 @@ const WaitingRoom: React.FC = () => {
       <Breadcrumb title="Poczekalnia" />
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
-        <MainBox before={game?.owner.username === "server" && <TimeBar />}>
+        <MainBox before={game?.owner == null && <TimeBar />}>
           <MainTitle>Poczekalnia</MainTitle>
           <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
             {["ending", "copied"].includes(copyAnimationStage) ? (
@@ -144,7 +144,7 @@ const WaitingRoom: React.FC = () => {
           </div>
           <hr className={styles.line} />
           <div className={styles.playersBox}>
-            {game?.owner.username != "server" && (
+            {game?.owner && game?.owner?.username && (
               <div className={styles.singlePlayer}>
                 <span
                   className={
@@ -173,7 +173,7 @@ const WaitingRoom: React.FC = () => {
                       >
                         {player.username}
                       </span>
-                      {user.username === game.owner.username && (
+                      {game.owner && user.username === game.owner?.username && (
                         <div>
                           <button
                             className={styles.giveBtn}
@@ -198,7 +198,7 @@ const WaitingRoom: React.FC = () => {
             )}
           </div>
           <div className={styles.actionButtons}>
-            {user.username === game.owner.username && (
+            {game?.owner && user.username === game.owner?.username && (
               <div className={styles.buttonStart} onClick={startGame}>
                 Rozpocznij grę
               </div>

@@ -42,7 +42,6 @@ export default class Round {
       // check if every player answered the question - if so, end the question phase
       const time = Date.now();
       const allAnswered = this.game.getAllPlayers().every((player) => {
-        if (player.username === "server") return true;
         return player.chosenAnswer != null || player.answerEndTime <= time;
       });
 
@@ -168,8 +167,11 @@ export default class Round {
       const correct = player.chosenAnswer == this.chosenQuestion.correctAnswer;
 
       if (correct) {
-        player.score += 100 + ((player.answerEndTime - Date.now()) / (player.timeToAnswer * 1000)) * 100; // todo check if this is correct
-        player.score = Math.round(player.score)
+        player.score +=
+          100 +
+          ((player.answerEndTime - Date.now()) / (player.timeToAnswer * 1000)) *
+            100; // todo check if this is correct
+        player.score = Math.round(player.score);
       }
 
       player.answersHistory.push(correct);

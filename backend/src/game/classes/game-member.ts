@@ -48,7 +48,7 @@ export class GameMember {
   }
 
   public sendNotification(message: string) {
-    if (!this.socket.data.isServer) this.socket.emit("notification", message);
+    this.socket.emit("notification", message);
   }
 
   getPacket(): IGameMember {
@@ -65,13 +65,11 @@ export class GameMember {
   }
 
   sendGame() {
-    if (!this.socket.data.isServer)
-      this.socket.emit("set_game", this.game.getPacket(this));
+    this.socket.emit("set_game", this.game.getPacket(this));
   }
 
   sendGameUpdate(updatePacket: GameUpdatePacket) {
-    if (!this.socket.data.isServer)
-      this.socket.emit("update_game", updatePacket);
+    this.socket.emit("update_game", updatePacket);
   }
 
   setDisconnectTimeout(cb: () => void) {

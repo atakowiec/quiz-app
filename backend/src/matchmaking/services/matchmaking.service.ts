@@ -46,6 +46,7 @@ export class MatchmakingService {
       this.server_game_room = game.id;
       const players = this.gameService.getPlayersFromQueue();
       players.forEach((player) => {
+        this.logger.debug("Player: " + player.data.username);
         player.leave(MatchmakingService.ROOM_NAME);
         game.join(player);
       });

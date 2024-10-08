@@ -21,7 +21,7 @@ export default class Game {
   public gameService: GameService;
   public readonly id: string;
 
-  public owner: GameMember;
+  public owner: GameMember | null;
   public players: GameMember[] = [];
   public gameStatus: GameStatus = "waiting_for_players";
   public settings: GameSettings;
@@ -36,27 +36,31 @@ export default class Game {
   public timeEnd: number = -1;
   public onTimerEnd?: () => void;
 
-  constructor(owner: SocketType, gameService: GameService, gameType: GameType) {
+  constructor(
+    owner: SocketType | null,
+    gameService: GameService,
+    gameType: GameType
+  ) {
     this.gameService = gameService;
 
     this.settings = {
-      number_of_rounds: 1,
-      number_of_questions_per_round: 1,
+      number_of_rounds: 2,
+      number_of_questions_per_round: 5,
       number_of_categories_per_voting: 5,
-      time_for_answer: 2,
+      time_for_answer: 30,
       max_number_of_players: 49,
     };
 
     this.id = createGameID();
-    this.owner = new GameMember(owner, this);
     this.gameType = gameType;
 
-    if (!owner.data.isServer) {
+    if (owner) {
+      this.owner = new GameMember(owner, this);
       this.owner.socket.join(this.id);
       this.owner.socket.data.gameId = this.id;
     } else {
       this.setTimer(5, this.start.bind(this));
-      this.intervalId = setInterval(() => this.tickTimer(), 1000);
+      this.intervalId = setInterval(() => this.tickTimer(), 15000);
     }
 
     this.logger = new Logger(`game-${this.id}`);
@@ -75,7 +79,7 @@ export default class Game {
       status: this.gameStatus,
       gameType: this.gameType,
       settings: this.settings,
-      owner: this.owner.getPacket(),
+      owner: this.owner?.getPacket(),
       answersHistory: member.answersHistory,
       player: member.getPacket(),
       round: this.round?.getPacket(member),
@@ -93,11 +97,9 @@ export default class Game {
 
   public destroy() {
     this.getAllPlayers().forEach((player) => {
-      if (!player.socket.data.isServer) {
-        player.socket.leave(this.id);
-        delete player.socket.data.gameId;
-        player.socket.emit("set_game", null);
-      }
+      player.socket.leave(this.id);
+      delete player.socket.data.gameId;
+      player.socket.emit("set_game", null);
     });
 
     this.logger.log("Game destroyed");
@@ -117,7 +119,7 @@ export default class Game {
     this.logger.log(`Player ${player.username} joined the game`);
 
     this.send();
-    player.sendNotification("Dołączono do gry!");
+    // player.sendNotification("Dołączono do gry!");
   }
 
   public kick(username: string) {
@@ -179,6 +181,8 @@ export default class Game {
   }
 
   public broadcastNotification(message: string) {
+    this.logger.log(`Broadcasting notification: ${message}`);
+    this.logger.log(`Players: ${this.getAllPlayers()}`);
     this.getAllPlayers().forEach((player) => player.sendNotification(message));
   }
 
@@ -426,7 +430,10 @@ export default class Game {
   }
 
   getAllPlayers() {
-    return [this.owner, ...this.players];
+    return [this.owner, ...this.players].filter((player) => {
+      if (!player) return false;
+      return player;
+    });
   }
 
   checkPlayer(socket: SocketType): GameMember {
