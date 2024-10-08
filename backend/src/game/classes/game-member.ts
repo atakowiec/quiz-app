@@ -53,6 +53,7 @@ export class GameMember {
 
   getPacket(): IGameMember {
     return {
+      id: this.socket.data.user?.id,
       username: this.username,
       owner: this.game.owner === this,
       score: this.score,

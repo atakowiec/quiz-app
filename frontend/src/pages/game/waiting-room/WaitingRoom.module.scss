@@ -40,6 +40,7 @@
   margin-top: 0.5rem;
   border-bottom: 1px solid #888;
 }
+
 .playersBox {
   display: flex;
   flex-direction: column;
@@ -94,6 +95,17 @@
 .username {
   display: flex;
   justify-content: space-between;
+}
+
+.showProfileBtn {
+  background-color: $button-gray;
+  border-radius: $button-border-radius;
+  padding: 5px;
+  cursor: pointer;
+  box-shadow: $button-shadow-black;
+  border: none;
+  outline: none;
+  margin-left: 1rem;
 }
 
 .buttonStart {
@@ -177,6 +189,7 @@
 
 .currentPlayer {
   font-weight: 400;
+
   &::after {
     font-weight: 500;
     color: $green-black;

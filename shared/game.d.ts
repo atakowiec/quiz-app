@@ -42,6 +42,7 @@ export type IAnswer = string;
  * Represents a game member object that is sent to the client
  */
 export interface IGameMember {
+  id?: number;
   username: string;
   owner: boolean;
   score: number;
