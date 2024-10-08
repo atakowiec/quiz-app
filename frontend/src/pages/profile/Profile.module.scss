@@ -68,7 +68,7 @@
   align-items: center;
   background-color: white;
   border-radius: $container-border-radius;
-  padding: 0.3rem 0.25rem;
+  padding: 0.25rem 0.5rem;
   gap: 0.25rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -179,7 +179,7 @@
   border: none;
   background-color: $gray;
   border-radius: $container-border-radius;
-  padding: 0.25rem 0.5rem;
+  padding: 0.3rem 0.5rem;
   font-weight: 500;
   font-size: 0.8rem;
 }
@@ -203,13 +203,14 @@
   border-radius: $container-border-radius;
   color: white;
   font-weight: 500;
+  padding: 0.25rem 0.5rem;
 }
 
 .friendBut {
   background-color: white;
   border: none;
   border-radius: $container-border-radius;
-  padding: 0.25rem 0.25rem;
+  padding: 0.3rem 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
