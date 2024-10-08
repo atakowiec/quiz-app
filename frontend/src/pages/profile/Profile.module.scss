@@ -181,17 +181,18 @@
   border-radius: $container-border-radius;
   padding: 0.25rem 0.5rem;
   font-weight: 500;
+  font-size: 0.8rem;
 }
 
 .gamePad {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   margin-right: 0.1rem;
 }
 
 .friendModal {
   border: none;
   border-radius: $container-border-radius;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   background-color: $gray;
   padding: 0rem 0.3rem;
 }
