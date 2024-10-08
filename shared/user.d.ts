@@ -4,3 +4,9 @@ export type UserPacket = {
   email: string;
   permission: number;
 }
+
+export type UserDetails = {
+  id: number;
+  username: string;
+  email: string;
+}

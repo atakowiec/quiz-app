@@ -2,32 +2,39 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./Profile.module.scss";
 import { FaCircle } from "react-icons/fa";
-import MainTitle from "../../components/MainTitle.tsx"; // Zależnie od struktury projektu
-import RankingVisualization from "../game-stats/RankingVisualization.tsx"; // Import rankingu
+import MainTitle from "../../components/MainTitle.tsx";
+import RankingVisualization from "../game-stats/RankingVisualization.tsx";
 import { GiGamepad } from "react-icons/gi";
-import { IoMdPerson } from "react-icons/io";
 import { MdPersonRemoveAlt1 } from "react-icons/md";
+import useApi from "../../api/useApi.ts";
+import { UserDetails } from "@shared/user";
 
 interface ProfileModalProps {
   show: boolean;
   handleClose: () => void;
-  user: any;
+  userId: number;
 }
 
 const ProfileModal: React.FC<ProfileModalProps> = ({
   show,
   handleClose,
-  user,
+  userId
 }) => {
+
+  const {loaded, data: user} = useApi<UserDetails>(`/users/${userId}`, "get")
+  const userLoaded = loaded && !!user;
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Body>
         <MainTitle>Profil</MainTitle>
         <div className={styles.profileBox}>
           <div className={styles.iconAndName}>
-            <div className={styles.profileIcon}>{user.username[0]}</div>
+            <div className={styles.profileIcon}>
+              {userLoaded ? user.username?.[0] ?? "-" : "-"}
+            </div>
             <div className={styles.nameEmail}>
-              <div className={styles.profileName}>{user.username}</div>
+              <div className={styles.profileName}>{userLoaded ? user.username : "-"}</div>
               <div className={styles.statusOnline}>
                 <FaCircle className={styles.circle} />
                 online

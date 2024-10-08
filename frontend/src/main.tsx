@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import AppWrapper from "./components/AppWrapper.tsx";
 import { ReloadApiProvider } from "./api/ReloadApiContext.tsx";
+import ProfileModalProvider from "./hooks/profile-modal/ProfileModalProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,9 +17,11 @@ createRoot(document.getElementById("root")!).render(
       <SocketProvider>
         <ReloadApiProvider>
           <AppWrapper>
-            <BrowserRouter>
-              <App/>
-            </BrowserRouter>
+            <ProfileModalProvider>
+              <BrowserRouter>
+                <App/>
+              </BrowserRouter>
+            </ProfileModalProvider>
           </AppWrapper>
         </ReloadApiProvider>
         <ToastContainer

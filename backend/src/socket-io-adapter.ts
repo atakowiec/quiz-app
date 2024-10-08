@@ -64,20 +64,21 @@ const createTokenMiddleware =
         });
 
         if (!dbUser) {
-          logger.warn(
-            `User with id ${user.id} not found in the database - removing token.`
-          );
+          logger.warn(`User with id ${user.id} not found in the database - removing token.`);
           authService.clearTokenFromSocket(socket);
           return next(new UnauthorizedException("User not found"));
         } else {
-          logger.log(
-            `User [ID:${dbUser.id}] ${dbUser.username} found in the database.`
-          );
-          socket.data = { ...socket.data, ...dbUser };
+          logger.log(`User [ID:${dbUser.id}] ${dbUser.username} found in the database.`);
+          socket.data = {
+            user: dbUser,
+            username: dbUser.username,
+          };
         }
       } else {
         logger.log(`User ${user.username} has no account.`);
-        socket.data = { ...socket.data, ...{ username: user.username } };
+        socket.data = {
+          username: user.username,
+        };
       }
       next();
     } catch (error) {

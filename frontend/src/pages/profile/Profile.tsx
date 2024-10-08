@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Breadcrumb } from "react-bootstrap";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Meta from "../../components/Meta.tsx";
@@ -19,7 +19,8 @@ import { FaLock } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
 import { GiGamepad } from "react-icons/gi";
 import { IoMdPerson } from "react-icons/io";
-import ProfileModal from "./ProfileModal.tsx";
+import { UserState } from "../../store/userSlice.ts";
+import useProfileModal from "../../hooks/profile-modal/useProfileModal.ts";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -29,12 +30,8 @@ const Profile: React.FC = () => {
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
 
-  const user = useSelector<State>((state: State) => state.user) as any;
-
-  const [showModal, setShowModal] = useState(false);
-
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const user = useSelector<State, UserState>(state => state.user);
+  const {showModal} = useProfileModal();
 
   return (
     <>
@@ -46,7 +43,7 @@ const Profile: React.FC = () => {
           <MainTitle>Twój Profil</MainTitle>
           <div className={styles.profileBox}>
             <div className={styles.iconAndName}>
-              <div className={styles.profileIcon}>{user.username[0]}</div>
+              <div className={styles.profileIcon}>{user.username?.[0] ?? "-"}</div>
               <div className={styles.nameEmail}>
                 <div className={styles.profileName}>
                   {user.username}
@@ -79,7 +76,7 @@ const Profile: React.FC = () => {
                 </button>
                 <button
                   className={styles.friendModal}
-                  onClick={handleOpenModal}
+                  onClick={() => showModal(user.id)}
                 >
                   <IoMdPerson />
                 </button>
@@ -88,11 +85,6 @@ const Profile: React.FC = () => {
           </div>
         </MainBox>
       </MainContainer>
-      <ProfileModal
-        show={showModal}
-        handleClose={handleCloseModal}
-        user={user}
-      />
     </>
   );
 };

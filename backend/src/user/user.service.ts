@@ -11,4 +11,22 @@ export class UserService {
   ) {
     // empty
   }
+
+  async getUserDataById(id: number) {
+    const user = await this.repository.findOne({
+      where: { id }
+    });
+
+    if(!user) {
+      return null;
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    }
+
+    // todo return more extensive user data for the profile modal
+  }
 }
