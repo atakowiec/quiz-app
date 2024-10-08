@@ -1,5 +1,7 @@
-import { Controller, Get, Header, Param } from '@nestjs/common';
+import { Controller, Get, Header, Param, Req, UseGuards } from '@nestjs/common';
 import { UserService } from "./user.service";
+import { Request } from "../app";
+import { AuthGuard } from "../guards/auth.guard";
 
 @Controller('users')
 export class UserController {
@@ -9,7 +11,8 @@ export class UserController {
 
   @Get(":id")
   @Header('Cache-Control', 'none')
-  getUserDataById(@Param('id') id: number) {
-    return this.userService.getUserDataById(id);
+  @UseGuards(AuthGuard)
+  getUserDataById(@Req() req: Request, @Param('id') id: number) {
+    return this.userService.getUserDataById(req.user, id);
   }
 }

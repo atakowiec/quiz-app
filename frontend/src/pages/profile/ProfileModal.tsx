@@ -5,9 +5,18 @@ import { FaCircle } from "react-icons/fa";
 import MainTitle from "../../components/MainTitle.tsx";
 import RankingVisualization from "../game-stats/RankingVisualization.tsx";
 import { GiGamepad } from "react-icons/gi";
-import { MdPersonRemoveAlt1 } from "react-icons/md";
 import useApi from "../../api/useApi.ts";
-import { UserDetails } from "@shared/user";
+import { FriendshipStatus, UserDetails } from "@shared/user";
+import {
+  BsPersonFillAdd,
+  BsPersonFillCheck,
+  BsPersonFillDown,
+  BsPersonFillUp
+} from "react-icons/bs";
+import { useSocket } from "../../socket/useSocket.ts";
+import { produce } from "immer";
+import { ClientToServerEventsKeys } from "@shared/socket";
+
 
 interface ProfileModalProps {
   show: boolean;
@@ -15,14 +24,34 @@ interface ProfileModalProps {
   userId: number;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({
-  show,
-  handleClose,
-  userId
-}) => {
-
-  const {loaded, data: user} = useApi<UserDetails>(`/users/${userId}`, "get")
+const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }) => {
+  const socket = useSocket();
+  const { loaded, data: user, setData: setUserData } = useApi<UserDetails>(`/users/${userId}`, "get")
   const userLoaded = loaded && !!user;
+
+  function setFriendshipStatus(newStatus: FriendshipStatus) {
+    if (!user)
+      return;
+
+    setUserData(produce(user, draft => {
+      draft.friendship.status = newStatus;
+    }))
+  }
+
+  function handleFriendship() {
+    if (!user?.friendship) {
+      return;
+    }
+
+    const statusToEvent: { [_: string]: ClientToServerEventsKeys } = {
+      friend: "remove_friend",
+      none: "invite_friend",
+      pending: "invite_friend",
+      requested: "cancel_friend_request",
+    }
+
+    socket.emit(statusToEvent[user.friendship.status], user.id, setFriendshipStatus);
+  }
 
   return (
     <Modal show={show} onHide={handleClose} centered>
@@ -36,22 +65,29 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className={styles.nameEmail}>
               <div className={styles.profileName}>{userLoaded ? user.username : "-"}</div>
               <div className={styles.statusOnline}>
-                <FaCircle className={styles.circle} />
+                <FaCircle className={styles.circle}/>
                 online
               </div>
             </div>
           </div>
           <div className={styles.rightSide}>
             <button className={styles.inviteF}>
-              <GiGamepad className={styles.gamePad} /> Zaproś do gry
+              <GiGamepad className={styles.gamePad}/> Zaproś do gry
             </button>
-            <button className={styles.friendBut}>
-              <MdPersonRemoveAlt1 className={styles.remove} />
-            </button>
+            {
+              userLoaded && (
+                <button className={styles.friendBut} onClick={handleFriendship}>
+                  {user.friendship.status == "friend" && <><BsPersonFillCheck className={styles.remove}/></>}
+                  {user.friendship.status == "none" && <><BsPersonFillAdd className={styles.remove}/></>}
+                  {user.friendship.status == "pending" && <><BsPersonFillDown className={styles.remove}/></>}
+                  {user.friendship.status == "requested" && <><BsPersonFillUp className={styles.remove}/></>}
+                </button>
+              )
+            }
           </div>
         </div>
         <div className={styles.friendRanking}>
-          <RankingVisualization />
+          <RankingVisualization/>
           <div className={styles.friendStats}>
             <div>Zagranych Gier</div>
             <div>1500</div>

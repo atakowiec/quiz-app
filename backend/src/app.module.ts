@@ -16,6 +16,7 @@ import { RoundModule } from "./round/round.module";
 import { AuthUserMiddleware } from "./auth/auth-user.middleware";
 import { GameModule } from "./game/game.module";
 import { MatchmakingModule } from './matchmaking/matchmaking.module';
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MatchmakingModule } from './matchmaking/matchmaking.module';
     UserModule,
     RoundModule,
     GameModule,
+    FriendsModule,
     MatchmakingModule,
   ],
   controllers: [AppController, QuestionsController],

@@ -262,7 +262,7 @@ export default class Game {
     }
 
     // we need to disconnect the socket when the player was not logged in
-    if (!gameMember.socket.data.userId) {
+    if (!gameMember.socket.data.user.id) {
       gameMember.socket.disconnect();
     }
   }
@@ -419,7 +419,7 @@ export default class Game {
     // TODO: save the game to the database
 
     this.players.forEach((player) => {
-      if (!player.socket.data.userId) {
+      if (!player.socket.data.user.id) {
         player.socket.disconnect();
       }
     });
