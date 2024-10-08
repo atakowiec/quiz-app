@@ -1,13 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Breadcrumb } from "react-bootstrap";
-import { FaSearch } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Meta from "../../components/Meta.tsx";
 import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
 import styles from "./Profile.module.scss";
-import { IoPersonSharp } from "react-icons/io5";
-import { MdEdit } from "react-icons/md";
-import { SiDatadog } from "react-icons/si";
 import { useSelector } from "react-redux";
 import { State } from "../../store";
 import {
@@ -17,6 +13,13 @@ import {
 } from "react-icons/io";
 import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
+import MainTitle from "../../components/MainTitle.tsx";
+import { FaEdit } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
+import { FaCircle } from "react-icons/fa";
+import { GiGamepad } from "react-icons/gi";
+import { IoMdPerson } from "react-icons/io";
+import ProfileModal from "./ProfileModal.tsx";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -28,6 +31,11 @@ const Profile: React.FC = () => {
 
   const user = useSelector<State>((state: State) => state.user) as any;
 
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
   return (
     <>
       <Meta title={"Profil"} />
@@ -35,73 +43,56 @@ const Profile: React.FC = () => {
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
         <MainBox>
+          <MainTitle>Twój Profil</MainTitle>
           <div className={styles.profileBox}>
-            <div className={styles.profilePic}>
-              <IoPersonSharp className={styles.personIcon} />
-              <MdEdit className={styles.editPic} />
-            </div>
-            <div className={styles.personInfo}>
-              <div className={`${styles.personNick} mb-2`}>
-                Nickname:
-                <span className={styles.nick}>
-                  {user.username || "Example username"}
-                </span>
-                <MdEdit className={styles.editIcon} />
-              </div>
-              <div className={`${styles.personEmail} mb-2`}>
-                Email:{" "}
-                <span className={styles.email}>
-                  {user.email || "Example email"}
-                </span>
-                <MdEdit className={styles.editIcon} />
+            <div className={styles.iconAndName}>
+              <div className={styles.profileIcon}>{user.username[0]}</div>
+              <div className={styles.nameEmail}>
+                <div className={styles.profileName}>
+                  {user.username}
+                  <FaEdit className={styles.editIcon} />
+                </div>
+                <div className={styles.profileEmail}>{user.email}</div>
               </div>
             </div>
+            <button className={styles.changePass}>
+              <FaLock className={styles.lockIcon} /> Zmień hasło
+            </button>
           </div>
-          <div className={styles.friendsText}>Znajomi</div>
-          <hr className={styles.line} />
-          <div className={styles.addFriends}>
-            Szukaj <FaSearch className={styles.searchIcon} />
-          </div>
-          <div className={styles.friendsList}>
+          <div className={styles.friendsText}>Lista znajomych</div>
+          <div className={styles.friendsBox}>
+            <div className={styles.addFriends}>Wyszukaj...</div>
             <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#1</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#2</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#3</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#4</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#5</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#6</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#7</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#8</div>
-            </div>
-            <div className={styles.friend}>
-              <SiDatadog className={styles.friendIcon} />
-              <div className={styles.friendNickname}>Friend#8</div>
+              <div className={styles.friendIconNick}>
+                <div className={styles.friendIcon}>B</div>
+                <div className={styles.nickStatus}>
+                  <div className={styles.friendNick}>Blablador</div>
+                  <div className={styles.statusOnline}>
+                    <FaCircle className={styles.circle} />
+                    online
+                  </div>
+                </div>
+              </div>
+              <div className={styles.rightSide}>
+                <button className={styles.invite}>
+                  <GiGamepad className={styles.gamePad} /> Zaproś do gry
+                </button>
+                <button
+                  className={styles.friendModal}
+                  onClick={handleOpenModal}
+                >
+                  <IoMdPerson />
+                </button>
+              </div>
             </div>
           </div>
         </MainBox>
       </MainContainer>
+      <ProfileModal
+        show={showModal}
+        handleClose={handleCloseModal}
+        user={user}
+      />
     </>
   );
 };

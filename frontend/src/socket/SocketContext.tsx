@@ -1,3 +1,4 @@
+import React from "react";
 import { ReactNode, createContext, useEffect, useMemo } from "react";
 import { io, Socket } from "socket.io-client";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/socket";

@@ -1,63 +1,82 @@
 @import "../../styles/Global";
+@import "../game-stats/Stats.module.scss";
 
 .profileBox {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  align-items: center;
 }
-
-.editPic {
-  position: absolute;
-  color: white;
-  font-size: 1.25rem;
-  top: 0.5rem;
-  right: 0.5rem;
-  cursor: pointer;
-}
-
-.profilePic {
-  background-color: #0c1a25;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.iconAndName {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 6.5rem;
-  height: 6.5rem;
-  position: relative;
 }
-
-.personIcon {
-  font-size: 5rem;
+.profileIcon {
+  display: flex;
+  font-size: 3rem;
   color: #fff;
+  background-color: #5596ca;
+  border-radius: 50%;
+  text-transform: capitalize;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
 }
 
-.personInfo {
-  margin-left: 2rem;
+.nameEmail {
+  margin-left: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: auto;
-  width: 80%;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-.personNick,
-.personEmail {
-  background-color: #e0e0e0;
-  padding: 0.75rem;
-  border-radius: 10px;
+.profileName {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-}
-
-.personEmail > span {
-  margin-left: 2rem;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 .editIcon {
   cursor: pointer;
+  color: #999;
+  font-size: 0.9rem;
+  margin-left: 0.25rem;
+}
+.profileEmail {
+  color: #999;
+  font-size: 0.9rem;
+  margin-top: -0.4rem;
+}
+
+.changePass {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: $container-border-radius;
+  padding: 0.3rem 0.25rem;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+}
+
+.lockIcon {
+  font-size: 1rem;
 }
 
 .friendsText {
@@ -65,110 +84,183 @@
   font-weight: 500;
   margin-bottom: 0;
   margin-top: 1rem;
-  color: #0c1a25;
+  color: $blue;
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
 }
 
-.line {
-  margin-top: 0;
-  border-bottom: 1px solid #888;
+.friendsBox {
+  margin-top: 1rem;
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .addFriends {
+  background-color: white;
+  border-radius: $container-border-radius;
+  padding: 0.3rem 0.75rem;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+.friend {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-radius: $container-border-radius;
+  padding: 0.75rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+.friendIconNick {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: $green-black;
-  box-shadow: $button-shadow-black;
-  border-radius: $button-border-radius;
-  padding: $button-padding;
-  font-weight: $button-font-weight;
-  width: 35%;
   justify-content: center;
-  color: $blue;
-  cursor: pointer;
-}
-
-.searchIcon {
-  margin-left: 0.5rem;
-  color: #0c1a25;
-}
-
-.friendsList {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin-top: 2rem;
-}
-
-.friend {
-  background-color: #0c1a25;
-  border-radius: 10px;
-  padding: 0.35rem;
-  cursor: pointer;
-  margin-bottom: 1rem;
-  margin-right: 0.5rem;
 }
 
 .friendIcon {
-  font-size: 3.5rem;
-  color: #ffffff;
+  display: flex;
+  font-size: 1.5rem;
+  color: #fff;
+  background-color: #ca5555;
+  border-radius: 50%;
+  text-transform: capitalize;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
 }
 
-.friendNickname {
+.nickStatus {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 0.5rem;
+}
+.rightSide {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.friendNick {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.statusOnline {
+  font-weight: 800;
+  color: $green;
+  font-size: 0.7rem;
+  margin-top: -0.25rem;
+}
+.circle {
+  font-size: 0.5rem;
+  margin-right: 0.25rem;
+}
+
+.invite {
+  border: none;
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  padding: 0.25rem 0.5rem;
+  font-weight: 500;
+}
+
+.gamePad {
+  font-size: 1.8rem;
+  margin-right: 0.1rem;
+}
+
+.friendModal {
+  border: none;
+  border-radius: $container-border-radius;
+  font-size: 1.4rem;
+  background-color: $gray;
+  padding: 0rem 0.3rem;
+}
+
+.inviteF {
+  background-color: $green;
+  border: none;
+  border-radius: $container-border-radius;
   color: white;
-  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.friendBut {
+  background-color: white;
+  border: none;
+  border-radius: $container-border-radius;
+  padding: 0.25rem 0.25rem;
   display: flex;
   justify-content: center;
-  font-weight: 300;
+  align-items: center;
+}
+
+.remove {
+  font-size: 1.5rem;
+}
+
+.friendRanking {
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.friendStats {
+  background-color: white;
+  border-radius: $container-border-radius;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 1rem;
 }
 
 @media (max-width: $phone-breakpoint) {
-  .personIcon {
-    font-size: 3rem;
-  }
-
-  .profilePic {
-    height: 5.5rem;
-  }
-
   .friendsText {
     font-size: 1.15rem;
   }
-
-  .editPic {
-    position: absolute;
-    font-size: 1rem;
-  }
-  .friend {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .friendIcon {
-    font-size: 2.5rem;
-    align-items: center;
-  }
-
-  .searchIcon {
+  .profileName {
     font-size: 1rem;
   }
 
-  .addFriends {
-    padding: $button-phone-padding;
-    font-size: $button-font-size;
-    display: inline-block;
-    justify-content: center;
+  .profileEmail {
+    font-size: 0.7rem;
+  }
+  .changePass {
+    font-size: 0.7rem;
   }
 }
 
 @media (max-width: $small-phone-breakpoint) {
-  .addFriends {
-    font-size: 0.5rem;
+  .profileBox {
+    overflow-y: auto;
+    flex-wrap: wrap;
   }
 
-  .searchIcon {
-    font-size: 0.5rem;
+  .friend {
+    overflow-y: auto;
+    flex: wrap;
   }
 }
