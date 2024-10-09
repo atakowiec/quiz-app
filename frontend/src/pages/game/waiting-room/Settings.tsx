@@ -4,7 +4,7 @@ import Sidebar, { SidebarItem } from "../../../components/SideBar";
 import MainContainer from "../../../components/MainContainer";
 import MainBox from "../../../components/MainBox";
 import MainTitle from "../../../components/MainTitle";
-import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
+import { IoArrowBack, IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import styles from "./Settings.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { GameSettings, HelperType } from "@shared/game";
@@ -12,6 +12,7 @@ import { useSocket } from "../../../socket/useSocket";
 import { useGlobalData } from "../../../store/globalDataSlice";
 import CategoriesModal from "./CategoriesModal";
 import HelpersModal from "./HelpersModal";
+import { useNavigate } from "react-router-dom";
 
 const Settings: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -20,14 +21,33 @@ const Settings: React.FC = () => {
   ];
 
   const socket = useSocket();
+  const navigate = useNavigate();
 
-  const [number_of_rounds, setNumberOfRounds] = useState(2);
-  const [number_of_questions_per_round, setNumberOfQuestions] = useState(5);
+  // Load initial values from localStorage, or use default values
+  const [number_of_rounds, setNumberOfRounds] = useState(() => {
+    const savedValue = localStorage.getItem("number_of_rounds");
+    return savedValue !== null ? Number(savedValue) : 2; // default value
+  });
+
+  const [number_of_questions_per_round, setNumberOfQuestions] = useState(() => {
+    const savedValue = localStorage.getItem("number_of_questions_per_round");
+    return savedValue !== null ? Number(savedValue) : 5; // default value
+  });
+
   const [number_of_categories_per_voting, setNumberOfCategoriesInVoting] =
-    useState(5);
-  const [time_for_answer, setTimeForAnswer] = useState(30);
+    useState(() => {
+      const savedValue = localStorage.getItem(
+        "number_of_categories_per_voting"
+      );
+      return savedValue !== null ? Number(savedValue) : 5; // default value
+    });
 
-  // if settings has been changed send event to update this settings
+  const [time_for_answer, setTimeForAnswer] = useState(() => {
+    const savedValue = localStorage.getItem("time_for_answer");
+    return savedValue !== null ? Number(savedValue) : 30; // default value
+  });
+
+  // if settings have been changed, send event to update this settings
   const prevSettings = useRef({
     number_of_rounds,
     number_of_questions_per_round,
@@ -56,12 +76,25 @@ const Settings: React.FC = () => {
       socket.emit("change_settings", updatedSettings);
     }
 
+    // Update previous settings reference
     prevSettings.current = {
       number_of_rounds,
       number_of_questions_per_round,
       number_of_categories_per_voting,
       time_for_answer,
     };
+
+    // Save updated settings to localStorage
+    localStorage.setItem("number_of_rounds", number_of_rounds.toString());
+    localStorage.setItem(
+      "number_of_questions_per_round",
+      number_of_questions_per_round.toString()
+    );
+    localStorage.setItem(
+      "number_of_categories_per_voting",
+      number_of_categories_per_voting.toString()
+    );
+    localStorage.setItem("time_for_answer", time_for_answer.toString());
   }, [
     number_of_rounds,
     number_of_questions_per_round,
@@ -118,14 +151,18 @@ const Settings: React.FC = () => {
 
   const handleToggle = (index: number) => {
     const updatedStates = [...helperStates];
-    updatedStates[index] = !updatedStates[index]; // Zmiana stanu
+    updatedStates[index] = !updatedStates[index]; // Change state
 
     const blackListedHelpers = helpersNames.filter(
       (_, i) => !updatedStates[i]
     ) as HelperType[];
 
     socket.emit("change_settings_helpers", blackListedHelpers);
-    setHelperStates(updatedStates); // Aktualizacja stanu
+    setHelperStates(updatedStates); // Update state
+  };
+
+  const handleBackClick = () => {
+    navigate("/waiting-room");
   };
 
   return (
@@ -153,9 +190,11 @@ const Settings: React.FC = () => {
                   value={number_of_rounds}
                   className={styles.choiceValue}
                   onChange={(e) => {
-                    if (Number(e.target.value) > 25) e.target.value = "25";
-                    else if (Number(e.target.value) < 1) e.target.value = "1";
-                    setNumberOfRounds(Number(e.target.value));
+                    const value = Math.min(
+                      Math.max(1, Number(e.target.value)),
+                      25
+                    ); // Limit value between 1 and 25
+                    setNumberOfRounds(value);
                   }}
                 />
                 <button
@@ -186,9 +225,11 @@ const Settings: React.FC = () => {
                   value={number_of_questions_per_round}
                   className={styles.choiceValue}
                   onChange={(e) => {
-                    if (Number(e.target.value) > 25) e.target.value = "25";
-                    else if (Number(e.target.value) < 1) e.target.value = "1";
-                    setNumberOfQuestions(Number(e.target.value));
+                    const value = Math.min(
+                      Math.max(1, Number(e.target.value)),
+                      25
+                    ); // Limit value between 1 and 25
+                    setNumberOfQuestions(value);
                   }}
                 />
                 <button
@@ -223,9 +264,11 @@ const Settings: React.FC = () => {
                   value={number_of_categories_per_voting}
                   className={styles.choiceValue}
                   onChange={(e) => {
-                    if (Number(e.target.value) > 10) e.target.value = "10";
-                    else if (Number(e.target.value) < 1) e.target.value = "1";
-                    setNumberOfCategoriesInVoting(Number(e.target.value));
+                    const value = Math.min(
+                      Math.max(1, Number(e.target.value)),
+                      10
+                    ); // Limit value between 1 and 10
+                    setNumberOfCategoriesInVoting(value);
                   }}
                 />
                 <button
@@ -258,9 +301,11 @@ const Settings: React.FC = () => {
                   value={time_for_answer}
                   className={styles.choiceValue}
                   onChange={(e) => {
-                    if (Number(e.target.value) > 120) e.target.value = "120";
-                    else if (Number(e.target.value) < 1) e.target.value = "1";
-                    setTimeForAnswer(Number(e.target.value));
+                    const value = Math.min(
+                      Math.max(1, Number(e.target.value)),
+                      120
+                    ); // Limit value between 1 and 120
+                    setTimeForAnswer(value);
                   }}
                 />
                 <button
@@ -274,6 +319,9 @@ const Settings: React.FC = () => {
               </div>
             </div>
             <div className={styles.settingsButtons}>
+              <button className={styles.settings2} onClick={handleBackClick}>
+                <IoArrowBack /> Powrót
+              </button>
               <button className={styles.settings} onClick={handleModalShow}>
                 Wybór kategorii
               </button>

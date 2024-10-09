@@ -261,6 +261,23 @@ input:checked + .slider:before {
   transform: translateX(20px);
 }
 
+.settings2 {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: $green-black;
+  border: none;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  box-shadow: $button-shadow-green;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+
+  &:hover {
+    background-color: $button-green-hover;
+  }
+}
+
 @media (max-width: $phone-breakpoint) {
   .Title {
     margin-bottom: 1rem;
