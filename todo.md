@@ -5,9 +5,9 @@
 - [x] mniejsze paddingi w statach
 - [ ] ŁUKASZ - przerobic ownera na nullable zamiast 'server'
 - [x] w ustawieniac kategorii domyslnie border transparent zeby uniknac przesuwania sie elementow po kliknieciu
-- [ ] ustawienia jako modal
+- [?] ustawienia jako modal
 - [x] wywalic wszystkie ikonki z title albo dodac wszedzie
-- [ ] naprawic settingsy - na froncie sie nie aktualizuje po zmianie
+- [x] naprawic settingsy - na froncie sie nie aktualizuje po zmianie
 - [x] w SelectedCategoryPhase uzyc tego samego zielonego i czerwonego co w reszcie apki
 - [ ] sprawdzic i naprawic i dodac zaokraglenia punktow w grze
 - [ ] odswiezenie gry jako niezalogowany przywraca do gry

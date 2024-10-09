@@ -121,16 +121,16 @@ const WaitingRoom: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Poczekalnia"}/>
-      <Breadcrumb title="Poczekalnia"/>
-      <Sidebar items={sidebarItems}/>
+      <Meta title={"Poczekalnia"} />
+      <Breadcrumb title="Poczekalnia" />
+      <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
-        <MainBox before={game?.owner == null && <TimeBar/>}>
+        <MainBox before={game?.owner == null && <TimeBar />}>
           <MainTitle>Poczekalnia</MainTitle>
           <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
             {["ending", "copied"].includes(copyAnimationStage) ? (
               <>
-                <FaCheck/> Skopiowano!
+                <FaCheck /> Skopiowano!
               </>
             ) : (
               <OverlayTrigger
@@ -139,12 +139,12 @@ const WaitingRoom: React.FC = () => {
                 overlay={renderTooltip}
               >
                 <span onClick={copyId}>
-                  Kod: {game?.id} <FaLink/>
+                  Kod: {game?.id} <FaLink />
                 </span>
               </OverlayTrigger>
             )}
           </div>
-          <hr className={styles.line}/>
+          <hr className={styles.line} />
           <div className={styles.playersBox}>
             {game?.owner && game?.owner?.username && (
               <div className={styles.singlePlayer}>
@@ -158,12 +158,16 @@ const WaitingRoom: React.FC = () => {
                   {game?.owner.username}
                 </span>
                 <div>
-                  <LuCrown className={styles.playerAction}/>
+                  <LuCrown className={styles.playerAction} />
 
-                  {game.owner?.id &&
-                      <button className={styles.showProfileBtn} onClick={() => showProfileModal(game.owner.id)}>
-                          <FaUser className={styles.playerAction}/>
-                      </button>}
+                  {game.owner?.id && (
+                    <button
+                      className={styles.showProfileBtn}
+                      onClick={() => showProfileModal(game.owner?.id)}
+                    >
+                      <FaUser className={styles.playerAction} />
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -190,20 +194,24 @@ const WaitingRoom: React.FC = () => {
                               handleGiveOwnerClick(player.username!)
                             }
                           >
-                            <IoMdArrowUp className={styles.playerAction2}/>
+                            <IoMdArrowUp className={styles.playerAction2} />
                           </button>
 
                           <button
                             className={styles.kickBtn}
                             onClick={() => kickPlayer(player.username!)}
                           >
-                            <RxCross2 className={styles.playerAction}/>
+                            <RxCross2 className={styles.playerAction} />
                           </button>
 
-                          {player?.id &&
-                              <button className={styles.showProfileBtn} onClick={() => showProfileModal(player.id)}>
-                                  <FaUser className={styles.playerAction}/>
-                              </button>}
+                          {player?.id && (
+                            <button
+                              className={styles.showProfileBtn}
+                              onClick={() => showProfileModal(player.id)}
+                            >
+                              <FaUser className={styles.playerAction} />
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
