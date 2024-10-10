@@ -1,11 +1,13 @@
+@import "../../../styles/Global.scss";
+
 .container {
   display: flex;
-  flex: wrap;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  margin: 5rem;
-  flex-flow: row wrap;
-  gap: 1rem;
+  margin: 5rem auto;
+  gap: 2rem;
 }
 
 .catBox {
@@ -13,10 +15,38 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 150px;
+  max-width: 200px;
 }
 
 .categoryImage {
-  max-height: 150px;
-  max-width: 150px;
+  min-height: 22vh;
+  max-width: 200px;
+}
+
+.categoryDetails {
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 1rem;
+  text-align: center;
+  width: 100%;
+  max-height: 20%;
+  min-width: 10vw;
+}
+
+.categoryName {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: $blue;
+}
+
+.categoryDesc {
+  font-size: 1rem;
+  font-weight: 400;
+  color: $blue;
 }

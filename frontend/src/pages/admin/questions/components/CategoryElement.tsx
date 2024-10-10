@@ -1,5 +1,4 @@
 import React from "react";
-import classes from "./styles/categoryElement.module.scss";
 import { Link } from "react-router-dom";
 import styles from "../categories.module.scss";
 
@@ -17,9 +16,9 @@ export default function CategoryElement(props: CategoryElementProps) {
           alt={props.name}
           className={styles.categoryImage}
         />
-        <div className={classes.categoryDetails}>
-          <h3>{props.name}</h3>
-          <p>{props.description}</p>
+        <div className={styles.categoryDetails}>
+          <h3 className={styles.categoryName}>{props.name}</h3>
+          <p className={styles.categoryDesc}>{props.description}</p>
         </div>
       </Link>
     </div>
