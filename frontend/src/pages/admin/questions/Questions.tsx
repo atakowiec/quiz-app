@@ -4,7 +4,7 @@ import useApi from "../../../api/useApi";
 import { useParams } from "react-router-dom";
 import { ICategory } from "@shared/game";
 import QuestionElement from "./components/QuestionElement";
-import classes from "./questions.module.scss";
+import styles from "./questions.module.scss";
 export interface Pagination {
   questions: Question[];
   totalQuestions: number;
@@ -111,18 +111,14 @@ export default function Questions() {
   };
 
   return (
-    <div className={`container mx-auto p-4 ${classes.context} ${classes.questionsBox}`}>
-      <h1 className={`text-2xl font-bold mb-4`}>
-        Questions from {categoryName}
-      </h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search for a question"
-          className={classes.searchBar}
-        />
-      </div>
-      <ul className={`list-unstyled flex ${classes.questions}`}>
+    <div className={styles.questionsContainer}>
+      <h1 className={styles.questionsTitle}>Pytania z {categoryName}</h1>
+      <input
+        type="text"
+        placeholder="Wyszukaj pytanie"
+        className={styles.searchBar}
+      />
+      <ul className={`{list-unstyled flex ${styles.questions}}`}>
         {questions.map((question: Question) =>
           QuestionElement({
             question: question.question,
@@ -131,7 +127,9 @@ export default function Questions() {
           })
         )}
       </ul>
-      <Pagination>{renderPagination()}</Pagination>
+      <Pagination className={styles.pagination}>
+        {renderPagination()}
+      </Pagination>
     </div>
   );
 }

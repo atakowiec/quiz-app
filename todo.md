@@ -13,12 +13,13 @@
 - [ ] odswiezenie gry jako niezalogowany przywraca do gry
 - [x] osoba niezalogowana nie ma w ogole powiadomien
 - [ ] info ze ktos inny uzyl kola ratunkowego
+- [ ] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały
 
 ## Co jeszcze trzeba zrobic
 - [ ] po kliknieciu w zdjecie pytania w grze - powieksza sie zdjecie
 - [ ] tryb jednoosobowy - nie zapisuja sie pierwsze miejsca itp
 - [ ] zapis do bazy gry dla zalogowanych
-- [ ] skonczyc admina - zmiana stylow, zrobic ladne i dzialajace i spójne z reszta aplikacji
+- [chyba?] skonczyc admina - zmiana stylow, zrobic ladne i dzialajace i spójne z reszta aplikacji
 - [ ] dodac sprawdzanie permisji/autoryzacji np na profilu lub adminie
 - [x] zrobic od nowa profil
 - [x] zrobic modal z profilem innych graczy (figma)

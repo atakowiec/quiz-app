@@ -1,3 +1,5 @@
+@import "../../../../../styles/Global.scss";
+
 .container {
   display: flex;
   justify-content: space-between;
@@ -20,7 +22,7 @@
     font-weight: 600;
     min-width: 20%;
     width: 20%;
-    color: #088f8f;
+    color: $green;
   }
   .distractors {
     font-size: 1.2rem;
