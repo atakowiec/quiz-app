@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FriendRequest } from "./model/friend-request.model";
 import { Repository } from "typeorm";
@@ -7,6 +7,7 @@ import { SocketType } from "../game/game.types";
 import { WsException } from "@nestjs/websockets";
 import { User } from "../user/user.model";
 import { FriendshipStatus } from "@shared/user";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @Injectable()
 export class FriendsService {
@@ -14,7 +15,9 @@ export class FriendsService {
     @InjectRepository(FriendRequest)
     private readonly friendRequestRepository: Repository<FriendRequest>,
     @InjectRepository(Friendship)
-    private readonly friendshipRepository: Repository<Friendship>
+    private readonly friendshipRepository: Repository<Friendship>,
+    @Inject()
+    private readonly eventEmitter: EventEmitter2,
   ) {
     // empty
   }
@@ -38,7 +41,7 @@ export class FriendsService {
     }
 
     if (friendRequest) {
-      return await this.acceptFriendRequest(friendRequest);
+      return await this.acceptFriendRequest(inviterSocket, friendRequest);
     }
 
     const newFriendRequest = this.friendRequestRepository.create({
@@ -53,15 +56,49 @@ export class FriendsService {
     await this.friendRequestRepository.save(newFriendRequest);
 
     inviterSocket.emit("notification", "Zaproszenie zostało wysłane");
-    return "pending";
+    return "requested";
   }
 
   async removeFriend(socket: SocketType, userId: number): Promise<FriendshipStatus> {
-    return undefined; // todo
+    const friendship = await this.getFriendship(socket.data.user.id, userId);
+
+    if (!friendship) {
+      throw new WsException("Nie jesteście znajomymi");
+    }
+
+    await this.friendshipRepository.remove(friendship);
+
+    socket.emit("notification", "Usunięto znajomego");
+
+    return "none";
   }
 
   async cancelRequest(socket: SocketType, userId: number): Promise<FriendshipStatus> {
-    return undefined; // todo
+    const friendRequest = await this.getFriendRequest(socket.data.user.id, userId);
+
+    if (!friendRequest) {
+      throw new WsException("Nie wysłałeś zaproszenia do tej osoby");
+    }
+
+    await this.friendRequestRepository.remove(friendRequest);
+
+    socket.emit("notification", "Anulowano zaproszenie");
+
+    return "none";
+  }
+
+  async declineRequest(socket: SocketType, inviterId: number, inviteeId: number): Promise<FriendshipStatus> {
+    const friendRequest = await this.getFriendRequest(inviterId, inviteeId);
+
+    if (!friendRequest) {
+      throw new WsException("Nie masz zaproszenia od tej osoby");
+    }
+
+    await this.friendRequestRepository.remove(friendRequest);
+
+    socket.emit("notification", "Odrzucono zaproszenie");
+
+    return "none";
   }
 
   public async areFriends(userId1: number, userId2: number) {
@@ -119,7 +156,7 @@ export class FriendsService {
     });
   }
 
-  private async acceptFriendRequest(friendRequest: FriendRequest): Promise<FriendshipStatus> {
+  private async acceptFriendRequest(socket: SocketType, friendRequest: FriendRequest): Promise<FriendshipStatus> {
     const friendship = this.friendshipRepository.create({
       user_1: {
         id: friendRequest.inviter.id
@@ -131,6 +168,22 @@ export class FriendsService {
 
     await this.friendshipRepository.save(friendship);
 
+    await this.friendRequestRepository.remove(friendRequest);
+
+    socket.emit("notification", "Zaproszenie zostało zaakceptowane");
+
+    this.eventEmitter.emit("friend_request_accepted", friendRequest);
+
     return "friend";
+  }
+
+  async getPendingRequests(userId: number) {
+    return await this.friendRequestRepository.find({
+      where: {
+        invitee: {
+          id: userId
+        }
+      }
+    });
   }
 }

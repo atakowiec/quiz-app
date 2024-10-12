@@ -1,5 +1,5 @@
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { SocketType } from "../game/game.types";
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { SocketServerType, SocketType } from "../game/game.types";
 import { FriendsService } from "./friends.service";
 import { UseFilters, UseGuards } from "@nestjs/common";
 import { WsCatchAllFilter } from "../exceptions/ws-catch-all-filter";
@@ -9,6 +9,9 @@ import { FriendshipStatus } from "@shared/user";
 @WebSocketGateway()
 @UseFilters(WsCatchAllFilter)
 export class FriendsGateway {
+  @WebSocketServer()
+  public readonly server: SocketServerType;
+
   constructor(private readonly friendsService: FriendsService) {
     // empty
   }

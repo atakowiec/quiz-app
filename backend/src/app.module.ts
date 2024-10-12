@@ -16,7 +16,9 @@ import { RoundModule } from "./round/round.module";
 import { AuthUserMiddleware } from "./auth/auth-user.middleware";
 import { GameModule } from "./game/game.module";
 import { MatchmakingModule } from './matchmaking/matchmaking.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { FriendsModule } from './friends/friends.module';
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { FriendsModule } from './friends/friends.module';
       isGlobal: true,
       load: [databaseConfig],
     }),
+    EventEmitterModule.forRoot(),
     TypeOrmModule.forFeature([Distractor, Question, Category]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -37,6 +40,7 @@ import { FriendsModule } from './friends/friends.module';
     UserModule,
     RoundModule,
     GameModule,
+    NotificationsModule,
     FriendsModule,
     MatchmakingModule,
   ],

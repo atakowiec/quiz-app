@@ -18,6 +18,12 @@ export class UserService {
     // empty
   }
 
+  async getUserById(id: number): Promise<User> {
+    return this.repository.findOne({
+      where: { id }
+    });
+  }
+
   async getUserDataById(requester: TokenPayload, id: number): Promise<UserDetails> {
     const user = await this.repository.findOne({
       where: { id }
