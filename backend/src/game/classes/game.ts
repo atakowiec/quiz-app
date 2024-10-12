@@ -14,6 +14,8 @@ import {
 import { Logger } from "@nestjs/common";
 import Round from "./round";
 import { log } from "console";
+import GameInvite from "../../notifications/classes/game-invite";
+import { WsException } from "@nestjs/websockets";
 
 export default class Game {
   readonly logger: Logger;
@@ -35,6 +37,8 @@ export default class Game {
   public timeStart: number = -1;
   public timeEnd: number = -1;
   public onTimerEnd?: () => void;
+
+  public invites: GameInvite[] = [];
 
   constructor(
     owner: SocketType | null,
@@ -102,6 +106,8 @@ export default class Game {
       player.socket.emit("set_game", null);
     });
 
+    this.gameService.eventEmitter.emit("game_destroyed", this);
+
     this.logger.log("Game destroyed");
   }
 
@@ -111,6 +117,13 @@ export default class Game {
    * @param playerSocket - the socket of the player
    */
   public join(playerSocket: SocketType) {
+    if (this.gameStatus !== "waiting_for_players") {
+      throw new WsException("Gra już się rozpoczęła!");
+    }
+    if (this.players.length >= this.settings.max_number_of_players) {
+      throw new WsException("Gra jest pełna!");
+    }
+
     const player = new GameMember(playerSocket, this);
     this.players.push(player);
     player.socket.join(this.id);
@@ -277,7 +290,6 @@ export default class Game {
       this.logger.warn(
         `Player ${member.username} tried to reconnect, but he is already connected`
       );
-      // todo lekka kraksa - ktos probuje sie polaczyc z drugiego konta - trzeba ukrócić takie wybryki
       return;
     }
     this.logger.log(`Player ${member.username} reconnected to the game`);
@@ -291,8 +303,6 @@ export default class Game {
 
     // send the game to the client
     member.sendGame();
-
-    // TODO in the future there might be a need to send the game to all the players
   }
 
   async start() {

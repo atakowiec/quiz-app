@@ -14,6 +14,7 @@ import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
 import { CategoryId, GameSettings, GameType, HelperType } from "@shared/game";
 import { MatchmakingService } from "src/matchmaking/services/matchmaking.service";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
@@ -26,7 +27,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     @Inject(forwardRef(() => GameService))
     private readonly gameService: GameService,
-    private readonly matchMakingService: MatchmakingService
+    private readonly matchMakingService: MatchmakingService,
+    @Inject()
+    public readonly eventEmitter: EventEmitter2
   ) {}
 
   handleConnection(client: SocketType) {
@@ -84,13 +87,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Gra nie istnieje!");
     }
 
-    if (game.gameStatus !== "waiting_for_players") {
-      throw new WsException("Gra już się rozpoczęła!");
-    }
-    if (game.players.length >= game.settings.max_number_of_players) {
-      throw new WsException("Gra jest pełna!");
-    }
     game.join(playerSocket);
+
+    this.eventEmitter.emit("game_joined", playerSocket, game);
 
     return game.id;
   }

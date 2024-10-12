@@ -8,10 +8,11 @@ import { QuestionsService } from "../../questions/services/questions/questions.s
 import { ConfigService } from "@nestjs/config";
 import { log } from "console";
 import { GameMember } from "../classes/game-member";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @Injectable()
 export class GameService {
-  private readonly games: Game[] = [];
+  readonly games: Game[] = [];
 
   constructor(
     @Inject(forwardRef(() => GameGateway))
@@ -19,7 +20,9 @@ export class GameService {
     @Inject()
     public readonly questionsService: QuestionsService,
     @Inject()
-    public readonly configService: ConfigService
+    public readonly configService: ConfigService,
+    @Inject()
+    public readonly eventEmitter: EventEmitter2,
   ) {
     setInterval(() => this.tickGames(), 1000);
   }

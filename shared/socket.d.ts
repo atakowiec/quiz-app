@@ -6,6 +6,7 @@ import {
   IGamePacket,
 } from "./game";
 import { FriendshipStatus } from "./user";
+import { INotification } from "./notifications";
 
 export interface ServerToClientEvents {
   send_message: (message: string) => void;
@@ -13,6 +14,9 @@ export interface ServerToClientEvents {
   exception: (message: string | object) => void;
   set_game: (game: IGamePacket) => void;
   update_game: (game: GameUpdatePacket) => void;
+  new_notification: (notification: INotification) => void;
+  set_notifications: (notification: INotification[]) => void;
+  remove_notification: (notificationId: string) => void;
 }
 
 export type ServerToClientEventsKeys = keyof ServerToClientEvents;
@@ -34,6 +38,8 @@ export interface ClientToServerEvents {
   invite_friend: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
   remove_friend: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
   cancel_friend_request: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
+  decline_notification: (notification: INotification) => void;
+  send_game_invite: (userId: number) => void;
 }
 
 export type ClientToServerEventsKeys = keyof ClientToServerEvents;
