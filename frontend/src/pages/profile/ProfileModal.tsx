@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./Profile.module.scss";
 import { FaCircle } from "react-icons/fa";
@@ -6,21 +6,13 @@ import MainTitle from "../../components/MainTitle.tsx";
 import RankingVisualization from "../game-stats/RankingVisualization.tsx";
 import { GiGamepad } from "react-icons/gi";
 import useApi from "../../api/useApi.ts";
-import { FriendshipStatus, UserDetails } from "@shared/user";
-import {
-  BsPersonFillAdd,
-  BsPersonFillCheck,
-  BsPersonFillDown,
-  BsPersonFillUp
-} from "react-icons/bs";
+import { UserDetails } from "@shared/user";
 import { useSocket } from "../../socket/useSocket.ts";
-import { produce } from "immer";
-import { ClientToServerEventsKeys } from "@shared/socket";
 import { useGame } from "../../store/gameSlice.ts";
 import { toast } from "react-toastify";
 import { useUser } from "../../store/userSlice.ts";
-import { translateUserStatus } from "../../utils/utils.ts";
-import ConfirmationModal from "../../components/ConfirmationModal.tsx";
+import { getFriend, translateUserStatus } from "../../utils/utils.ts";
+import { FriendshipButton } from "./components/FriendshipButton.tsx";
 
 
 interface ProfileModalProps {
@@ -31,46 +23,15 @@ interface ProfileModalProps {
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }) => {
   const socket = useSocket();
-  const { loaded, data: user, setData: setUserData } = useApi<UserDetails>(`/users/${userId}`, "get")
+  const { loaded, data: user } = useApi<UserDetails>(`/users/get-by-id/${userId}`, "get")
   const userLoaded = loaded && !!user;
   const game = useGame()
   const loggedUser = useUser()
   const isOwnUser = loggedUser?.id === userId;
-  const canInviteToGame = !isOwnUser && userLoaded && user.friendship.status == "friend" && game?.status == "waiting_for_players";
 
-  const [unfriendConfirmation, setUnfriendConfirmation] = useState(false);
+  const friend = getFriend(loggedUser, userId);
 
-  function setFriendshipStatus(newStatus: FriendshipStatus) {
-    if (!user)
-      return;
-
-    setUserData(produce(user, draft => {
-      draft.friendship.status = newStatus;
-    }))
-  }
-
-  function handleFriendship() {
-    setUnfriendConfirmation(false);
-
-    if (!user?.friendship) {
-      return;
-    }
-
-    const statusToEvent: { [_: string]: ClientToServerEventsKeys } = {
-      friend: "remove_friend",
-      none: "invite_friend",
-      pending: "invite_friend",
-      requested: "cancel_friend_request",
-    }
-
-    const event = statusToEvent[user.friendship.status];
-
-    if (event == "remove_friend" && !unfriendConfirmation) {
-      setUnfriendConfirmation(true);
-      return;
-    }
-    socket.emit(event, user.id, setFriendshipStatus);
-  }
+  const canInviteToGame = !isOwnUser && userLoaded && friend && friend.status == "online" && game?.status == "waiting_for_players";
 
   function inviteToGame() {
     if (!user)
@@ -93,14 +54,17 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
           <div className={styles.profileBox}>
             <div className={styles.iconAndName}>
               <div className={styles.profileIcon}>
-                {userLoaded ? user.username?.[0] ?? "-" : "-"}
+                {user?.username?.[0] ?? "-"}
               </div>
               <div className={styles.nameEmail}>
                 <div className={styles.profileName}>{userLoaded ? user.username : "-"}</div>
-                <div className={`${styles.status} ${styles[user?.status ?? ""]}`}>
-                  <FaCircle className={styles.circle}/>
-                  {translateUserStatus(user?.status ?? "offline")}
-                </div>
+                {
+                  friend &&
+                  <div className={`${styles.status} ${styles[friend.status ?? "offline"]}`}>
+                    <FaCircle className={styles.circle}/>
+                    {translateUserStatus(friend.status ?? "offline")}
+                  </div>
+                }
               </div>
             </div>
             <div className={styles.rightSide}>
@@ -112,18 +76,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
                   </button>
               }
               {
-                !isOwnUser && userLoaded && (
-                  <button className={styles.friendBut} onClick={handleFriendship}>
-                    {user.friendship.status == "friend" &&
-                        <><BsPersonFillCheck className={styles.remove}/> Znajomi</>}
-                    {user.friendship.status == "none" &&
-                        <><BsPersonFillAdd className={styles.remove}/> Wyślij zaproszenie</>}
-                    {user.friendship.status == "pending" &&
-                        <><BsPersonFillDown className={styles.remove}/> Przyjmij zaproszenie</>}
-                    {user.friendship.status == "requested" &&
-                        <><BsPersonFillUp className={styles.remove}/> Anuluj zaproszenie</>}
-                  </button>
-                )
+                !isOwnUser && userLoaded && <FriendshipButton user={user} />
               }
             </div>
           </div>
@@ -136,12 +89,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
           </div>
         </Modal.Body>
       </Modal>
-      <ConfirmationModal show={unfriendConfirmation}
-                         setShow={setUnfriendConfirmation}
-                         onConfirm={handleFriendship}
-                         title={"Usuwanie znajomego"}>
-        Czy na pewno chcesz usunąć tego znajomego?
-      </ConfirmationModal>
     </>
   );
 };

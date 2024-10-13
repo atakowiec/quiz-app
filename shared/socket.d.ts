@@ -5,18 +5,29 @@ import {
   HelperType,
   IGamePacket,
 } from "./game";
-import { FriendshipStatus } from "./user";
+import { UserStatus } from "./user";
 import { INotification } from "./notifications";
+import { Friend, IFriendRequest } from "./friends";
 
 export interface ServerToClientEvents {
   send_message: (message: string) => void;
   notification: (message: string) => void;
-  exception: (message: string | object) => void;
+  exception: (message: string | any) => void;
   set_game: (game: IGamePacket) => void;
   update_game: (game: GameUpdatePacket) => void;
+
   new_notification: (notification: INotification) => void;
   set_notifications: (notification: INotification[]) => void;
   remove_notification: (notificationId: string) => void;
+
+  set_friends: (friends: Friend[]) => void;
+  new_friend: (friend: Friend) => void;
+  update_friend_status: (friendId: number, newStatus: UserStatus) => void;
+  remove_friend: (friendId: number) => void;
+
+  set_friend_requests: (friendRequests: IFriendRequest[]) => void;
+  new_friend_request: (friendRequest: IFriendRequest) => void;
+  remove_friend_request: (friendRequestId: string) => void;
 }
 
 export type ServerToClientEventsKeys = keyof ServerToClientEvents;
@@ -35,9 +46,9 @@ export interface ClientToServerEvents {
   change_settings: (settings: Partial<GameSettings>) => void;
   change_settings_helpers: (blackListedHelpers: HelperType[]) => void;
   change_settings_categories: (whiteListedCategories: CategoryId[]) => void;
-  invite_friend: (userId: number, cb?: (newStatus: FriendshipStatus) => void) => void;
-  remove_friend: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
-  cancel_friend_request: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
+  invite_friend: (userId: number) => void;
+  remove_friend: (userId: number) => void;
+  cancel_friend_request: (userId: number) => void;
   decline_notification: (notification: INotification) => void;
   send_game_invite: (userId: number) => void;
 }

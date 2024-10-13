@@ -32,6 +32,8 @@ export class GameService {
   }
 
   public createGame(owner: SocketType | null, gameType: GameType) {
+    this.eventEmitter.emit("game_join", owner);
+
     const game = new Game(owner, this, gameType);
     this.games.push(game);
     return game;

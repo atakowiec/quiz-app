@@ -6,6 +6,7 @@ import { AppDispatch } from "../store";
 import { gameActions } from "../store/gameSlice";
 import { notificationsActions } from "../store/notificationsSlice.ts";
 import { toast } from "react-toastify";
+import { userActions } from "../store/userSlice.ts";
 
 export type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -36,8 +37,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     // todo - stringyfing the message is a temporary solution - now we can see a json object in the toast
     newSocket.on("exception", (message) =>
-      toast.error(JSON.stringify(message))
+      toast.error(typeof message === "string" ? message : message.message)
     );
+
+    newSocket.on("notification", (message) => toast.info(message));
 
     newSocket.on("new_notification", (notification) => dispatch(notificationsActions.newNotification(notification)));
 
@@ -45,7 +48,22 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     newSocket.on("remove_notification", (notificationId) => dispatch(notificationsActions.removeNotification(notificationId)));
 
-    newSocket.on("notification", (message) => toast.info(message));
+    newSocket.on("set_friend_requests", (friendRequests) => dispatch(userActions.setFriendRequests(friendRequests)));
+
+    newSocket.on("remove_friend_request", (friendRequestId) => dispatch(userActions.removeFriendRequest(friendRequestId)));
+
+    newSocket.on("new_friend_request", (friendRequest) => dispatch(userActions.newFriendRequest(friendRequest)));
+
+    newSocket.on("set_friends", (friends) => dispatch(userActions.setFriendships(friends)));
+
+    newSocket.on("new_friend", (friend) => dispatch(userActions.newFriendship(friend)));
+
+    newSocket.on("update_friend_status", (friendId, newStatus) => dispatch(userActions.updateFriendStatus({
+      friendId,
+      newStatus
+    })));
+
+    newSocket.on("remove_friend", (friendId) => dispatch(userActions.removeFriendship(friendId)));
     return newSocket;
   }, []);
 

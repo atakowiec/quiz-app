@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import useApi from "../api/useApi.ts";
 import { globalDataActions } from "../store/globalDataSlice.ts";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/userSlice.ts";
@@ -15,12 +14,12 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
   const dispatch = useDispatch();
   const socket = useSocket();
   const reloadApi = useReloadApi();
-  const categoriesData = useApi("/questions/categories", "get");
   const [refreshToken, setRefreshToken] = useState(1);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<AxiosError | null>(null);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
 
-  const everythingLoaded = categoriesData.loaded && loaded && (!error || !isNaN(parseInt(error.code ?? "")));
+  const everythingLoaded = categoriesLoaded && loaded && (!error || !isNaN(parseInt(error.code ?? "")));
 
   // on start of the application check whether the user has some valid token
   useEffect(() => {
@@ -55,12 +54,18 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
 
   // on the start of the application fetch the categories and store them in the global state
   useEffect(() => {
-    if (!categoriesData.loaded) return;
+    getApi().get("/questions/categories")
+      .then((response: AxiosResponse) => {
+        dispatch(globalDataActions.setData({ categories: response.data }));
+        setCategoriesLoaded(true);
+      })
+      .catch(() => {
+        if (!error)
+          setRefreshToken(prevState => prevState + 1);
+      })
+  }, [refreshToken]);
 
-    dispatch(globalDataActions.setData({ categories: categoriesData.data }));
-  }, [categoriesData]);
-
-  if(!everythingLoaded && refreshToken == 1) {
+  if (!everythingLoaded && refreshToken == 1) {
     return null;
   }
 

@@ -130,6 +130,7 @@ export default class Game {
     player.socket.data.gameId = this.id;
 
     this.logger.log(`Player ${player.username} joined the game`);
+    this.gameService.eventEmitter.emit("game_join", playerSocket);
 
     this.send();
     // player.sendNotification("Dołączono do gry!");
@@ -140,6 +141,8 @@ export default class Game {
     if (!player) {
       return;
     }
+
+    this.gameService.eventEmitter.emit("game_leave", player.socket);
 
     player.socket.leave(this.id);
     delete player.socket.data.gameId;
@@ -208,12 +211,13 @@ export default class Game {
     if (!["leaderboard", "waiting_for_players"].includes(this.gameStatus)) {
       return;
     }
-    this.logger.log(`Player ${playerSocket.data.username} has left the game`);
 
     const player = this.getPlayer(playerSocket);
     if (!player) {
       return;
     }
+
+    this.logger.log(`Player ${playerSocket.data.username} has left the game`);
 
     this.removePlayer(player);
   }
@@ -243,11 +247,10 @@ export default class Game {
    * Force removes given game member from the game
    */
   removePlayer(gameMember: GameMember) {
-    this.logger.log(
-      `Player ${gameMember.username} has been removed from the game`
-    );
-    gameMember.socket.emit("set_game", null);
+    this.logger.log(`Player ${gameMember.username} has been removed from the game`);
+    this.gameService.eventEmitter.emit("game_leave", gameMember.socket);
 
+    gameMember.socket.emit("set_game", null);
     gameMember.socket.leave(this.id);
     delete gameMember.socket.data.gameId;
 
@@ -542,6 +545,7 @@ export default class Game {
       settings: this.settings,
     });
   }
+
   changeSettingsCategories(whiteListedCategories: CategoryId[]) {
     if (this.gameStatus !== "waiting_for_players") {
       return;
@@ -561,6 +565,7 @@ export default class Game {
     this.timeEnd = this.timeStart + time * 1000;
     this.onTimerEnd = callback;
   }
+
   public tickTimer() {
     if (this.timeEnd === -1) {
       return;
@@ -571,6 +576,7 @@ export default class Game {
       this.onTimerEnd();
     }
   }
+
   private clearTimer() {
     if (this.intervalId) {
       clearInterval(this.intervalId);

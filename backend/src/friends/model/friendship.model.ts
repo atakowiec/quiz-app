@@ -14,6 +14,6 @@ export class Friendship {
   @JoinColumn({name: "user_2"})
   user_2: User
 
-  @Column({nullable: true})
-  since: string;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
+  since: Date;
 }

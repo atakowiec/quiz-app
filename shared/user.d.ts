@@ -17,22 +17,23 @@ export type UserStatus = "online" | "offline" | "ingame"
 export type FriendshipStatus = "friend" | "pending" | "requested" | "none"
 
 /**
- * This is per sender data about the user - the content depends on the sender and the receiver
- * Contains all the information about the user that is needed for the sender
+ * Data about the user that is available to all logged-in users
  */
 export type UserDetails = {
   id: number;
   username: string;
-  email: string;
-  status: UserStatus;
-  friendship: {
-    status: FriendshipStatus
-    since?: string
-  }
   stats: {
     playedGames: number
     firstPlace: number
     secondPlace: number
     thirdPlace: number
   }
+}
+
+/**
+ * This is simplified version of the user data
+ */
+export type BasicUserDetails = {
+  id: number;
+  username: string;
 }

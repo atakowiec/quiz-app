@@ -26,7 +26,7 @@ export class AuthService {
     // empty
   }
 
-  async register(createUserDto: RegisterDto, res: Response) {
+  async register(createUserDto: RegisterDto, res: Response): Promise<UserPacket> {
     // first find if the user already exists
     const user = await this.userRepository.findOne({
       where: [

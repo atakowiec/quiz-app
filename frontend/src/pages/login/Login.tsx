@@ -6,7 +6,7 @@ import styles from "./Login.module.scss";
 import CustomInput from "../../components/CustomInput.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import getApi from "../../api/axios.ts";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../store";
@@ -15,6 +15,7 @@ import { useSocket } from "../../socket/useSocket.ts";
 import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
+import { UserPacket } from "@shared/user";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -37,7 +38,7 @@ const Login = () => {
     onSubmit: (values) => {
       getApi()
         .post("/auth/login", values)
-        .then((response) => {
+        .then((response: AxiosResponse<UserPacket>) => {
           if (response.status !== 200) {
             return;
           }
