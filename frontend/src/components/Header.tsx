@@ -10,10 +10,15 @@ import { UserState } from "../store/userSlice.ts";
 import { Dropdown } from "react-bootstrap";
 import { useGame } from "../store/gameSlice.ts";
 import FancyLogo from "./FancyLogo.tsx";
+import Notifications from "./Notifications.tsx";
+import { useState } from "react";
+import { useNotifications } from "../store/notificationsSlice.ts";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector<State, UserState>((state: State) => state.user);
+  const [notificationsShow, setNotificationsShow] = useState(false);
+  const notificationCount = useNotifications().length
 
   const gameState = useGame();
 
@@ -30,13 +35,9 @@ const Header = () => {
   const shouldHideIcons =
     gameState && hideIconsStatuses.includes(gameState.status);
 
-  const handleIconClick = () => {
-    if (user.loggedIn) {
-      navigate("/profile");
-    } else {
-      navigate("/login");
-    }
-  };
+  function toggleNotifications() {
+    setNotificationsShow(prev => !prev);
+  }
 
   //TODO: make edit profile work
   const handleLogout = () => {
@@ -47,7 +48,7 @@ const Header = () => {
     <>
       <header className={`${styles.headerTopStrip}`}>
         <div className={styles.headerContent}>
-          <FancyLogo />
+          <FancyLogo/>
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
               <Link to="/" className={`${styles.gap15}`}>
@@ -57,12 +58,19 @@ const Header = () => {
                 />
               </Link>
               {user.loggedIn ? (
-                <Link to="/" className={`${styles.gap15}`}>
+                <div
+                  className={`${styles.gap15} ${styles.notificationIconLink}`}
+                  onClick={toggleNotifications}>
                   <IoMdNotificationsOutline
                     color="white"
-                    className={styles.iconSize}
-                  />
-                </Link>
+                    className={styles.iconSize}/>
+                  {
+                    notificationCount > 0 &&
+                      <div className={styles.notificationsIndicator}>
+                        {notificationCount}
+                      </div>
+                  }
+                </div>
               ) : null}
               {user.loggedIn ? (
                 <Dropdown align="end">
@@ -105,7 +113,7 @@ const Header = () => {
             </div>
           )}
         </div>
-        {/*<Notifications/>*/}
+        <Notifications show={notificationsShow} setShow={setNotificationsShow}/>
       </header>
     </>
   );

@@ -16,6 +16,9 @@ import {
 import { useSocket } from "../../socket/useSocket.ts";
 import { produce } from "immer";
 import { ClientToServerEventsKeys } from "@shared/socket";
+import { useGame } from "../../store/gameSlice.ts";
+import { toast } from "react-toastify";
+import { useUser } from "../../store/userSlice.ts";
 
 
 interface ProfileModalProps {
@@ -28,6 +31,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
   const socket = useSocket();
   const { loaded, data: user, setData: setUserData } = useApi<UserDetails>(`/users/${userId}`, "get")
   const userLoaded = loaded && !!user;
+  const game = useGame()
+  const loggedUser = useUser()
+  const isOwnUser = loggedUser?.id === userId;
+  const canInviteToGame = !isOwnUser && userLoaded && user.friendship.status == "friend" && game?.status == "waiting_for_players";
 
   function setFriendshipStatus(newStatus: FriendshipStatus) {
     if (!user)
@@ -53,6 +60,19 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
     socket.emit(statusToEvent[user.friendship.status], user.id, setFriendshipStatus);
   }
 
+  function inviteToGame() {
+    if(!user)
+      return
+
+    if(game?.status != "waiting_for_players") {
+      toast.warning("Nie możesz tego teraz zrobić!")
+
+      return
+    }
+
+    socket.emit("send_game_invite", user.id)
+  }
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Body>
@@ -71,16 +91,24 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
             </div>
           </div>
           <div className={styles.rightSide}>
-            <button className={styles.inviteF}>
-              <GiGamepad className={styles.gamePad}/> Zaproś do gry
-            </button>
             {
-              userLoaded && (
+              canInviteToGame &&
+                <button className={styles.inviteF} onClick={inviteToGame}>
+                    <GiGamepad className={styles.gamePad}/>
+                    Zaproś do gry
+                </button>
+            }
+            {
+              !isOwnUser && userLoaded && (
                 <button className={styles.friendBut} onClick={handleFriendship}>
-                  {user.friendship.status == "friend" && <><BsPersonFillCheck className={styles.remove}/></>}
-                  {user.friendship.status == "none" && <><BsPersonFillAdd className={styles.remove}/></>}
-                  {user.friendship.status == "pending" && <><BsPersonFillDown className={styles.remove}/></>}
-                  {user.friendship.status == "requested" && <><BsPersonFillUp className={styles.remove}/></>}
+                  {user.friendship.status == "friend" &&
+                      <><BsPersonFillCheck className={styles.remove}/> Znajomi</>}
+                  {user.friendship.status == "none" &&
+                      <><BsPersonFillAdd className={styles.remove}/> Wyślij zaproszenie</>}
+                  {user.friendship.status == "pending" &&
+                      <><BsPersonFillDown className={styles.remove}/> Przyjmij zaproszenie</>}
+                  {user.friendship.status == "requested" &&
+                      <><BsPersonFillUp className={styles.remove}/> Anuluj zaproszenie</>}
                 </button>
               )
             }

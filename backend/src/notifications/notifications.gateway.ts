@@ -8,9 +8,11 @@ import {
 } from '@nestjs/websockets';
 import { SocketServerType, SocketType } from "../game/game.types";
 import { NotificationsService } from "./notifications.service";
-import { forwardRef, Inject } from "@nestjs/common";
+import { forwardRef, Inject, UseFilters } from "@nestjs/common";
 import { INotification } from "@shared/notifications";
+import { WsCatchAllFilter } from "../exceptions/ws-catch-all-filter";
 
+@UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
 export class NotificationsGateway implements OnGatewayConnection {
   @WebSocketServer()

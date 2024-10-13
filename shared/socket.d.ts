@@ -35,7 +35,7 @@ export interface ClientToServerEvents {
   change_settings: (settings: Partial<GameSettings>) => void;
   change_settings_helpers: (blackListedHelpers: HelperType[]) => void;
   change_settings_categories: (whiteListedCategories: CategoryId[]) => void;
-  invite_friend: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
+  invite_friend: (userId: number, cb?: (newStatus: FriendshipStatus) => void) => void;
   remove_friend: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
   cancel_friend_request: (userId: number, cb: (newStatus: FriendshipStatus) => void) => void;
   decline_notification: (notification: INotification) => void;

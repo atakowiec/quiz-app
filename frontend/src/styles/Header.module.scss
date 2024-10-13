@@ -29,10 +29,9 @@
   display: flex;
 
   div {
-    transition:
-      color 0.1s ease,
-      padding 0.2s ease-in-out,
-      margin 0.2s ease-in-out;
+    transition: color 0.1s ease,
+    padding 0.2s ease-in-out,
+    margin 0.2s ease-in-out;
 
     &.space {
       width: 0.5rem;
@@ -93,6 +92,37 @@
   }
 }
 
+.notificationIconLink {
+  position: relative;
+  cursor: pointer;
+
+  .notificationsIndicator {
+    position: absolute;
+    font-size: 1rem;
+    color: white;
+    background-color: $green;
+    border-radius: 50%;
+    line-height: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: -5px;
+    right: -5px;
+    user-select: none;
+  }
+}
+
+.notificationOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
 .notificationsBox {
   position: absolute;
   right: 0;
@@ -102,6 +132,19 @@
   margin: 0.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 580px;
+  transition: transform 0.3s cubic-bezier(0.59, 0.78, 0.18, 1.24);;
+  z-index: 1000;
+  max-height: 60vh;
+  overflow-y: auto;
+
+  .noNotifications {
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  &.hide {
+    transform: translateX(150%);
+  }
 
   .notification {
     width: 100%;
