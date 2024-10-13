@@ -1,7 +1,7 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { SocketServerType, SocketType } from "../game/game.types";
 import { FriendsService } from "./friends.service";
-import { UseFilters, UseGuards } from "@nestjs/common";
+import { forwardRef, Inject, UseFilters, UseGuards } from "@nestjs/common";
 import { WsCatchAllFilter } from "../exceptions/ws-catch-all-filter";
 import { WsAuthGuard } from "../guards/ws-auth.guard";
 import { FriendshipStatus } from "@shared/user";
@@ -12,7 +12,9 @@ export class FriendsGateway {
   @WebSocketServer()
   public readonly server: SocketServerType;
 
-  constructor(private readonly friendsService: FriendsService) {
+  constructor(
+    @Inject(forwardRef(() => FriendsService))
+    private readonly friendsService: FriendsService) {
     // empty
   }
 

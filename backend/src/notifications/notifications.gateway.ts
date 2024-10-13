@@ -30,8 +30,8 @@ export class NotificationsGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('send_game_invite')
-  onGameInvite(@ConnectedSocket() socket: SocketType, @MessageBody() userId: number) {
-    this.notificationsService.sendGameInvite(socket, userId);
+  async onGameInvite(@ConnectedSocket() socket: SocketType, @MessageBody() userId: number) {
+    await this.notificationsService.sendGameInvite(socket, userId);
   }
 
   @SubscribeMessage('decline_notification')

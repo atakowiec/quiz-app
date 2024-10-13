@@ -4,8 +4,6 @@ import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import Meta from "../../../components/Meta.tsx";
 import {
   Breadcrumb,
-  Button,
-  Modal,
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
@@ -25,6 +23,7 @@ import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
 import TimeBar from "../components/time-bar/TimeBar.tsx";
 import useProfileModal from "../../../hooks/profile-modal/useProfileModal.ts";
+import ConfirmationModal from "../../../components/ConfirmationModal.tsx";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -121,16 +120,16 @@ const WaitingRoom: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Poczekalnia"} />
-      <Breadcrumb title="Poczekalnia" />
-      <Sidebar items={sidebarItems} />
+      <Meta title={"Poczekalnia"}/>
+      <Breadcrumb title="Poczekalnia"/>
+      <Sidebar items={sidebarItems}/>
       <MainContainer className={styles.sidebarContainer}>
-        <MainBox before={game?.owner == null && <TimeBar />}>
+        <MainBox before={game?.owner == null && <TimeBar/>}>
           <MainTitle>Poczekalnia</MainTitle>
           <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
             {["ending", "copied"].includes(copyAnimationStage) ? (
               <>
-                <FaCheck /> Skopiowano!
+                <FaCheck/> Skopiowano!
               </>
             ) : (
               <OverlayTrigger
@@ -139,12 +138,12 @@ const WaitingRoom: React.FC = () => {
                 overlay={renderTooltip}
               >
                 <span onClick={copyId}>
-                  Kod: {game?.id} <FaLink />
+                  Kod: {game?.id} <FaLink/>
                 </span>
               </OverlayTrigger>
             )}
           </div>
-          <hr className={styles.line} />
+          <hr className={styles.line}/>
           <div className={styles.playersBox}>
             {game?.owner && game?.owner?.username && (
               <div className={styles.singlePlayer}>
@@ -158,14 +157,14 @@ const WaitingRoom: React.FC = () => {
                   {game?.owner.username}
                 </span>
                 <div>
-                  <LuCrown className={styles.playerAction} />
+                  <LuCrown className={styles.playerAction}/>
 
                   {game.owner?.id && (
                     <button
                       className={styles.showProfileBtn}
                       onClick={() => showProfileModal(game.owner?.id)}
                     >
-                      <FaUser className={styles.playerAction} />
+                      <FaUser className={styles.playerAction}/>
                     </button>
                   )}
                 </div>
@@ -194,14 +193,14 @@ const WaitingRoom: React.FC = () => {
                               handleGiveOwnerClick(player.username!)
                             }
                           >
-                            <IoMdArrowUp className={styles.playerAction2} />
+                            <IoMdArrowUp className={styles.playerAction2}/>
                           </button>
 
                           <button
                             className={styles.kickBtn}
                             onClick={() => kickPlayer(player.username!)}
                           >
-                            <RxCross2 className={styles.playerAction} />
+                            <RxCross2 className={styles.playerAction}/>
                           </button>
 
                           {player?.id && (
@@ -209,7 +208,7 @@ const WaitingRoom: React.FC = () => {
                               className={styles.showProfileBtn}
                               onClick={() => showProfileModal(player.id)}
                             >
-                              <FaUser className={styles.playerAction} />
+                              <FaUser className={styles.playerAction}/>
                             </button>
                           )}
                         </div>
@@ -232,39 +231,13 @@ const WaitingRoom: React.FC = () => {
           </div>
         </MainBox>
       </MainContainer>
-      <Modal
-        show={showConfirmModal}
-        onHide={() => setShowConfirmModal(false)}
-        centered
-        className={styles.modalCenter}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title className={styles.modalOwnerTitle}>
-            Zmiana właściciela pokoju
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className={styles.modalBody}>
-            Czy na pewno chcesz zmienić właściciela pokoju na {selectedPlayer}?
-          </div>
-        </Modal.Body>
-        <Modal.Footer className={styles.modalButtons}>
-          <Button
-            variant="primary"
-            onClick={confirmGiveOwner}
-            className={styles.modalConfirmBut}
-          >
-            Tak, zmień właściciela
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => setShowConfirmModal(false)}
-            className={styles.modalCancelBut}
-          >
-            Anuluj
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ConfirmationModal show={showConfirmModal}
+                         setShow={setShowConfirmModal}
+                         onConfirm={confirmGiveOwner}
+                         confirmText={"Tak, zmień właściciela"}
+                         title={"Zmiana właściciela"}>
+        Czy na pewno chcesz zmienić właściciela pokoju na {selectedPlayer}?
+      </ConfirmationModal>
     </>
   );
 };

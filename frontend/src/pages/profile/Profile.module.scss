@@ -11,12 +11,14 @@
   margin-top: 1rem;
   align-items: center;
 }
+
 .iconAndName {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
+
 .profileIcon {
   display: flex;
   font-size: 3rem;
@@ -55,6 +57,7 @@
   font-size: 0.9rem;
   margin-left: 0.25rem;
 }
+
 .profileEmail {
   color: #999;
   font-size: 0.9rem;
@@ -100,16 +103,18 @@
   justify-content: center;
 }
 
-.addFriends {
+.searchFriendInput {
   background-color: white;
   border-radius: $container-border-radius;
   padding: 0.3rem 0.75rem;
   width: 100%;
   font-size: 1rem;
   font-weight: 600;
-  color: #999;
   margin-bottom: 0.5rem;
+  border: none;
+  outline: none;
 }
+
 .friend {
   display: flex;
   flex-direction: row;
@@ -121,6 +126,7 @@
   width: 100%;
   margin-bottom: 0.5rem;
 }
+
 .friendIconNick {
   display: flex;
   flex-direction: row;
@@ -151,6 +157,7 @@
   align-items: flex-start;
   margin-left: 0.5rem;
 }
+
 .rightSide {
   display: flex;
   flex-direction: row;
@@ -163,12 +170,22 @@
   font-size: 0.9rem;
   font-weight: 600;
 }
-.statusOnline {
+
+.status {
   font-weight: 800;
-  color: $green;
   font-size: 0.7rem;
   margin-top: -0.25rem;
+
+  &.ingame,
+  &.online {
+    color: $green;
+  }
+
+  &.offline {
+    color: $red;
+  }
 }
+
 .circle {
   font-size: 0.5rem;
   margin-right: 0.25rem;

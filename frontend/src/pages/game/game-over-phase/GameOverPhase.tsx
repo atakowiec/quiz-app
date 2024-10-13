@@ -52,6 +52,7 @@ export default function GameOverPhase() {
             {game?.players && game.players.length > 0 ? (
               game.players.map((player, index) => (
                 <div
+                  key={player.username}
                   className={`${styles.singlePlayer} ${player.username === user.username ? styles.currentPlayer : ""}`}
                 >
                   <div>
