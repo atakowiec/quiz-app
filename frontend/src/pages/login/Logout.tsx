@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../store/userSlice.ts";
 import { useSocket } from "../../socket/useSocket.ts";
+import { notificationsActions } from "../../store/notificationsSlice.ts";
+import { gameActions } from "../../store/gameSlice.ts";
 
 export default function Logout() {
   const dispatch = useDispatch()
@@ -13,9 +15,13 @@ export default function Logout() {
   useEffect(() => {
     // I trust that this won't throw an error - if so, it's kinda bad
     getApi().post("/auth/logout").then(() => {
-      navigate("/");
-      dispatch(userActions.setUser(null));
       socket.disconnect();
+
+      dispatch(userActions.setUser(null));
+      dispatch(notificationsActions.setNotifications([]));
+      dispatch(gameActions.setGame(null));
+
+      navigate("/");
     });
   }, []);
 
