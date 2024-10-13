@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { UserService } from "./user.service";
 import { Request } from "../app";
 import { AuthGuard } from "../guards/auth.guard";
@@ -9,10 +9,15 @@ export class UserController {
     // empty
   }
 
-  @Get(":id")
-  @Header('Cache-Control', 'none')
+  @Get("/find-by-name/:query?")
   @UseGuards(AuthGuard)
-  getUserDataById(@Req() req: Request, @Param('id') id: number) {
-    return this.userService.getUserDataById(req.user, id);
+  async findUsers(@Req() req: Request, @Param('query') query: string = "") {
+    return await this.userService.findUsers(req.user, query);
+  }
+
+  @Get("/get-by-id/:id")
+  @UseGuards(AuthGuard)
+  async getUserDataById(@Param('id') id: number) {
+    return await this.userService.getUserDataById(id);
   }
 }

@@ -6,8 +6,8 @@ import { Friendship } from "./model/friendship.model";
 import { SocketType } from "../game/game.types";
 import { WsException } from "@nestjs/websockets";
 import { User } from "../user/user.model";
-import { FriendshipStatus } from "@shared/user";
-import { EventEmitter2 } from "@nestjs/event-emitter";
+import { UserStatus } from "@shared/user";
+import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
 import { TokenPayload } from "../auth/auth";
 import { Friend } from "@shared/friends";
 import { FriendsGateway } from "./friends.gateway";
@@ -27,7 +27,123 @@ export class FriendsService {
     // empty
   }
 
-  async inviteFriend(inviterSocket: SocketType, inviteeId: number): Promise<FriendshipStatus> {
+  async onConnect(client: SocketType) {
+    if(!client.data.user?.id)
+      return; // not logged in
+
+    // find all friendships
+    const friends = await this.getFriends(client.data.user);
+
+    // find all friend requests
+    const pendingRequests = await this.getAllUserRequests(client.data.user.id);
+
+    // send the data to the client
+    client.emit("set_friends", friends);
+    client.emit("set_friend_requests", pendingRequests.map(request => request.toINotification()));
+
+    // notify the friends that the user is online
+    this.notifyFriendsAboutStatusChange(client.data.user.id, "online", friends);
+  }
+
+  async onDisconnect(client: SocketType) {
+    if(!client.data.user?.id)
+      return; // not logged in
+
+    // notify the friends that the user is offline
+    const friends = await this.getFriends(client.data.user);
+    this.notifyFriendsAboutStatusChange(client.data.user.id, "offline", friends);
+  }
+
+  @OnEvent("game_join")
+  async onGameJoin(socket: SocketType) {
+    if(!socket.data.user?.id)
+      return;
+
+    const friends = await this.getFriends(socket.data.user);
+    this.notifyFriendsAboutStatusChange(socket.data.user.id, "ingame", friends);
+  }
+
+  @OnEvent("game_leave")
+  async onGameLeave(socket: SocketType) {
+    if(!socket.data.user?.id) {
+      console.log("User is not logged in");
+      return;
+    }
+
+    socket = this.getUserSocket(socket.data.user.id); // try to get the socket again because the user might have disconnected
+
+    if(!socket?.connected) {
+      console.log("User is not connected");
+      return;
+    }
+
+    const friends = await this.getFriends(socket.data.user);
+    this.notifyFriendsAboutStatusChange(socket.data.user.id, "online", friends);
+  }
+
+  notifyFriendsAboutStatusChange(userId: number, status: UserStatus, friends: Friend[]) {
+    for (const friend of friends) {
+      const friendSocket = this.getUserSocket(friend.id);
+      if (friendSocket) {
+        friendSocket.emit("update_friend_status", userId, status);
+      }
+    }
+  }
+
+  notifyNewFriendship(friendship: Friendship) {
+    const user1Socket = this.getUserSocket(friendship.user_1.id);
+    const user2Socket = this.getUserSocket(friendship.user_2.id);
+
+    if (user1Socket) {
+      const friend: Friend = {
+        id: friendship.user_2.id,
+        username: friendship.user_2.username,
+        status: !user2Socket ? "offline" : user2Socket?.data.gameId ? "ingame" : "online"
+      }
+
+      user1Socket.emit("new_friend", friend);
+    }
+
+    if (user2Socket) {
+      const friend: Friend = {
+        id: friendship.user_1.id,
+        username: friendship.user_1.username,
+        status: !user1Socket ? "offline" : user1Socket?.data.gameId ? "ingame" : "online"
+      }
+
+      user2Socket.emit("new_friend", friend);
+    }
+  }
+
+  @OnEvent("friend_request_sent")
+  notifyNewFriendRequest(friendRequest: FriendRequest) {
+    const inviteeSocket = this.getUserSocket(friendRequest.invitee.id);
+    if (inviteeSocket) {
+      inviteeSocket.emit("new_friend_request", friendRequest.toINotification());
+    }
+
+    const inviterSocket = this.getUserSocket(friendRequest.inviter.id);
+    if (inviterSocket) {
+      inviterSocket.emit("new_friend_request", friendRequest.toINotification());
+    }
+  }
+
+  @OnEvent("friend_request_handled")
+  notifyFriendRequestRemove(friendRequest: FriendRequest) {
+    let requestId = friendRequest.toINotification().id;
+
+    const inviteeSocket = this.getUserSocket(friendRequest.invitee.id);
+    if (inviteeSocket) {
+      inviteeSocket.emit("remove_friend_request", requestId);
+    }
+
+    const inviterSocket = this.getUserSocket(friendRequest.inviter.id);
+    if (inviterSocket) {
+      inviterSocket.emit("remove_friend_request", requestId);
+    }
+  }
+
+  async inviteFriend(inviterSocket: SocketType, inviteeId: number) {
     const inviter: User = inviterSocket.data.user;
     // check if the user is not inviting himself
     if (inviter.id === inviteeId) {
@@ -46,12 +162,13 @@ export class FriendsService {
     }
 
     if (friendRequest) {
-      return await this.acceptFriendRequest(inviterSocket, friendRequest);
+      await this.acceptFriendRequest(inviterSocket, friendRequest);
+      return;
     }
 
     const newFriendRequest = this.friendRequestRepository.create({
       inviter: {
-        id: inviter.id
+        id: inviter.id,
       },
       invitee: {
         id: inviteeId
@@ -63,10 +180,9 @@ export class FriendsService {
     this.eventEmitter.emit("friend_request_sent", await this.getFriendRequest(inviteeId, inviter.id));
 
     inviterSocket.emit("notification", "Zaproszenie zostało wysłane");
-    return "requested";
   }
 
-  async removeFriend(socket: SocketType, userId: number): Promise<FriendshipStatus> {
+  async removeFriend(socket: SocketType, userId: number) {
     const friendship = await this.getFriendship(socket.data.user.id, userId);
 
     if (!friendship) {
@@ -75,12 +191,18 @@ export class FriendsService {
 
     await this.friendshipRepository.remove(friendship);
 
-    socket.emit("notification", "Usunięto znajomego");
+    // notify both users that the friendship has been removed
+    socket.emit("remove_friend", userId);
 
-    return "none";
+    const friendSocket = this.getUserSocket(userId);
+    if (friendSocket) {
+      friendSocket.emit("remove_friend", socket.data.user.id);
+    }
+
+    socket.emit("notification", "Usunięto znajomego");
   }
 
-  async cancelRequest(socket: SocketType, userId: number): Promise<FriendshipStatus> {
+  async cancelRequest(socket: SocketType, userId: number) {
     const friendRequest = await this.getFriendRequest(socket.data.user.id, userId);
 
     if (!friendRequest) {
@@ -92,11 +214,9 @@ export class FriendsService {
     await this.friendRequestRepository.remove(friendRequest);
 
     socket.emit("notification", "Anulowano zaproszenie");
-
-    return "none";
   }
 
-  async declineRequest(socket: SocketType, inviterId: number, inviteeId: number): Promise<FriendshipStatus> {
+  async declineRequest(socket: SocketType, inviterId: number, inviteeId: number) {
     const friendRequest = await this.getFriendRequest(inviterId, inviteeId);
 
     if (!friendRequest) {
@@ -167,25 +287,27 @@ export class FriendsService {
     });
   }
 
-  private async acceptFriendRequest(socket: SocketType, friendRequest: FriendRequest): Promise<FriendshipStatus> {
+  private async acceptFriendRequest(socket: SocketType, friendRequest: FriendRequest) {
     const friendship = this.friendshipRepository.create({
       user_1: {
-        id: friendRequest.inviter.id
+        id: friendRequest.inviter.id,
+        username: friendRequest.inviter.username
       },
       user_2: {
-        id: friendRequest.invitee.id
+        id: friendRequest.invitee.id,
+        username: friendRequest.invitee.username
       },
     })
 
-    await this.friendshipRepository.save(friendship);
+    const newFriendship = await this.friendshipRepository.save(friendship);
 
     this.eventEmitter.emit("friend_request_handled", friendRequest);
+
+    this.notifyNewFriendship(newFriendship);
 
     await this.friendRequestRepository.remove(friendRequest);
 
     socket.emit("notification", "Zaproszenie zostało zaakceptowane");
-
-    return "friend";
   }
 
   async getPendingRequests(userId: number) {
@@ -235,18 +357,36 @@ export class FriendsService {
         username: friend.username,
         status: !friendSocket ? "offline" : friendSocket.data.gameId ? "ingame" : "online"
       } as Friend
-    }).sort((a: Friend, b:Friend) => {
+    }).sort((a: Friend, b: Friend) => {
       // not sure if this is the best way to sort friends
-      if(a.status == "online")
+      if (a.status == "online")
         return 1;
 
-      if(a.status == "ingame" && b.status == "online")
+      if (a.status == "ingame" && b.status == "online")
         return -1;
 
-      if(a.status == "ingame" && b.status == "offline")
+      if (a.status == "ingame" && b.status == "offline")
         return 1;
 
       return 0;
+    });
+  }
+
+  getAllUserRequests(userId: number) {
+    return this.friendRequestRepository.find({
+      where: [
+        {
+          invitee: {
+            id: userId
+          }
+        },
+        {
+          inviter: {
+            id: userId
+          }
+        }
+      ],
+      relations: ["inviter", "invitee"]
     });
   }
 }

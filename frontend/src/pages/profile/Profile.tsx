@@ -17,9 +17,8 @@ import MainTitle from "../../components/MainTitle.tsx";
 import { FaEdit } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { UserState } from "../../store/userSlice.ts";
-import useApi from "../../api/useApi.ts";
-import { Friend } from "@shared/friends";
 import FriendCard from "./components/FriendCard.tsx";
+import AddFriendsModal from "./components/AddFriendsModal.tsx";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -29,9 +28,9 @@ const Profile: React.FC = () => {
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
 
+  const [addFriendsVisible, setAddFriendsVisible] = useState<boolean>(false);
   const [searchFriend, setSearchFriend] = useState<string>("");
   const user = useSelector<State, UserState>(state => state.user);
-  const friends = useApi<Friend[]>("/friends", "get");
 
   return (
     <>
@@ -63,15 +62,23 @@ const Profile: React.FC = () => {
                    className={styles.searchFriendInput}
                    value={searchFriend}
                    onChange={e => setSearchFriend(e.target.value)}/>
-            {friends.loaded && friends.data &&
-              friends.data
+            {user.friends &&
+              user.friends
                 .filter(friend => friend.username.includes(searchFriend))
                 .map(friend => (
                   <FriendCard key={friend.id} friend={friend}/>
                 ))}
+            {
+              user.friends?.length === 0 &&
+                <div className={styles.noFriends}>Lista znajomych jest pusta</div>
+            }
+            <button className={styles.addFriends} onClick={() => setAddFriendsVisible(true)}>
+              Wyszukaj znajomych
+            </button>
           </div>
         </MainBox>
       </MainContainer>
+      <AddFriendsModal show={addFriendsVisible} setShow={setAddFriendsVisible}/>
     </>
   );
 };
