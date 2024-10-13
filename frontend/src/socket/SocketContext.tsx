@@ -4,6 +4,7 @@ import { ClientToServerEvents, ServerToClientEvents } from "@shared/socket";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { gameActions } from "../store/gameSlice";
+import { notificationsActions } from "../store/notificationsSlice.ts";
 import { toast } from "react-toastify";
 
 export type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -37,6 +38,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     newSocket.on("exception", (message) =>
       toast.error(JSON.stringify(message))
     );
+
+    newSocket.on("new_notification", (notification) => dispatch(notificationsActions.newNotification(notification)));
+
+    newSocket.on("set_notifications", (notifications) => dispatch(notificationsActions.setNotifications(notifications)));
+
+    newSocket.on("remove_notification", (notificationId) => dispatch(notificationsActions.removeNotification(notificationId)));
+
     newSocket.on("notification", (message) => toast.info(message));
     return newSocket;
   }, []);

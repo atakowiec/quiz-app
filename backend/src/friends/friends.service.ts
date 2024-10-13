@@ -55,6 +55,8 @@ export class FriendsService {
 
     await this.friendRequestRepository.save(newFriendRequest);
 
+    this.eventEmitter.emit("friend_request_sent", await this.getFriendRequest(inviteeId, inviter.id));
+
     inviterSocket.emit("notification", "Zaproszenie zostało wysłane");
     return "requested";
   }
@@ -80,6 +82,8 @@ export class FriendsService {
       throw new WsException("Nie wysłałeś zaproszenia do tej osoby");
     }
 
+    this.eventEmitter.emit("friend_request_handled", friendRequest);
+
     await this.friendRequestRepository.remove(friendRequest);
 
     socket.emit("notification", "Anulowano zaproszenie");
@@ -93,6 +97,8 @@ export class FriendsService {
     if (!friendRequest) {
       throw new WsException("Nie masz zaproszenia od tej osoby");
     }
+
+    this.eventEmitter.emit("friend_request_handled", friendRequest);
 
     await this.friendRequestRepository.remove(friendRequest);
 
@@ -168,11 +174,11 @@ export class FriendsService {
 
     await this.friendshipRepository.save(friendship);
 
+    this.eventEmitter.emit("friend_request_handled", friendRequest);
+
     await this.friendRequestRepository.remove(friendRequest);
 
     socket.emit("notification", "Zaproszenie zostało zaakceptowane");
-
-    this.eventEmitter.emit("friend_request_accepted", friendRequest);
 
     return "friend";
   }
@@ -183,7 +189,8 @@ export class FriendsService {
         invitee: {
           id: userId
         }
-      }
+      },
+      relations: ["inviter", "invitee"]
     });
   }
 }

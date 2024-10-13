@@ -3,7 +3,6 @@ import { SocketType } from "../game/game.types";
 import { GameService } from "../game/services/game.service";
 import { WsException } from "@nestjs/websockets";
 import { UserService } from "../user/user.service";
-import Notification from "./classes/notification";
 import GameInvite from "./classes/game-invite";
 import { NotificationsGateway } from "./notifications.gateway";
 import { FriendsService } from "../friends/friends.service";
@@ -66,10 +65,10 @@ export class NotificationsService {
     }
   }
 
-  public sendNotification(notification: Notification) {
+  public sendNotification(notification: INotification) {
     const socket = this.getUserSocket(notification.invitee.id);
 
-    socket?.emit("new_notification", notification.toINotification());
+    socket?.emit("new_notification", notification);
   }
 
   async sendGameInvite(socket: SocketType, userId: number) {
@@ -96,7 +95,7 @@ export class NotificationsService {
 
     const invite = new GameInvite(inviter, invitee, game)
     game.invites.push(invite);
-    this.sendNotification(invite);
+    this.sendNotification(invite.toINotification());
   }
 
   declineNotification(socket: SocketType, notification: INotification) {
@@ -145,10 +144,10 @@ export class NotificationsService {
     const inviteIndex = game.invites.findIndex(invite => invite.invitee.id === socket.data.user.id)
     game.invites.splice(inviteIndex, 1)
 
-    this.sendRemoveNotification(socket, invite)
+    this.sendRemoveNotification(socket, invite.toINotification())
   }
 
-  @OnEvent("friend_request_accepted")
+  @OnEvent("friend_request_handled")
   onAcceptFriendRequest(friendRequest: FriendRequest) {
     const inviteeSocket = this.getUserSocket(friendRequest.invitee.id)
 
@@ -163,8 +162,17 @@ export class NotificationsService {
       const inviteeSocket = this.getUserSocket(invite.invitee.id)
 
       if (inviteeSocket) {
-        this.sendRemoveNotification(inviteeSocket, invite)
+        this.sendRemoveNotification(inviteeSocket, invite.toINotification())
       }
+    }
+  }
+
+  @OnEvent("friend_request_sent")
+  onFriendRequestSent(friendRequest: FriendRequest) {
+    const inviteeSocket = this.getUserSocket(friendRequest.invitee.id)
+
+    if (inviteeSocket) {
+      this.sendNotification(friendRequest.toINotification())
     }
   }
 

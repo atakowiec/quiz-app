@@ -1,7 +1,6 @@
 import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../components/Meta.tsx";
 import styles from "./JoinGame.module.scss";
-import { FaWrench } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
 import { useSocket } from "../../socket/useSocket.ts";

@@ -6,7 +6,7 @@ type ProfileModalContextType = {
   showModal: (username?: number) => void;
 }
 
-export const ProfileModalContext = createContext<ProfileModalContextType | undefined>(undefined);
+export const ProfileModalContext = createContext<ProfileModalContextType>({ closeModal: () => {}, showModal: () => {} });
 
 export default function ProfileModalProvider({ children }: { children: ReactNode }) {
   const [show, setShow] = useState<boolean>(false);
