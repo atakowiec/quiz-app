@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./Profile.module.scss";
 import { FaCircle } from "react-icons/fa";
@@ -19,6 +19,8 @@ import { ClientToServerEventsKeys } from "@shared/socket";
 import { useGame } from "../../store/gameSlice.ts";
 import { toast } from "react-toastify";
 import { useUser } from "../../store/userSlice.ts";
+import { translateUserStatus } from "../../utils/utils.ts";
+import ConfirmationModal from "../../components/ConfirmationModal.tsx";
 
 
 interface ProfileModalProps {
@@ -36,6 +38,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
   const isOwnUser = loggedUser?.id === userId;
   const canInviteToGame = !isOwnUser && userLoaded && user.friendship.status == "friend" && game?.status == "waiting_for_players";
 
+  const [unfriendConfirmation, setUnfriendConfirmation] = useState(false);
+
   function setFriendshipStatus(newStatus: FriendshipStatus) {
     if (!user)
       return;
@@ -46,6 +50,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
   }
 
   function handleFriendship() {
+    setUnfriendConfirmation(false);
+
     if (!user?.friendship) {
       return;
     }
@@ -57,14 +63,20 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
       requested: "cancel_friend_request",
     }
 
-    socket.emit(statusToEvent[user.friendship.status], user.id, setFriendshipStatus);
+    const event = statusToEvent[user.friendship.status];
+
+    if (event == "remove_friend" && !unfriendConfirmation) {
+      setUnfriendConfirmation(true);
+      return;
+    }
+    socket.emit(event, user.id, setFriendshipStatus);
   }
 
   function inviteToGame() {
-    if(!user)
+    if (!user)
       return
 
-    if(game?.status != "waiting_for_players") {
+    if (game?.status != "waiting_for_players") {
       toast.warning("Nie możesz tego teraz zrobić!")
 
       return
@@ -74,55 +86,63 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
   }
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
-      <Modal.Body>
-        <MainTitle>Profil</MainTitle>
-        <div className={styles.profileBox}>
-          <div className={styles.iconAndName}>
-            <div className={styles.profileIcon}>
-              {userLoaded ? user.username?.[0] ?? "-" : "-"}
-            </div>
-            <div className={styles.nameEmail}>
-              <div className={styles.profileName}>{userLoaded ? user.username : "-"}</div>
-              <div className={styles.statusOnline}>
-                <FaCircle className={styles.circle}/>
-                online
+    <>
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Body>
+          <MainTitle>Profil</MainTitle>
+          <div className={styles.profileBox}>
+            <div className={styles.iconAndName}>
+              <div className={styles.profileIcon}>
+                {userLoaded ? user.username?.[0] ?? "-" : "-"}
+              </div>
+              <div className={styles.nameEmail}>
+                <div className={styles.profileName}>{userLoaded ? user.username : "-"}</div>
+                <div className={`${styles.status} ${styles[user?.status ?? ""]}`}>
+                  <FaCircle className={styles.circle}/>
+                  {translateUserStatus(user?.status ?? "offline")}
+                </div>
               </div>
             </div>
+            <div className={styles.rightSide}>
+              {
+                canInviteToGame &&
+                  <button className={styles.inviteF} onClick={inviteToGame}>
+                      <GiGamepad className={styles.gamePad}/>
+                      Zaproś do gry
+                  </button>
+              }
+              {
+                !isOwnUser && userLoaded && (
+                  <button className={styles.friendBut} onClick={handleFriendship}>
+                    {user.friendship.status == "friend" &&
+                        <><BsPersonFillCheck className={styles.remove}/> Znajomi</>}
+                    {user.friendship.status == "none" &&
+                        <><BsPersonFillAdd className={styles.remove}/> Wyślij zaproszenie</>}
+                    {user.friendship.status == "pending" &&
+                        <><BsPersonFillDown className={styles.remove}/> Przyjmij zaproszenie</>}
+                    {user.friendship.status == "requested" &&
+                        <><BsPersonFillUp className={styles.remove}/> Anuluj zaproszenie</>}
+                  </button>
+                )
+              }
+            </div>
           </div>
-          <div className={styles.rightSide}>
-            {
-              canInviteToGame &&
-                <button className={styles.inviteF} onClick={inviteToGame}>
-                    <GiGamepad className={styles.gamePad}/>
-                    Zaproś do gry
-                </button>
-            }
-            {
-              !isOwnUser && userLoaded && (
-                <button className={styles.friendBut} onClick={handleFriendship}>
-                  {user.friendship.status == "friend" &&
-                      <><BsPersonFillCheck className={styles.remove}/> Znajomi</>}
-                  {user.friendship.status == "none" &&
-                      <><BsPersonFillAdd className={styles.remove}/> Wyślij zaproszenie</>}
-                  {user.friendship.status == "pending" &&
-                      <><BsPersonFillDown className={styles.remove}/> Przyjmij zaproszenie</>}
-                  {user.friendship.status == "requested" &&
-                      <><BsPersonFillUp className={styles.remove}/> Anuluj zaproszenie</>}
-                </button>
-              )
-            }
+          <div className={styles.friendRanking}>
+            <RankingVisualization/>
+            <div className={styles.friendStats}>
+              <div>Zagranych Gier</div>
+              <div>1500</div>
+            </div>
           </div>
-        </div>
-        <div className={styles.friendRanking}>
-          <RankingVisualization/>
-          <div className={styles.friendStats}>
-            <div>Zagranych Gier</div>
-            <div>1500</div>
-          </div>
-        </div>
-      </Modal.Body>
-    </Modal>
+        </Modal.Body>
+      </Modal>
+      <ConfirmationModal show={unfriendConfirmation}
+                         setShow={setUnfriendConfirmation}
+                         onConfirm={handleFriendship}
+                         title={"Usuwanie znajomego"}>
+        Czy na pewno chcesz usunąć tego znajomego?
+      </ConfirmationModal>
+    </>
   );
 };
 

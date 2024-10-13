@@ -8,6 +8,9 @@ import { WsException } from "@nestjs/websockets";
 import { User } from "../user/user.model";
 import { FriendshipStatus } from "@shared/user";
 import { EventEmitter2 } from "@nestjs/event-emitter";
+import { TokenPayload } from "../auth/auth";
+import { Friend } from "@shared/friends";
+import { FriendsGateway } from "./friends.gateway";
 
 @Injectable()
 export class FriendsService {
@@ -18,6 +21,8 @@ export class FriendsService {
     private readonly friendshipRepository: Repository<Friendship>,
     @Inject()
     private readonly eventEmitter: EventEmitter2,
+    @Inject()
+    private readonly friendsGateway: FriendsGateway,
   ) {
     // empty
   }
@@ -191,6 +196,57 @@ export class FriendsService {
         }
       },
       relations: ["inviter", "invitee"]
+    });
+  }
+
+  public getUserSocket(userId: number): SocketType | null {
+    for (const socket of this.friendsGateway.server.sockets.sockets.values()) {
+      if (socket.data.user?.id === userId) {
+        return socket;
+      }
+    }
+
+    return null;
+  }
+
+  async getFriends(user: TokenPayload): Promise<Friend[]> {
+    const friendships = await this.friendshipRepository.find({
+      where: [
+        {
+          user_1: {
+            id: user.id
+          }
+        },
+        {
+          user_2: {
+            id: user.id
+          }
+        }
+      ],
+      relations: ["user_1", "user_2"]
+    });
+
+    return friendships.map(friendship => {
+      const friend = friendship.user_1.id === user.id ? friendship.user_2 : friendship.user_1;
+      const friendSocket = this.getUserSocket(friend.id);
+
+      return {
+        id: friend.id,
+        username: friend.username,
+        status: !friendSocket ? "offline" : friendSocket.data.gameId ? "ingame" : "online"
+      } as Friend
+    }).sort((a: Friend, b:Friend) => {
+      // not sure if this is the best way to sort friends
+      if(a.status == "online")
+        return 1;
+
+      if(a.status == "ingame" && b.status == "online")
+        return -1;
+
+      if(a.status == "ingame" && b.status == "offline")
+        return 1;
+
+      return 0;
     });
   }
 }

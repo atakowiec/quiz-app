@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Breadcrumb } from "react-bootstrap";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Meta from "../../components/Meta.tsx";
@@ -16,11 +16,10 @@ import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
 import { FaEdit } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
-import { FaCircle } from "react-icons/fa";
-import { GiGamepad } from "react-icons/gi";
-import { IoMdPerson } from "react-icons/io";
 import { UserState } from "../../store/userSlice.ts";
-import useProfileModal from "../../hooks/profile-modal/useProfileModal.ts";
+import useApi from "../../api/useApi.ts";
+import { Friend } from "@shared/friends";
+import FriendCard from "./components/FriendCard.tsx";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -30,14 +29,15 @@ const Profile: React.FC = () => {
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
 
+  const [searchFriend, setSearchFriend] = useState<string>("");
   const user = useSelector<State, UserState>(state => state.user);
-  const {showModal} = useProfileModal();
+  const friends = useApi<Friend[]>("/friends", "get");
 
   return (
     <>
-      <Meta title={"Profil"} />
-      <Breadcrumb title="Profil" />
-      <Sidebar items={sidebarItems} />
+      <Meta title={"Profil"}/>
+      <Breadcrumb title="Profil"/>
+      <Sidebar items={sidebarItems}/>
       <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>Twój Profil</MainTitle>
@@ -47,41 +47,28 @@ const Profile: React.FC = () => {
               <div className={styles.nameEmail}>
                 <div className={styles.profileName}>
                   {user.username}
-                  <FaEdit className={styles.editIcon} />
+                  <FaEdit className={styles.editIcon}/>
                 </div>
                 <div className={styles.profileEmail}>{user.email}</div>
               </div>
             </div>
             <button className={styles.changePass}>
-              <FaLock className={styles.lockIcon} /> Zmień hasło
+              <FaLock className={styles.lockIcon}/> Zmień hasło
             </button>
           </div>
           <div className={styles.friendsText}>Lista znajomych</div>
           <div className={styles.friendsBox}>
-            <div className={styles.addFriends}>Wyszukaj...</div>
-            <div className={styles.friend}>
-              <div className={styles.friendIconNick}>
-                <div className={styles.friendIcon}>B</div>
-                <div className={styles.nickStatus}>
-                  <div className={styles.friendNick}>Blablador</div>
-                  <div className={styles.statusOnline}>
-                    <FaCircle className={styles.circle} />
-                    online
-                  </div>
-                </div>
-              </div>
-              <div className={styles.rightSide}>
-                <button className={styles.invite}>
-                  <GiGamepad className={styles.gamePad} /> Zaproś do gry
-                </button>
-                <button
-                  className={styles.friendModal}
-                  onClick={() => showModal(user.id)}
-                >
-                  <IoMdPerson />
-                </button>
-              </div>
-            </div>
+            <input type={"text"}
+                   placeholder={"Wyszukaj..."}
+                   className={styles.searchFriendInput}
+                   value={searchFriend}
+                   onChange={e => setSearchFriend(e.target.value)}/>
+            {friends.loaded && friends.data &&
+              friends.data
+                .filter(friend => friend.username.includes(searchFriend))
+                .map(friend => (
+                  <FriendCard key={friend.id} friend={friend}/>
+                ))}
           </div>
         </MainBox>
       </MainContainer>

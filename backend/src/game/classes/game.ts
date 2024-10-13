@@ -143,9 +143,7 @@ export default class Game {
 
     player.socket.leave(this.id);
     delete player.socket.data.gameId;
-    this.players = this.players.filter(
-      (player) => player.username !== username
-    );
+    this.players = this.players.filter((player) => player.username !== username);
     player.socket.emit("set_game", null);
     player.socket.emit("notification", "Zostałeś wyrzucony z gry");
 
