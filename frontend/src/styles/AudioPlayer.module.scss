@@ -1,0 +1,21 @@
+.audioButton {
+  background-color: #f8f9fa;
+  border: none;
+  color: #212529;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition-duration: 0.4s;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 768px) {
+  .audioText {
+    display: none;
+  }
+}

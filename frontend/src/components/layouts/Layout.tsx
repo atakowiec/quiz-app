@@ -1,13 +1,13 @@
-import { Outlet } from 'react-router-dom';
-import Header from '../Header.tsx';
+import { Outlet } from "react-router-dom";
+import Header from "../Header.tsx";
 
 const Layout = () => {
   return (
     <>
-        <Header />
-        <Outlet />
+      <Header />
+      <Outlet />
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

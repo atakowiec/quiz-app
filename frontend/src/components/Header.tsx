@@ -13,12 +13,13 @@ import FancyLogo from "./FancyLogo.tsx";
 import Notifications from "./Notifications.tsx";
 import { useState } from "react";
 import { useNotifications } from "../store/notificationsSlice.ts";
+import AudioPlayer from "./AudioPlayer.tsx";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector<State, UserState>((state: State) => state.user);
   const [notificationsShow, setNotificationsShow] = useState(false);
-  const notificationCount = useNotifications().length
+  const notificationCount = useNotifications().length;
 
   const gameState = useGame();
 
@@ -36,7 +37,7 @@ const Header = () => {
     gameState && hideIconsStatuses.includes(gameState.status);
 
   function toggleNotifications() {
-    setNotificationsShow(prev => !prev);
+    setNotificationsShow((prev) => !prev);
   }
 
   //TODO: make edit profile work
@@ -46,9 +47,11 @@ const Header = () => {
 
   return (
     <>
+      <AudioPlayer />
+
       <header className={`${styles.headerTopStrip}`}>
         <div className={styles.headerContent}>
-          <FancyLogo/>
+          <FancyLogo />
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
               <Link to="/" className={`${styles.gap15}`}>
@@ -60,16 +63,17 @@ const Header = () => {
               {user.loggedIn ? (
                 <div
                   className={`${styles.gap15} ${styles.notificationIconLink}`}
-                  onClick={toggleNotifications}>
+                  onClick={toggleNotifications}
+                >
                   <IoMdNotificationsOutline
                     color="white"
-                    className={styles.iconSize}/>
-                  {
-                    notificationCount > 0 &&
-                      <div className={styles.notificationsIndicator}>
-                        {notificationCount}
-                      </div>
-                  }
+                    className={styles.iconSize}
+                  />
+                  {notificationCount > 0 && (
+                    <div className={styles.notificationsIndicator}>
+                      {notificationCount}
+                    </div>
+                  )}
                 </div>
               ) : null}
               {user.loggedIn ? (
@@ -113,7 +117,10 @@ const Header = () => {
             </div>
           )}
         </div>
-        <Notifications show={notificationsShow} setShow={setNotificationsShow}/>
+        <Notifications
+          show={notificationsShow}
+          setShow={setNotificationsShow}
+        />
       </header>
     </>
   );
