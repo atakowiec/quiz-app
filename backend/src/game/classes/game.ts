@@ -1,6 +1,6 @@
 import { GameMember } from "./game-member";
 import { GameService } from "../services/game.service";
-import { SocketType } from "../game.types";
+import { CategoryUserScore, SocketType } from "../game.types";
 import { createGameID } from "src/utils/ids";
 import {
   CategoryId,
@@ -40,6 +40,8 @@ export default class Game {
 
   public invites: GameInvite[] = [];
 
+  public categoryScores: CategoryUserScore[] = [];
+
   constructor(
     owner: SocketType | null,
     gameService: GameService,
@@ -48,8 +50,8 @@ export default class Game {
     this.gameService = gameService;
 
     this.settings = {
-      number_of_rounds: 2,
-      number_of_questions_per_round: 5,
+      number_of_rounds: 1,
+      number_of_questions_per_round: 1,
       number_of_categories_per_voting: 5,
       time_for_answer: 30,
       max_number_of_players: 49,
@@ -146,7 +148,9 @@ export default class Game {
 
     player.socket.leave(this.id);
     delete player.socket.data.gameId;
-    this.players = this.players.filter((player) => player.username !== username);
+    this.players = this.players.filter(
+      (player) => player.username !== username
+    );
     player.socket.emit("set_game", null);
     player.socket.emit("notification", "Zostałeś wyrzucony z gry");
 
@@ -247,7 +251,9 @@ export default class Game {
    * Force removes given game member from the game
    */
   removePlayer(gameMember: GameMember) {
-    this.logger.log(`Player ${gameMember.username} has been removed from the game`);
+    this.logger.log(
+      `Player ${gameMember.username} has been removed from the game`
+    );
     this.gameService.eventEmitter.emit("game_leave", gameMember.socket);
 
     gameMember.socket.emit("set_game", null);
@@ -322,8 +328,26 @@ export default class Game {
   nextRound() {
     this.round = new Round(this);
     this.roundNumber++;
+    this.logger.log(`Starting round ${this.roundNumber}`);
 
     this.round.start();
+  }
+
+  public stashLoggedPlayerCategoryScore(player: GameMember) {
+    if (player.socket.data.user.id) {
+      const userCategoryScore: CategoryUserScore =
+        this.buildCategoryUserScoreObject(player);
+      this.categoryScores.push(userCategoryScore);
+      this.logger.log("Category scores in stash method", this.categoryScores);
+    }
+  }
+
+  private buildCategoryUserScoreObject(player: GameMember): CategoryUserScore {
+    return {
+      categoryId: this.round.chosenCategory.id,
+      userId: player.socket.data.user.id,
+      score: player.roundScore,
+    };
   }
 
   selectCategory(playerSocket: SocketType, categoryId: number) {
@@ -421,19 +445,39 @@ export default class Game {
       (player) => player.score === ranking[0].score
     );
 
+    const result = [];
+    let currentPlace = 1;
+    let previousScore = null;
+    let playersAtCurrentPlace = 0;
+
+    ranking.forEach((player) => {
+      if (player.score !== previousScore) {
+        currentPlace += playersAtCurrentPlace;
+        playersAtCurrentPlace = 1;
+        previousScore = player.score;
+      } else {
+        playersAtCurrentPlace++;
+      }
+
+      result.push({ player, place: currentPlace });
+    });
+
     this.broadcastUpdate({
       status: "game_over",
       players: ranking.map((player) => player.getPacket()),
       winners: winners.map((player) => player.username),
     });
 
-    // TODO: save the game to the database
-
-    this.players.forEach((player) => {
+    this.getAllPlayers().forEach((player) => {
+      player.place = result.find((r) => r.player === player)?.place;
       if (!player.socket.data.user.id) {
         player.socket.disconnect();
       }
     });
+
+    this.logger.log("Game ended");
+    this.logger.log(this.categoryScores);
+    this.gameService.saveGameToHistory(this);
 
     setTimeout(() => {
       this.gameService.removeGame(this);
@@ -445,6 +489,10 @@ export default class Game {
       if (!player) return false;
       return player;
     });
+  }
+
+  getAllLoggedPlayers() {
+    return this.getAllPlayers().filter((player) => player.socket.data.user.id);
   }
 
   checkPlayer(socket: SocketType): GameMember {

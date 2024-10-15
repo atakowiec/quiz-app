@@ -1,15 +1,15 @@
+import { RankingPlace } from "@shared/game";
 import styles from "./Stats.module.scss";
+interface RankingVisualizationProps {
+  rankingData: RankingPlace[];
+}
 
-const RankingVisualization = () => {
-  const rankingData = [
-    { place: "II Miejsce", count: 120, unit: "gier", percentage: 21.3 },
-    { place: "I Miejsce", count: 120, unit: "gier", percentage: 70.1 },
-    { place: "III Miejsce", count: 52, unit: "gry", percentage: 8.6 },
-  ];
-
+const RankingVisualization: React.FC<RankingVisualizationProps> = ({
+  rankingData,
+}) => {
   return (
     <div className={styles.container}>
-      {rankingData.map((item, index) => (
+      {rankingData?.map((item, index) => (
         <div key={index} className={styles.rankItem}>
           <div
             className={`${styles.rankBar} ${

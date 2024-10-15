@@ -20,3 +20,9 @@ export interface SocketData {
   username: string;
   gameId?: string;
 }
+
+export interface CategoryUserScore {
+  categoryId: number;
+  userId: number;
+  score: number;
+}

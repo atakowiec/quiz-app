@@ -15,10 +15,11 @@ import { UserModule } from "./user/user.module";
 import { RoundModule } from "./round/round.module";
 import { AuthUserMiddleware } from "./auth/auth-user.middleware";
 import { GameModule } from "./game/game.module";
-import { MatchmakingModule } from './matchmaking/matchmaking.module';
-import { NotificationsModule } from './notifications/notifications.module';
-import { FriendsModule } from './friends/friends.module';
+import { MatchmakingModule } from "./matchmaking/matchmaking.module";
+import { NotificationsModule } from "./notifications/notifications.module";
+import { FriendsModule } from "./friends/friends.module";
 import { EventEmitterModule } from "@nestjs/event-emitter";
+import { GameHistoryModule } from "./game-history/game-history.module";
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
     NotificationsModule,
     FriendsModule,
     MatchmakingModule,
+    GameHistoryModule,
   ],
   controllers: [AppController, QuestionsController],
   providers: [AppService],

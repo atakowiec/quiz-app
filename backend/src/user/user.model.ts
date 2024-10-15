@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { UserGame } from "src/game/entities/usergame.model";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 
 @Entity()
 export class User {
@@ -19,4 +20,7 @@ export class User {
 
   @Column({ default: true })
   acvite: boolean;
+
+  @OneToMany(() => UserGame, (userGame) => userGame.user)
+  userGames: UserGame[];
 }

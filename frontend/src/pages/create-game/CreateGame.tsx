@@ -95,7 +95,7 @@ const CreateGame: React.FC = () => {
             </div>
             <div
               className={styles.modeSelectionText}
-              onClick={() => onNewGame("multi")}
+              onClick={() => onNewGame("wieloosobowy")}
             >
               Wieloosobowy <IoPeopleSharp className={styles.multiPlayer} />
             </div>

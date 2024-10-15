@@ -93,6 +93,7 @@ export default class Round {
     this.game.getAllPlayers().forEach((player) => {
       player.chosenCategory = -1;
       player.answersHistory = [];
+      player.roundScore = 0;
     });
     this.game.gameStatus = "voting_phase";
 
@@ -167,10 +168,10 @@ export default class Round {
       const correct = player.chosenAnswer == this.chosenQuestion.correctAnswer;
 
       if (correct) {
-        player.score +=
-          100 +
-          ((player.answerEndTime - Date.now()) / (player.timeToAnswer * 1000)) *
-            100; // todo check if this is correct
+        const scoreToAdd = this.calculateScoreToAdd(player);
+
+        player.roundScore += scoreToAdd;
+        player.score += scoreToAdd;
         player.score = Math.round(player.score);
       }
 
@@ -192,6 +193,15 @@ export default class Round {
       );
     }
     this.game.send();
+  }
+
+  private calculateScoreToAdd(player: GameMember) {
+    let scoreToAdd =
+      100 +
+      ((player.answerEndTime - Date.now()) / (player.timeToAnswer * 1000)) *
+        100;
+    scoreToAdd = Math.round(scoreToAdd);
+    return scoreToAdd;
   }
 
   /**
@@ -224,6 +234,10 @@ export default class Round {
 
   private endRound() {
     this.logger.debug("End round");
+
+    this.game.getAllPlayers().forEach((player) => {
+      this.game.stashLoggedPlayerCategoryScore(player);
+    });
 
     if (this.game.roundNumber == this.game.settings.number_of_rounds) {
       this.game.endGame();
