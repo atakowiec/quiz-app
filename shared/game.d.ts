@@ -8,7 +8,7 @@ export type GameStatus =
   | "game_over";
 export type HelperType = "fifty_fifty" | "extend_time" | "cheat_from_others";
 
-export type GameType = "single" | "multi" | "matchmaking";
+export type GameType = "jednoosobowy" | "wieloosobowy" | "matchmaking";
 
 export type GameId = string;
 
@@ -110,4 +110,49 @@ export interface GameRoundPacket {
   timerStart?: number;
   timerEnd?: number;
   questionNumber?: number;
+}
+
+export interface GameDatabase {
+  id: string;
+  gameType: string;
+  dateTime: Date;
+}
+
+export interface UserGameDatabase {
+  gameId: string;
+  userId: number;
+  score: number;
+  place: number;
+}
+
+export interface UserGameCategoryScoreDatabase {
+  userGameGameId: string;
+  userGameUserId: number;
+  categoryId: number;
+  score: number;
+}
+
+export interface GameHistoryPlayerItem {
+  place: number;
+  gameType: string;
+  score: number;
+  dateTime: Date;
+}
+
+export interface ProfileStats {
+  gamesPlayed: number;
+  firstPlace?: number;
+  secondPlace?: number;
+  thirdPlace?: number;
+  rankingPlaces: RankingPlace[];
+  totalScore: number;
+  averageScore: number;
+  maxScore: number;
+}
+
+export interface RankingPlace {
+  place: string;
+  count: number;
+  unit: string;
+  percentage: number;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../components/Meta.tsx";
 import MainContainer from "../../components/MainContainer.tsx";
@@ -12,6 +12,9 @@ import { IoStatsChartSharp } from "react-icons/io5";
 import MainBox from "../../components/MainBox.tsx";
 import styles from "./History.module.scss";
 import MainTitle from "../../components/MainTitle.tsx";
+import { useUser } from "../../store/userSlice.ts";
+import getApi from "../../api/axios.ts";
+import { GameHistoryPlayerItem } from "@shared/game.js";
 
 const History: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -20,6 +23,30 @@ const History: React.FC = () => {
     { icon: IoLogoGameControllerB, label: "Historia Gier", href: "/history" },
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
+
+  const userId = useUser()?.id;
+  const [gameHistory, setGameHistory] = useState<GameHistoryPlayerItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!userId) return;
+    const fetchGameHistory = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await getApi().get(`history/user/${userId}`);
+        setGameHistory(response.data);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGameHistory();
+  }, [userId]);
 
   return (
     <>
@@ -42,26 +69,20 @@ const History: React.FC = () => {
             </div>
             <hr className={styles.line} />
             <div className={styles.grayHistoryBox}>
-              <div className={styles.singleHistory}>
-                <div className={styles.leftTitles}>
-                  <div>12.12.2021</div>
-                  <div>3.</div>
+              {loading && <div>Loading...</div>}
+              {error && <div>Error: {error}</div>}
+              {gameHistory.map((history, index) => (
+                <div className={styles.singleHistory} key={index}>
+                  <div className={styles.leftTitles}>
+                    <div>{new Date(history.dateTime).toLocaleDateString()}</div>
+                    <div>{history.place}</div>
+                  </div>
+                  <div className={styles.rightTitles}>
+                    <div>{history.gameType}</div>
+                    <div className={styles.pointsMargin}>{history.score}</div>
+                  </div>
                 </div>
-                <div className={styles.rightTitles}>
-                  <div>Wieloosobowy</div>
-                  <div className={styles.pointsMargin}>540</div>
-                </div>
-              </div>
-              <div className={styles.singleHistory}>
-                <div className={styles.leftTitles}>
-                  <div>12.12.2021</div>
-                  <div>3.</div>
-                </div>
-                <div className={styles.rightTitles}>
-                  <div>Wieloosobowy</div>
-                  <div className={styles.pointsMargin}>540</div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </MainBox>

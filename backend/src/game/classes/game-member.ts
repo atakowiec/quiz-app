@@ -21,6 +21,8 @@ export class GameMember {
   public availableHelpers: Helper[];
   public chosenCategory: number = -1;
   public chosenAnswer: IAnswer;
+  public place: number;
+  public roundScore: number = 0;
 
   // Propably for the "50/50" helper
   public hiddenAnswers: IAnswer[];

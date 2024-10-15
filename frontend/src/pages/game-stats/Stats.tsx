@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
 import {
   IoIosAddCircleOutline,
@@ -16,6 +16,8 @@ import styles from "./Stats.module.scss";
 import RankingVisualization from "./RankingVisualization.tsx";
 import { IoIosStats } from "react-icons/io";
 import StatsModal from "./StatsModal.tsx";
+import { ProfileStats } from "@shared/game.js";
+import getApi from "../../api/axios.ts";
 
 const Stats: React.FC = () => {
   const user = useUser();
@@ -39,6 +41,29 @@ const Stats: React.FC = () => {
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
+  const [profileStats, setProfileStats] = useState<ProfileStats>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const fetchProfileStats = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await getApi().get(`history/stats/${user?.id}`);
+        setProfileStats(response.data);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfileStats();
+  }, [user]);
+
   return (
     <>
       <Meta title={"Dołącz do gry"} />
@@ -48,11 +73,13 @@ const Stats: React.FC = () => {
         <MainBox className={styles.sBox}>
           <MainTitle>Statystyki</MainTitle>
           <div className={styles.statsBox}>
-            <RankingVisualization />
+            {loading && <div>Ładowanie...</div>}
+            {error && <div>{error}</div>}
+            <RankingVisualization rankingData={profileStats.rankingPlaces} />
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Liczba zagranych gier</div>
-                <div>332</div>
+                <div>{profileStats.gamesPlayed}</div>
               </div>
               <button className={styles.rankingIcon}>
                 <IoIosStats />
@@ -61,7 +88,7 @@ const Stats: React.FC = () => {
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Liczba zdobytych punktów</div>
-                <div>4 442</div>
+                <div>{profileStats.totalScore}</div>
               </div>
               <button className={styles.rankingIcon}>
                 <IoIosStats />
@@ -70,7 +97,7 @@ const Stats: React.FC = () => {
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Średnia liczba punktów na grę</div>
-                <div>55.3</div>
+                <div>{profileStats.averageScore}</div>
               </div>
               <button className={styles.rankingIcon}>
                 <IoIosStats />
@@ -79,7 +106,7 @@ const Stats: React.FC = () => {
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Największa liczba punktów w grze</div>
-                <div>322</div>
+                <div>{profileStats.maxScore}</div>
               </div>
               <button className={styles.rankingIcon}>
                 <IoIosStats />

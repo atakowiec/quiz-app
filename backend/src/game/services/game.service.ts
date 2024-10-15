@@ -1,28 +1,37 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import Game from "../classes/game";
 import { GameGateway } from "../gateways/game.gateway";
 import { SocketType } from "../game.types";
-import { GameType } from "@shared/game";
+import {
+  GameDatabase,
+  GameType,
+  UserGameCategoryScoreDatabase,
+  UserGameDatabase,
+} from "@shared/game";
 import { Category } from "../../questions/entities/category.model";
 import { QuestionsService } from "../../questions/services/questions/questions.service";
 import { ConfigService } from "@nestjs/config";
 import { log } from "console";
 import { GameMember } from "../classes/game-member";
 import { EventEmitter2 } from "@nestjs/event-emitter";
+import { GameHistoryService } from "src/game-history/services/game-history.service";
 
 @Injectable()
 export class GameService {
   readonly games: Game[] = [];
+  private readonly logger = new Logger(GameService.name);
 
   constructor(
     @Inject(forwardRef(() => GameGateway))
     private readonly gameGateway: GameGateway,
+    @Inject(forwardRef(() => GameHistoryService))
+    private readonly gameHistoryService: GameHistoryService,
     @Inject()
     public readonly questionsService: QuestionsService,
     @Inject()
     public readonly configService: ConfigService,
     @Inject()
-    public readonly eventEmitter: EventEmitter2,
+    public readonly eventEmitter: EventEmitter2
   ) {
     setInterval(() => this.tickGames(), 1000);
   }
@@ -107,5 +116,61 @@ export class GameService {
     return Array.from(
       this.gameGateway.server.sockets.adapter.rooms.get("queue").values()
     ).map((id) => this.gameGateway.server.sockets.sockets.get(id));
+  }
+
+  public async saveGameToHistory(game: Game) {
+    const gameObj = this.getGameDatabaseObject(game);
+    await this.gameHistoryService.addGameToHistory(gameObj);
+
+    const userGameObjs = game.getAllLoggedPlayers().map((member) => {
+      return this.getUserGameDatabaseObject(game, member);
+    });
+
+    const userGameCategoryScores: UserGameCategoryScoreDatabase[] =
+      this.getUserGameCategoryScoreDatabaseObject(game);
+
+    await this.gameHistoryService.addUserGameResults(userGameObjs);
+
+    this.logger.log(
+      "UserGameCategoryScores: ",
+      userGameCategoryScores,
+      game.categoryScores
+    );
+    await this.gameHistoryService.addUserGameCategoryScores(
+      userGameCategoryScores
+    );
+  }
+
+  private getGameDatabaseObject(game: Game): GameDatabase {
+    return {
+      id: game.id,
+      gameType: game.gameType,
+      dateTime: new Date(),
+    };
+  }
+
+  private getUserGameDatabaseObject(
+    game: Game,
+    member: GameMember
+  ): UserGameDatabase {
+    return {
+      gameId: game.id,
+      userId: member.socket.data.user.id,
+      score: member.score,
+      place: member.place,
+    };
+  }
+
+  private getUserGameCategoryScoreDatabaseObject(
+    game: Game
+  ): UserGameCategoryScoreDatabase[] {
+    return game.categoryScores.map((categoryScore) => {
+      return {
+        userGameGameId: game.id,
+        userGameUserId: categoryScore.userId,
+        categoryId: categoryScore.categoryId,
+        score: categoryScore.score,
+      };
+    });
   }
 }
