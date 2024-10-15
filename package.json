@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@nestjs/platform-socket.io": "^10.4.2",
-    "@nestjs/websockets": "^10.4.2"
+    "@nestjs/websockets": "^10.4.2",
+    "react-h5-audio-player": "^3.9.3"
   }
 }

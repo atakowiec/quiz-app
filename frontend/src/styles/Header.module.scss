@@ -29,9 +29,10 @@
   display: flex;
 
   div {
-    transition: color 0.1s ease,
-    padding 0.2s ease-in-out,
-    margin 0.2s ease-in-out;
+    transition:
+      color 0.1s ease,
+      padding 0.2s ease-in-out,
+      margin 0.2s ease-in-out;
 
     &.space {
       width: 0.5rem;
@@ -127,12 +128,12 @@
   position: absolute;
   right: 0;
   color: black;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 15px;
   margin: 0.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 580px;
-  transition: transform 0.3s cubic-bezier(0.59, 0.78, 0.18, 1.24);;
+  transition: transform 0.3s cubic-bezier(0.59, 0.78, 0.18, 1.24);
   z-index: 1000;
   max-height: 60vh;
   overflow-y: auto;
@@ -184,7 +185,7 @@
       border: none;
       padding: 0.4rem 1rem;
       border-radius: 10px;
-      font-size: .9rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: 0.15s background-color ease-in-out;
 
