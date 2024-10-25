@@ -139,6 +139,11 @@ export class GameService {
     await this.gameHistoryService.addUserGameCategoryScores(
       userGameCategoryScores
     );
+    game.getAllLoggedPlayers().forEach((member) => {
+      this.gameHistoryService.checkIfAverageScoreHasChanged(member.socket.data.user.id);
+    }
+    );
+
   }
 
   private getGameDatabaseObject(game: Game): GameDatabase {

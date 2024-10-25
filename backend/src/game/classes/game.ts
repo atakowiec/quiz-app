@@ -479,6 +479,8 @@ export default class Game {
     this.logger.log(this.categoryScores);
     this.gameService.saveGameToHistory(this);
 
+
+
     setTimeout(() => {
       this.gameService.removeGame(this);
     }, 10000);

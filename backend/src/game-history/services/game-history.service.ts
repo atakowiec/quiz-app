@@ -14,6 +14,8 @@ import { UserGameCategoryScore } from "src/game/entities/usergamecategoryscore.m
 import { GameService } from "src/game/services/game.service";
 import { Repository } from "typeorm";
 import { ICategoryStatsFilter } from "../classes/filters/ICategoryStatsFilter";
+import { AvgHistory } from "src/game/entities/avghistory.model";
+import { log } from "console";
 
 @Injectable()
 export class GameHistoryService {
@@ -25,8 +27,10 @@ export class GameHistoryService {
     @InjectRepository(UserGame)
     private userGameRepository: Repository<UserGame>,
     @InjectRepository(UserGameCategoryScore)
-    private userGameCategoryScoreRepository: Repository<UserGameCategoryScore>
-  ) {}
+    private userGameCategoryScoreRepository: Repository<UserGameCategoryScore>,
+    @InjectRepository(AvgHistory)
+    private avgHistoryRepository: Repository<AvgHistory>
+  ) { }
 
   async getGameHistory(gameId: string): Promise<GameHistory> {
     return this.gameRepository.findOne({
@@ -175,4 +179,41 @@ export class GameHistoryService {
   ): Promise<CategoryScore[]> {
     return filter.filter(this.userGameCategoryScoreRepository);
   }
+
+  async calculateAverageScore(userId: number): Promise<number> {
+
+    const query = `
+    SELECT 
+      AVG(userGame.score) as "averageScore"
+    FROM user_game userGame
+    WHERE userGame.userId = ?
+    GROUP BY userGame.userId
+  `;
+
+    const result = await this.userGameRepository.query(query, [userId]);
+
+    return result[0].averageScore;
+  }
+
+  async checkIfAverageScoreHasChanged(userId: number) {
+    const newAvgScore = await this.calculateAverageScore(userId);
+    const avgHistory = await this.avgHistoryRepository.findOne({
+      where: { userId },
+      order: { createdAt: "DESC" },
+    });
+    if (!avgHistory || avgHistory.avgScore !== newAvgScore) {
+      this.addNewAverageScoreToHistory(userId, newAvgScore);
+    }
+
+  }
+
+  async addNewAverageScoreToHistory(userId: number, avgScore: number) {
+    const avgHistory = this.avgHistoryRepository.create({
+      userId,
+      avgScore,
+    });
+    await this.avgHistoryRepository.save(avgHistory);
+  }
+
+
 }
