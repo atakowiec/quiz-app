@@ -60,6 +60,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
       for (const category of gamesResponse.data) {
         category.img = findImageFromCategoryName(category.category_name);
       }
+      avgResponse.data.sort((a, b) => b.number - a.number);
+      gamesResponse.data.sort((a, b) => b.number - a.number);
       setAvgCategoryPoints(avgResponse.data);
       setGamesPerCategory(gamesResponse.data);
     } catch (err) {
