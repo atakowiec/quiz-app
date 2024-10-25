@@ -1,18 +1,19 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
+  CategoryScore,
   GameDatabase,
   GameHistoryPlayerItem,
   ProfileStats,
   UserGameCategoryScoreDatabase,
   UserGameDatabase,
 } from "@shared/game";
-import { map } from "rxjs";
 import { GameHistory } from "src/game/entities/gamehistory.model";
 import { UserGame } from "src/game/entities/usergame.model";
 import { UserGameCategoryScore } from "src/game/entities/usergamecategoryscore.model";
 import { GameService } from "src/game/services/game.service";
 import { Repository } from "typeorm";
+import { ICategoryStatsFilter } from "../classes/filters/ICategoryStatsFilter";
 
 @Injectable()
 export class GameHistoryService {
@@ -124,19 +125,25 @@ export class GameHistoryService {
         place: "I Miejsce",
         count: profileStats.firstPlace,
         unit: this.getUnitByNumberOfGames(profileStats.firstPlace),
-        percentage: profileStats.firstPlace / profileStats.gamesPlayed,
+        percentage: this.roundToTwoDecimals(
+          profileStats.firstPlace / profileStats.gamesPlayed
+        ),
       },
       {
         place: "II Miejsce",
         count: profileStats.secondPlace,
         unit: this.getUnitByNumberOfGames(profileStats.secondPlace),
-        percentage: profileStats.secondPlace / profileStats.gamesPlayed,
+        percentage: this.roundToTwoDecimals(
+          profileStats.secondPlace / profileStats.gamesPlayed
+        ),
       },
       {
         place: "III Miejsce",
         count: profileStats.thirdPlace,
         unit: this.getUnitByNumberOfGames(profileStats.thirdPlace),
-        percentage: profileStats.thirdPlace / profileStats.gamesPlayed,
+        percentage: this.roundToTwoDecimals(
+          profileStats.thirdPlace / profileStats.gamesPlayed
+        ),
       },
     ];
 
@@ -144,6 +151,10 @@ export class GameHistoryService {
       Math.round(profileStats.averageScore * 100) / 100;
 
     return profileStats;
+  }
+
+  private roundToTwoDecimals(value: number): number {
+    return Math.round(value * 100) / 100;
   }
 
   getUnitByNumberOfGames(count: number): string {
@@ -157,5 +168,11 @@ export class GameHistoryService {
       return "gry";
     }
     return "gier";
+  }
+
+  async getCategoryStatistics(
+    filter: ICategoryStatsFilter
+  ): Promise<CategoryScore[]> {
+    return filter.filter(this.userGameCategoryScoreRepository);
   }
 }
