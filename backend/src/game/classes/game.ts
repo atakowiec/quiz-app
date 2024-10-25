@@ -105,6 +105,7 @@ export default class Game {
     this.getAllPlayers().forEach((player) => {
       player.socket.leave(this.id);
       delete player.socket.data.gameId;
+      player.socket.emit("set_game", null);
     });
 
     this.gameService.eventEmitter.emit("game_destroyed", this);
@@ -281,7 +282,7 @@ export default class Game {
     }
 
     // we need to disconnect the socket when the player was not logged in
-    if (!gameMember.socket.data.user?.id) {
+    if (!gameMember.socket.data.user.id) {
       gameMember.socket.disconnect();
     }
   }
@@ -333,7 +334,7 @@ export default class Game {
   }
 
   public stashLoggedPlayerCategoryScore(player: GameMember) {
-    if (player.socket.data.user?.id) {
+    if (player.socket.data.user.id) {
       const userCategoryScore: CategoryUserScore =
         this.buildCategoryUserScoreObject(player);
       this.categoryScores.push(userCategoryScore);
@@ -469,18 +470,20 @@ export default class Game {
 
     this.getAllPlayers().forEach((player) => {
       player.place = result.find((r) => r.player === player)?.place;
+      if (!player.socket.data.user.id) {
+        player.socket.disconnect();
+      }
     });
 
     this.logger.log("Game ended");
     this.logger.log(this.categoryScores);
     this.gameService.saveGameToHistory(this);
 
-    if (this.gameType === "matchmaking") {
-      this.gameService.removeGame(this);
-    }
+
+
     setTimeout(() => {
       this.gameService.removeGame(this);
-    }, 300000); // after 5 minutes game will be removed and it can't be played again
+    }, 10000);
   }
 
   getAllPlayers() {
@@ -491,7 +494,7 @@ export default class Game {
   }
 
   getAllLoggedPlayers() {
-    return this.getAllPlayers().filter((player) => player.socket.data.user?.id);
+    return this.getAllPlayers().filter((player) => player.socket.data.user.id);
   }
 
   checkPlayer(socket: SocketType): GameMember {
