@@ -156,3 +156,9 @@ export interface RankingPlace {
   unit: string;
   percentage: number;
 }
+
+export interface CategoryScore {
+  category_name: string;
+  number: number;
+  img?: string;
+}

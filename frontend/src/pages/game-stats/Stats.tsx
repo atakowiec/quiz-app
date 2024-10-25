@@ -116,7 +116,11 @@ const Stats: React.FC = () => {
               <button className={styles.rankingButton} onClick={openModal}>
                 Statystyki kategorii
               </button>
-              <StatsModal show={showModal} handleClose={closeModal} />
+              <StatsModal
+                show={showModal}
+                handleClose={closeModal}
+                userId={user?.id}
+              />
               <button className={styles.rankingButton}>
                 Statystyki jakies
               </button>
