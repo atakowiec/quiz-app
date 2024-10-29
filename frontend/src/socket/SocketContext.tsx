@@ -35,7 +35,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       dispatch(gameActions.updateGame(game))
     );
 
-    // todo - stringyfing the message is a temporary solution - now we can see a json object in the toast
     newSocket.on("exception", (message) =>
       toast.error(typeof message === "string" ? message : message.message)
     );
