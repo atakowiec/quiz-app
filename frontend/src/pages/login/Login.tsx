@@ -16,6 +16,7 @@ import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
 import { UserPacket } from "@shared/user";
+import { gameActions } from "../../store/gameSlice.ts";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -44,6 +45,7 @@ const Login = () => {
           }
 
           dispatch(userActions.setUser(response.data));
+          dispatch(gameActions.setGame(null));
           socket.connect();
           navigate("/");
         })
@@ -53,7 +55,9 @@ const Login = () => {
           }
 
           if (error.status == 409) {
-            return setError("Użytkownik jest już połączony na innym urządzeniu");
+            return setError(
+              "Użytkownik jest już połączony na innym urządzeniu"
+            );
           }
 
           setError("Wystąpił błąd podczas logowania");
@@ -69,8 +73,8 @@ const Login = () => {
 
   return (
     <>
-      <Meta title={"Logowanie"}/>
-      <Breadcrumb title="Logowanie"/>
+      <Meta title={"Logowanie"} />
+      <Breadcrumb title="Logowanie" />
       <MainContainer>
         <MainBox>
           <MainTitle>Logowanie</MainTitle>
@@ -114,9 +118,7 @@ const Login = () => {
               )}
             </div>
             {error && (
-              <div className={`${styles.error} p-0 text-center`}>
-                {error}
-              </div>
+              <div className={`${styles.error} p-0 text-center`}>{error}</div>
             )}
             <Button type="submit" className={styles.submitButton}>
               Zaloguj się

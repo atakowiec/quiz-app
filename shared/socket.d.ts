@@ -28,6 +28,7 @@ export interface ServerToClientEvents {
   set_friend_requests: (friendRequests: IFriendRequest[]) => void;
   new_friend_request: (friendRequest: IFriendRequest) => void;
   remove_friend_request: (friendRequestId: string) => void;
+  game_joined: () => void;
 }
 
 export type ServerToClientEventsKeys = keyof ServerToClientEvents;
@@ -51,6 +52,7 @@ export interface ClientToServerEvents {
   cancel_friend_request: (userId: number) => void;
   decline_notification: (notification: INotification) => void;
   send_game_invite: (userId: number) => void;
+  play_again: (cb: () => void) => void;
 }
 
 export type ClientToServerEventsKeys = keyof ClientToServerEvents;

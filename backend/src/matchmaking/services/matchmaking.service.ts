@@ -49,6 +49,7 @@ export class MatchmakingService {
         this.logger.debug("Player: " + player.data.username);
         player.leave(MatchmakingService.ROOM_NAME);
         game.join(player);
+        player.emit("game_joined");
       });
       this.logger.log("Game id: " + game.id);
       return game;

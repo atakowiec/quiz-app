@@ -19,7 +19,7 @@ createRoot(document.getElementById("root")!).render(
           <AppWrapper>
             <ProfileModalProvider>
               <BrowserRouter>
-                <App/>
+                <App />
               </BrowserRouter>
             </ProfileModalProvider>
           </AppWrapper>

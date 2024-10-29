@@ -262,4 +262,30 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
     }
   }
+
+  @SubscribeMessage("play_again")
+  playAgain(@ConnectedSocket() ownerSocket: SocketType) {
+    const game = this.gameService.getGameByUsername(ownerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    if (game.owner.username !== ownerSocket.data.username) {
+      throw new WsException("Nie jesteś właścicielem gry!");
+    }
+    const newGame = this.gameService.createGame(ownerSocket, game.gameType);
+    newGame.settings = game.settings;
+    newGame.send(ownerSocket);
+    newGame.owner.sendNotification("Zaczęto nową grę");
+
+    this.gameService.removeGame(game);
+
+    game.players.forEach((player) => {
+      player.socket.data.gameId = newGame.id;
+      newGame.join(player.socket);
+      player.socket.emit("game_joined");
+    });
+    game.send;
+
+    return newGame.id;
+  }
 }

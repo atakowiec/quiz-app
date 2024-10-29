@@ -1,7 +1,6 @@
 import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../components/Meta.tsx";
 import styles from "./CreateGame.module.scss";
-import { FaWrench } from "react-icons/fa";
 import {
   IoPersonSharp,
   IoPeopleSharp,
@@ -60,7 +59,7 @@ const CreateGame: React.FC = () => {
     if (gameType === "matchmaking") {
       toast.promise(
         new Promise<void>((resolve) => {
-          socket.emit("join_queue", () => {
+          socket.emit("join_queue", "matchmaking", () => {
             navigate("/waiting-room");
             resolve();
           });
