@@ -18,6 +18,7 @@ import Questions from "./pages/admin/questions/Questions.tsx";
 import Settings from "./pages/game/waiting-room/Settings.tsx";
 import History from "./pages/game-history/History.tsx";
 import Stats from "./pages/game-stats/Stats.tsx";
+import { NavigationHandler } from "./socket/NavigationHandler.tsx";
 
 function App() {
   const game = useGame();
@@ -44,6 +45,7 @@ function App() {
 
   return (
     <>
+      <NavigationHandler />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home />} />

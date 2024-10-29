@@ -42,28 +42,50 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     newSocket.on("notification", (message) => toast.info(message));
 
-    newSocket.on("new_notification", (notification) => dispatch(notificationsActions.newNotification(notification)));
+    newSocket.on("new_notification", (notification) =>
+      dispatch(notificationsActions.newNotification(notification))
+    );
 
-    newSocket.on("set_notifications", (notifications) => dispatch(notificationsActions.setNotifications(notifications)));
+    newSocket.on("set_notifications", (notifications) =>
+      dispatch(notificationsActions.setNotifications(notifications))
+    );
 
-    newSocket.on("remove_notification", (notificationId) => dispatch(notificationsActions.removeNotification(notificationId)));
+    newSocket.on("remove_notification", (notificationId) =>
+      dispatch(notificationsActions.removeNotification(notificationId))
+    );
 
-    newSocket.on("set_friend_requests", (friendRequests) => dispatch(userActions.setFriendRequests(friendRequests)));
+    newSocket.on("set_friend_requests", (friendRequests) =>
+      dispatch(userActions.setFriendRequests(friendRequests))
+    );
 
-    newSocket.on("remove_friend_request", (friendRequestId) => dispatch(userActions.removeFriendRequest(friendRequestId)));
+    newSocket.on("remove_friend_request", (friendRequestId) =>
+      dispatch(userActions.removeFriendRequest(friendRequestId))
+    );
 
-    newSocket.on("new_friend_request", (friendRequest) => dispatch(userActions.newFriendRequest(friendRequest)));
+    newSocket.on("new_friend_request", (friendRequest) =>
+      dispatch(userActions.newFriendRequest(friendRequest))
+    );
 
-    newSocket.on("set_friends", (friends) => dispatch(userActions.setFriendships(friends)));
+    newSocket.on("set_friends", (friends) =>
+      dispatch(userActions.setFriendships(friends))
+    );
 
-    newSocket.on("new_friend", (friend) => dispatch(userActions.newFriendship(friend)));
+    newSocket.on("new_friend", (friend) =>
+      dispatch(userActions.newFriendship(friend))
+    );
 
-    newSocket.on("update_friend_status", (friendId, newStatus) => dispatch(userActions.updateFriendStatus({
-      friendId,
-      newStatus
-    })));
+    newSocket.on("update_friend_status", (friendId, newStatus) =>
+      dispatch(
+        userActions.updateFriendStatus({
+          friendId,
+          newStatus,
+        })
+      )
+    );
 
-    newSocket.on("remove_friend", (friendId) => dispatch(userActions.removeFriendship(friendId)));
+    newSocket.on("remove_friend", (friendId) =>
+      dispatch(userActions.removeFriendship(friendId))
+    );
     return newSocket;
   }, []);
 

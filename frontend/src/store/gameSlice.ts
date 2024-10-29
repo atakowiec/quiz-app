@@ -1,9 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  GameUpdatePacket,
-  IGamePacket
-} from "@shared/game";
-import lodash from 'lodash';
+import { GameUpdatePacket, IGamePacket } from "@shared/game";
+import lodash from "lodash";
 import { State } from "./index.ts";
 import { useSelector } from "react-redux";
 
@@ -32,22 +29,30 @@ const gameSlice = createSlice({
       }
 
       // merge the `player` and `owner` members if the update packet of players contains them
-      if (playersUpdate.find(p => p.username === newState.owner?.username)) {
-        newState.owner = lodash.merge(newState.owner, playersUpdate.find(p => p.username === newState.owner?.username));
+      if (playersUpdate.find((p) => p.username === newState.owner?.username)) {
+        newState.owner = lodash.merge(
+          newState.owner,
+          playersUpdate.find((p) => p.username === newState.owner?.username)
+        );
       }
 
-      if (playersUpdate.find(p => p.username === newState.player?.username)) {
-        newState.player = lodash.merge(newState.player, playersUpdate.find(p => p.username === newState.player?.username));
+      if (playersUpdate.find((p) => p.username === newState.player?.username)) {
+        newState.player = lodash.merge(
+          newState.player,
+          playersUpdate.find((p) => p.username === newState.player?.username)
+        );
       }
 
       // iterate over the players and update them - hopefully it will work
-      newState.players = newState.players?.map(player => {
-        const playerUpdate = playersUpdate.find(p => p.username === player.username);
+      newState.players = newState.players?.map((player) => {
+        const playerUpdate = playersUpdate.find(
+          (p) => p.username === player.username
+        );
         return lodash.merge(player, playerUpdate);
       });
 
       return newState;
-    }
+    },
   },
 });
 

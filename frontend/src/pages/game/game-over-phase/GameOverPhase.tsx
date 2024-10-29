@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { userActions, useUser } from "../../../store/userSlice.ts";
 import getApi from "../../../api/axios.ts";
 import { useSocket } from "../../../socket/useSocket.ts";
@@ -12,6 +11,7 @@ import MainTitle from "../../../components/MainTitle.tsx";
 import { Breadcrumb } from "react-bootstrap";
 import { PiMedalFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function GameOverPhase() {
   const user = useUser();
@@ -24,14 +24,6 @@ export default function GameOverPhase() {
 
   function leaveGame() {
     dispatch(gameActions.setGame(null));
-    if (!user.loggedIn) socket.disconnect();
-    navigate("/");
-  }
-
-  useEffect(() => {
-    console.log(user);
-    console.log(game);
-    console.log(winners);
     if (!user.loggedIn) {
       getApi()
         .post("/auth/logout")
@@ -40,7 +32,32 @@ export default function GameOverPhase() {
           socket.disconnect();
         });
     }
-  }, []);
+    navigate("/");
+  }
+  function playAgain() {
+    if (game?.gameType !== "matchmaking") {
+      socket.emit("play_again", () => {
+        navigate(`/waiting-room`);
+      });
+    } else {
+      dispatch(gameActions.setGame(null));
+      toast.promise(
+        new Promise<void>((resolve) => {
+          socket.emit("join_queue", "matchmaking", () => {
+            navigate("/waiting-room");
+            resolve();
+          });
+        }),
+        {
+          pending: "Dołączanie do kolejki...",
+          success: "Dołączono do kolejki!",
+          error: "Błąd dołączania do kolejki",
+        }
+      );
+      navigate(`/`);
+    }
+  }
+
   return (
     <div>
       <Meta title={"Leaderboard"} />
@@ -72,7 +89,12 @@ export default function GameOverPhase() {
             )}
           </div>
           <div className={styles.buttons}>
-            <button className={styles.playButton}>Zagraj ponownie</button>
+            {game?.owner?.username === user.username ||
+              (game?.gameType === "matchmaking" && (
+                <button className={styles.playButton} onClick={playAgain}>
+                  Zagraj ponownie
+                </button>
+              ))}
             <button className={styles.cancelButton} onClick={leaveGame}>
               Opuść grę
             </button>
