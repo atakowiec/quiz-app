@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import Layout from "./components/layouts/Layout.tsx";
 import "./styles/Global.scss";
 import Login from "./pages/login/Login.tsx";
@@ -7,18 +7,19 @@ import CreateGame from "./pages/create-game/CreateGame.tsx";
 import Profile from "./pages/profile/Profile.tsx";
 import Logout from "./pages/login/Logout.tsx";
 import WaitingRoom from "./pages/game/waiting-room/WaitingRoom.tsx";
-import { useEffect } from "react";
+import {useEffect} from "react";
 import JoinGame from "./pages/join-game/JoinGame.tsx";
 import Home from "./pages/Home.tsx";
 import Categories from "./pages/admin/questions/Categories.tsx";
 import Game from "./pages/game/Game.tsx";
-import { useGame } from "./store/gameSlice.ts";
+import {useGame} from "./store/gameSlice.ts";
 import IsInWaitingRoomLayout from "./components/layouts/IsInWaitingRoomLayout.tsx";
 import Questions from "./pages/admin/questions/Questions.tsx";
 import Settings from "./pages/game/waiting-room/Settings.tsx";
 import History from "./pages/game-history/History.tsx";
 import Stats from "./pages/game-stats/Stats.tsx";
-import { NavigationHandler } from "./socket/NavigationHandler.tsx";
+import {NavigationHandler} from "./socket/NavigationHandler.tsx";
+import ProtectedRoutes, {PermissionEnum} from "./components/ProtectedRoute.tsx";
 
 function App() {
   const game = useGame();
@@ -52,16 +53,19 @@ function App() {
           <Route path="logout" element={<Logout />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-
-          <Route path="profile" element={<Profile />} />
           <Route path="waiting-room" element={<WaitingRoom />} />
           <Route path="game" element={<Game />} />
-          <Route path="/admin/categories" element={<Categories />} />
-          <Route
-            path="/admin/categories/:categoryName/"
-            element={<Questions />}
-          />
-          {}
+
+          <Route element={<ProtectedRoutes permissions={PermissionEnum.USER} />}>
+            <Route path="profile" element={<Profile />} />
+          </Route>
+            <Route element={<ProtectedRoutes permissions={PermissionEnum.ADMIN} />}>
+              <Route path="/admin/categories" element={<Categories />} />
+              <Route
+                  path="/admin/categories/:categoryName/"
+                  element={<Questions />}
+              />
+            </Route>
 
           <Route
             element={
@@ -85,8 +89,14 @@ function App() {
           >
             <Route path="settings" element={<Settings />} />
           </Route>
-          <Route path="history" element={<History />} />
-          <Route path="stats" element={<Stats />} />
+
+          <Route element={<ProtectedRoutes permissions={PermissionEnum.USER} />}>
+            <Route path="history" element={<History />} />
+            <Route path="stats" element={<Stats />} />
+          </Route>
+
+
+
         </Route>
       </Routes>
     </>

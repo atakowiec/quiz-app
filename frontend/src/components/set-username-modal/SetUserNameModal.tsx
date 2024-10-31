@@ -20,6 +20,10 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
 
   function saveUserName() {
     const username = userNameRef.current?.value;
+    dispatch(userActions.setUser(null));
+    socket.disconnect();
+
+    console.log("username", username);
     getApi()
       .post("/auth/username", { username: username })
       .then((response) => {

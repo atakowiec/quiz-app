@@ -1,0 +1,56 @@
+@import "Global";
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+.icon {
+  margin-right: .5rem;
+
+}
+.spin {
+  animation: spin 2s linear infinite;
+}
+.queueInfo{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+
+}
+.leaveQueueButton{
+  border-radius: $button-border-radius;
+  border: none;
+  padding: $button-padding;
+  background-color: $red;
+  color: white;
+  font-weight: $button-font-weight;
+  font-size: $button-font-size;
+  box-shadow: $button-shadow-black;
+  transition: 0.15s background-color ease-in-out;
+}
+.leaveQueueButton:hover {
+  background-color: #ff0000ce;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: $phone-breakpoint) {
+  .leaveQueueButton{
+    padding: $button-phone-padding;
+    font-size: $button-phone-font-size;
+  }
+    .queueInfo{
+      font-size: $code-phone-font-size-500;
+    }
+
+}

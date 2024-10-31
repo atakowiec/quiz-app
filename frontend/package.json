@@ -17,6 +17,7 @@
     "formik": "^2.4.6",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.454.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",

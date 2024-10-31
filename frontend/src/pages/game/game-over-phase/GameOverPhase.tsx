@@ -1,5 +1,4 @@
-import { userActions, useUser } from "../../../store/userSlice.ts";
-import getApi from "../../../api/axios.ts";
+import {  useUser } from "../../../store/userSlice.ts";
 import { useSocket } from "../../../socket/useSocket.ts";
 import { useDispatch } from "react-redux";
 import { gameActions, useGame } from "../../../store/gameSlice.ts";
@@ -11,7 +10,9 @@ import MainTitle from "../../../components/MainTitle.tsx";
 import { Breadcrumb } from "react-bootstrap";
 import { PiMedalFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import {useEffect} from "react";
+import {setInQueue} from "../../../store/queueSlice.ts";
+import {toast} from "react-toastify";
 
 export default function GameOverPhase() {
   const user = useUser();
@@ -22,17 +23,14 @@ export default function GameOverPhase() {
   // Znalezienie gracza z największą liczbą punktów
   const winners = game?.winners ?? [];
 
+  useEffect(() => {
+    console.log("Game over phase", game);
+  }, []);
   function leaveGame() {
+    socket.emit("leave_game");
     dispatch(gameActions.setGame(null));
-    if (!user.loggedIn) {
-      getApi()
-        .post("/auth/logout")
-        .then(() => {
-          dispatch(userActions.setUser(null));
-          socket.disconnect();
-        });
-    }
     navigate("/");
+
   }
   function playAgain() {
     if (game?.gameType !== "matchmaking") {
@@ -40,20 +38,14 @@ export default function GameOverPhase() {
         navigate(`/waiting-room`);
       });
     } else {
-      dispatch(gameActions.setGame(null));
-      toast.promise(
-        new Promise<void>((resolve) => {
-          socket.emit("join_queue", "matchmaking", () => {
-            navigate("/waiting-room");
-            resolve();
-          });
-        }),
-        {
-          pending: "Dołączanie do kolejki...",
-          success: "Dołączono do kolejki!",
-          error: "Błąd dołączania do kolejki",
+      socket.emit("join_queue", (gameId: string) => {
+        console.log("gameId", gameId);
+        if (gameId === "NO_GAME") {
+          dispatch(setInQueue(true));
+          toast.error("Dołączono do kolejki");
         }
-      );
+      });
+      dispatch(gameActions.setGame(null));
       navigate(`/`);
     }
   }
@@ -89,12 +81,11 @@ export default function GameOverPhase() {
             )}
           </div>
           <div className={styles.buttons}>
-            {game?.owner?.username === user.username ||
-              (game?.gameType === "matchmaking" && (
+            {game?.owner?.username === user.username || game?.gameType === "matchmaking" &&
                 <button className={styles.playButton} onClick={playAgain}>
                   Zagraj ponownie
                 </button>
-              ))}
+              }
             <button className={styles.cancelButton} onClick={leaveGame}>
               Opuść grę
             </button>

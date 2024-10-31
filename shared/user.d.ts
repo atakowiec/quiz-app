@@ -5,6 +5,10 @@ export type UserPacket = {
   permission: number;
 }
 
+export enum PermissionEnum {
+    USER = 0,
+    ADMIN = 1,
+}
 export type UserStatus = "online" | "offline" | "ingame"
 
 /**

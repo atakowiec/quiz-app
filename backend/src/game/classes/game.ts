@@ -41,11 +41,12 @@ export default class Game {
   public invites: GameInvite[] = [];
 
   public categoryScores: CategoryUserScore[] = [];
+  private winners: string[];
 
   constructor(
-    owner: SocketType | null,
-    gameService: GameService,
-    gameType: GameType
+      owner: SocketType | null,
+      gameService: GameService,
+      gameType: GameType
   ) {
     this.gameService = gameService;
 
@@ -65,8 +66,8 @@ export default class Game {
       this.owner.socket.join(this.id);
       this.owner.socket.data.gameId = this.id;
     } else {
-      this.setTimer(5, this.start.bind(this));
-      this.intervalId = setInterval(() => this.tickTimer(), 15000);
+      this.setTimer(2, this.start.bind(this));
+      this.intervalId = setInterval(() => this.tickTimer(), 2000);
     }
 
     this.logger = new Logger(`game-${this.id}`);
@@ -92,12 +93,13 @@ export default class Game {
       players: this.getAllPlayers().map((player) => player.getPacket()),
       timerEnd: this.timeEnd,
       timerStart: this.timeStart,
+      winners: this.winners,
     };
   }
 
   public getPlayer(socket: SocketType): GameMember {
     return this.getAllPlayers().find(
-      (player) => player.username === socket.data.username
+        (player) => player.username === socket.data.username
     );
   }
 
@@ -105,7 +107,6 @@ export default class Game {
     this.getAllPlayers().forEach((player) => {
       player.socket.leave(this.id);
       delete player.socket.data.gameId;
-      player.socket.emit("set_game", null);
     });
 
     this.gameService.eventEmitter.emit("game_destroyed", this);
@@ -149,7 +150,7 @@ export default class Game {
     player.socket.leave(this.id);
     delete player.socket.data.gameId;
     this.players = this.players.filter(
-      (player) => player.username !== username
+        (player) => player.username !== username
     );
     player.socket.emit("set_game", null);
     player.socket.emit("notification", "Zostałeś wyrzucony z gry");
@@ -168,7 +169,7 @@ export default class Game {
     const oldOwner = this.owner;
     this.owner = player;
     this.players = this.players.filter(
-      (player) => player.username !== username
+        (player) => player.username !== username
     );
     this.players.push(oldOwner);
     player.socket.emit("notification", "Zostałeś właścicielem gry");
@@ -186,16 +187,16 @@ export default class Game {
 
   public broadcastUpdate(updatePacket: GameUpdatePacket) {
     this.getAllPlayers().forEach((player) =>
-      player.sendGameUpdate(updatePacket)
+        player.sendGameUpdate(updatePacket)
     );
   }
 
   public broadcastUpdateForAllPlayersThatHaveShownAnswers(
-    updatePacket: GameUpdatePacket
+      updatePacket: GameUpdatePacket
   ) {
     this.getAllPlayers()
-      .filter((player) => player.showOtherPlayersAnswers)
-      .forEach((player) => player.sendGameUpdate(updatePacket));
+        .filter((player) => player.showOtherPlayersAnswers)
+        .forEach((player) => player.sendGameUpdate(updatePacket));
   }
 
   public broadcastNotification(message: string) {
@@ -212,7 +213,7 @@ export default class Game {
    * @param playerSocket the socket that wants to leave the game
    */
   leave(playerSocket: SocketType) {
-    if (!["leaderboard", "waiting_for_players"].includes(this.gameStatus)) {
+    if (!["leaderboard", "waiting_for_players", "game_over"].includes(this.gameStatus)) {
       return;
     }
 
@@ -240,7 +241,7 @@ export default class Game {
     if (!player) return;
 
     this.logger.log(
-      `Player ${player.username} disconnected from the game - waiting 60s before removing him`
+        `Player ${player.username} disconnected from the game - waiting 60s before removing him`
     );
     player.setDisconnectTimeout(() => {
       this.removePlayer(player);
@@ -252,7 +253,7 @@ export default class Game {
    */
   removePlayer(gameMember: GameMember) {
     this.logger.log(
-      `Player ${gameMember.username} has been removed from the game`
+        `Player ${gameMember.username} has been removed from the game`
     );
     this.gameService.eventEmitter.emit("game_leave", gameMember.socket);
 
@@ -267,14 +268,14 @@ export default class Game {
         this.send();
 
         this.broadcastNotification(
-          `Właściciel pokoju opuścił grę, ${this.owner.username} zostaje nowym właścicielem.`
+            `Właściciel pokoju opuścił grę, ${this.owner.username} zostaje nowym właścicielem.`
         );
       } else {
         this.gameService.removeGame(this);
       }
     } else {
       this.players = this.players.filter(
-        (player) => player.socket.id !== gameMember.socket.id
+          (player) => player.socket.id !== gameMember.socket.id
       );
       this.broadcastNotification(`${gameMember.username} opuścił grę.`);
 
@@ -282,7 +283,7 @@ export default class Game {
     }
 
     // we need to disconnect the socket when the player was not logged in
-    if (!gameMember.socket.data.user.id) {
+    if (!gameMember.socket.data.user?.id) {
       gameMember.socket.disconnect();
     }
   }
@@ -295,7 +296,7 @@ export default class Game {
 
     if (member.socket.connected) {
       this.logger.warn(
-        `Player ${member.username} tried to reconnect, but he is already connected`
+          `Player ${member.username} tried to reconnect, but he is already connected`
       );
       return;
     }
@@ -334,9 +335,9 @@ export default class Game {
   }
 
   public stashLoggedPlayerCategoryScore(player: GameMember) {
-    if (player.socket.data.user.id) {
+    if (player.socket.data.user?.id) {
       const userCategoryScore: CategoryUserScore =
-        this.buildCategoryUserScoreObject(player);
+          this.buildCategoryUserScoreObject(player);
       this.categoryScores.push(userCategoryScore);
       this.logger.log("Category scores in stash method", this.categoryScores);
     }
@@ -366,7 +367,7 @@ export default class Game {
     }
 
     this.logger.log(
-      `Player ${player.username} selected category ${categoryId}`
+        `Player ${player.username} selected category ${categoryId}`
     );
     player.chosenCategory = categoryId;
 
@@ -387,11 +388,11 @@ export default class Game {
 
   getPlayersWithTheirAnswers() {
     return this.getAllPlayers()
-      .filter((player) => player.chosenAnswer)
-      .map((player) => ({
-        username: player.username,
-        chosenAnswer: player.chosenAnswer,
-      }));
+        .filter((player) => player.chosenAnswer)
+        .map((player) => ({
+          username: player.username,
+          chosenAnswer: player.chosenAnswer,
+        }));
   }
 
   selectAnswer(playerSocket: SocketType, answer: string) {
@@ -434,7 +435,7 @@ export default class Game {
         if (!this.settings.blackListedHelpers?.includes(helper.name)) {
           player.score += 100;
           log(
-            `Player ${player.username} got 100 points for not using ${helper.name}`
+              `Player ${player.username} got 100 points for not using ${helper.name}`
           );
         }
       });
@@ -442,7 +443,7 @@ export default class Game {
 
     const ranking = this.getAllPlayers().sort((a, b) => b.score - a.score);
     const winners = ranking.filter(
-      (player) => player.score === ranking[0].score
+        (player) => player.score === ranking[0].score
     );
 
     const result = [];
@@ -461,29 +462,28 @@ export default class Game {
 
       result.push({ player, place: currentPlace });
     });
+    this.winners = winners.map((player) => player.username);
 
     this.broadcastUpdate({
       status: "game_over",
       players: ranking.map((player) => player.getPacket()),
-      winners: winners.map((player) => player.username),
+      winners: this.winners,
     });
 
     this.getAllPlayers().forEach((player) => {
       player.place = result.find((r) => r.player === player)?.place;
-      if (!player.socket.data.user.id) {
-        player.socket.disconnect();
-      }
     });
 
     this.logger.log("Game ended");
     this.logger.log(this.categoryScores);
     this.gameService.saveGameToHistory(this);
 
-
-
+    if (this.gameType === "matchmaking") {
+      this.gameService.removeGame(this);
+    }
     setTimeout(() => {
       this.gameService.removeGame(this);
-    }, 10000);
+    }, 300000); // after 5 minutes game will be removed and it can't be played again
   }
 
   getAllPlayers() {
@@ -494,7 +494,7 @@ export default class Game {
   }
 
   getAllLoggedPlayers() {
-    return this.getAllPlayers().filter((player) => player.socket.data.user.id);
+    return this.getAllPlayers().filter((player) => player.socket.data.user?.id);
   }
 
   checkPlayer(socket: SocketType): GameMember {
@@ -516,15 +516,15 @@ export default class Game {
   fiftyFifty(socket: SocketType) {
     const player = this.getPlayer(socket);
     player.availableHelpers = player.availableHelpers.filter(
-      (helper) => helper.name !== "fifty_fifty"
+        (helper) => helper.name !== "fifty_fifty"
     );
 
     player.hiddenAnswers = player.question.answers.filter(
-      (answer) => answer !== this.round.chosenQuestion.correctAnswer
+        (answer) => answer !== this.round.chosenQuestion.correctAnswer
     );
     player.hiddenAnswers.splice(
-      Math.floor(Math.random() * player.hiddenAnswers.length),
-      1
+        Math.floor(Math.random() * player.hiddenAnswers.length),
+        1
     );
 
     player.sendGameUpdate({
@@ -540,7 +540,7 @@ export default class Game {
     const player = this.getPlayer(socket);
 
     player.availableHelpers = player.availableHelpers.filter(
-      (helper) => helper.name !== "cheat_from_others"
+        (helper) => helper.name !== "cheat_from_others"
     );
 
     player.showOtherPlayersAnswers = true;
@@ -561,7 +561,7 @@ export default class Game {
     const player = this.getPlayer(socket);
 
     player.availableHelpers = player.availableHelpers.filter(
-      (helper) => helper.name !== "extend_time"
+        (helper) => helper.name !== "extend_time"
     );
 
     this.round.extendTime(player);

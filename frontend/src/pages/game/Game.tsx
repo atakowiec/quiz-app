@@ -17,7 +17,7 @@ export default function Game() {
 
   useEffect(() => {
     if (shouldRedirect) {
-      navigate("/profile");
+      navigate("/");
     }
   }, []);
 

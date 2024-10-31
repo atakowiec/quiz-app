@@ -2,6 +2,7 @@ import { FriendshipStatus, UserStatus } from "@shared/user";
 import { UserState } from "../store/userSlice.ts";
 import { Friend, IFriendRequest } from "@shared/friends";
 
+
 export function translateUserStatus(status: UserStatus) {
   return {
     online: "Online",

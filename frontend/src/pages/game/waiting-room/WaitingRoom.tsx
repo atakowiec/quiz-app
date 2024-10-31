@@ -44,10 +44,8 @@ const WaitingRoom: React.FC = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!game) {
-      navigate("/profile");
-    } else if (game.status !== "waiting_for_players") {
-      navigate(`/profile`);
+    if (!game || game.status !== "waiting_for_players") {
+      navigate("/");
     }
   }, [game]);
 
@@ -112,9 +110,11 @@ const WaitingRoom: React.FC = () => {
 
   function renderTooltip(props: any) {
     return (
-      <Tooltip id="button-tooltip" {...props}>
-        Kliknij, aby skopiować link do pokoju
-      </Tooltip>
+        game?.gameType !== "matchmaking" && (
+            <Tooltip id="button-tooltip" {...props}>
+              Kliknij, aby skopiować link do pokoju
+            </Tooltip>
+        )
     );
   }
 

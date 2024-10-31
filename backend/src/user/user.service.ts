@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import { User } from "./user.model";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,6 +6,8 @@ import { BasicUserDetails, UserDetails } from "@shared/user";
 import { GameService } from "../game/services/game.service";
 import { FriendsService } from "../friends/friends.service";
 import { TokenPayload } from "../auth/auth";
+import {UpdateUserDto} from "./user";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
@@ -58,5 +60,20 @@ export class UserService {
       id: user.id,
       username: user.username,
     }));
+  }
+
+  async updateProfile(userId: number, updateUserDto: UpdateUserDto) {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+    if (updateUserDto.email) user.email = updateUserDto.email;
+    if (updateUserDto.password) user.password = await this.hashPassword(updateUserDto.password);
+    await this.repository.save(user);
+    return user;
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 }

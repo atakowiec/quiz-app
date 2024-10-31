@@ -1,8 +1,6 @@
 import styles from "../styles/Header.module.scss";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { IoInformationCircleOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { State } from "../store";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +12,7 @@ import Notifications from "./Notifications.tsx";
 import { useState } from "react";
 import { useNotifications } from "../store/notificationsSlice.ts";
 import AudioPlayer from "./AudioPlayer.tsx";
+import QueueBox from "./QueueBox.tsx";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -52,14 +51,10 @@ const Header = () => {
       <header className={`${styles.headerTopStrip}`}>
         <div className={styles.headerContent}>
           <FancyLogo />
+          <QueueBox />
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
-              <Link to="/" className={`${styles.gap15}`}>
-                <IoInformationCircleOutline
-                  color="white"
-                  className={styles.iconSize}
-                />
-              </Link>
+
               {user.loggedIn ? (
                 <div
                   className={`${styles.gap15} ${styles.notificationIconLink}`}

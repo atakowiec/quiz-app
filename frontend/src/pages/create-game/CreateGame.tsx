@@ -22,11 +22,15 @@ import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
 import { toast } from "react-toastify";
+import {setInQueue, useQueue} from "../../store/queueSlice.ts";
+import {useDispatch} from "react-redux";
 
 const CreateGame: React.FC = () => {
   const socket = useSocket();
   const navigate = useNavigate();
   const user = useUser();
+  const dispatch = useDispatch();
+  const queue = useQueue();
 
   const [showModal, setShowModal] = useState(false);
   const [gameType, setGameType] = useState("");
@@ -57,19 +61,18 @@ const CreateGame: React.FC = () => {
   }
   function newGame(gameType: string) {
     if (gameType === "matchmaking") {
-      toast.promise(
-        new Promise<void>((resolve) => {
-          socket.emit("join_queue", "matchmaking", () => {
-            navigate("/waiting-room");
-            resolve();
-          });
-        }),
-        {
-          pending: "Dołączanie do kolejki...",
-          success: "Dołączono do kolejki!",
-          error: "Błąd dołączania do kolejki",
+      if (queue.inQueue) {
+        toast.error("Jesteś już w kolejce");
+        return;
+      }
+      console.log("joining queue", user, socket);
+      socket.emit("join_queue", (gameId: string) => {
+        console.log("gameId", gameId);
+        if (gameId === "NO_GAME") {
+          dispatch(setInQueue(true));
+          toast.error("Dołączono do kolejki");
         }
-      );
+      });
     } else {
       socket.emit("create_game", gameType, () => navigate("/waiting-room"));
     }

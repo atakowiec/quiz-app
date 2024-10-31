@@ -247,7 +247,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("join_queue")
-  joinQueue(@ConnectedSocket() playerSocket: SocketType) {
+  joinQueue(@ConnectedSocket() playerSocket: SocketType): string{
     if (playerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
@@ -257,10 +257,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (game) {
       return game.id;
     } else {
-      return new Promise<void>((resolve) => {
-        resolve();
-      });
+      return "NO_GAME";
     }
+
+  }
+
+  @SubscribeMessage("leave_queue")
+  leaveQueue(@ConnectedSocket() playerSocket: SocketType): number {
+      this.logger.log(`Player ${playerSocket.data.username} left the queue`);
+      this.matchMakingService.tryRemovePlayerFromQueue(playerSocket);
+      return 200;
   }
 
   @SubscribeMessage("play_again")
