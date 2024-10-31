@@ -163,7 +163,6 @@ export default class Round {
     this.logger.debug("End question phase");
     this.game.gameStatus = "question_result_phase";
 
-    // todo calculate the scores
     this.game.getAllPlayers().forEach((player) => {
       const correct = player.chosenAnswer == this.chosenQuestion.correctAnswer;
 

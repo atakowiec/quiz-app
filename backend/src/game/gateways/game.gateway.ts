@@ -78,6 +78,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() playerSocket: SocketType,
     @MessageBody() gameId: string
   ) {
+    // todo dodac sprawdzanie czy gracz jest wgrze, ale tez naprawic przycisk oposc w leaderboard
     if (playerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }

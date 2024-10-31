@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import H5AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import styles from "../styles/AudioPlayer.module.scss";
@@ -31,7 +31,7 @@ const AudioPlayer = () => {
         onClick={togglePlayPause}
         style={{
           backgroundColor: isPlaying ? "green" : "red",
-          position: "absolute",
+          position: "fixed",
           bottom: 0,
           right: 0,
           zIndex: 1000,

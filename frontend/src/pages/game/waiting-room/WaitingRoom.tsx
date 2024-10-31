@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar, { SidebarItem } from "../../../components/SideBar.tsx";
 import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import Meta from "../../../components/Meta.tsx";
-import {
-  Breadcrumb,
-  OverlayTrigger,
-  Tooltip,
-} from "react-bootstrap";
+import { Breadcrumb, OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "./WaitingRoom.module.scss";
 import { LuCrown } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
@@ -52,10 +48,6 @@ const WaitingRoom: React.FC = () => {
   }, [game]);
 
   if (!game) return null;
-
-  //TODO: make settings for an owner of the room
-  //TODO: make invite link/ player
-  //TODO: make player unable to join the same game twice and more
 
   function leaveGame() {
     socket.emit("leave_game");
@@ -120,16 +112,16 @@ const WaitingRoom: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Poczekalnia"}/>
-      <Breadcrumb title="Poczekalnia"/>
-      <Sidebar items={sidebarItems}/>
+      <Meta title={"Poczekalnia"} />
+      <Breadcrumb title="Poczekalnia" />
+      <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
-        <MainBox before={game?.owner == null && <TimeBar/>}>
+        <MainBox before={game?.owner == null && <TimeBar />}>
           <MainTitle>Poczekalnia</MainTitle>
           <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
             {["ending", "copied"].includes(copyAnimationStage) ? (
               <>
-                <FaCheck/> Skopiowano!
+                <FaCheck /> Skopiowano!
               </>
             ) : (
               <OverlayTrigger
@@ -138,12 +130,12 @@ const WaitingRoom: React.FC = () => {
                 overlay={renderTooltip}
               >
                 <span onClick={copyId}>
-                  Kod: {game?.id} <FaLink/>
+                  Kod: {game?.id} <FaLink />
                 </span>
               </OverlayTrigger>
             )}
           </div>
-          <hr className={styles.line}/>
+          <hr className={styles.line} />
           <div className={styles.playersBox}>
             {game?.owner && game?.owner?.username && (
               <div className={styles.singlePlayer}>
@@ -157,14 +149,14 @@ const WaitingRoom: React.FC = () => {
                   {game?.owner.username}
                 </span>
                 <div>
-                  <LuCrown className={styles.playerAction}/>
+                  <LuCrown className={styles.playerAction} />
 
                   {game.owner?.id && (
                     <button
                       className={styles.showProfileBtn}
                       onClick={() => showProfileModal(game.owner?.id)}
                     >
-                      <FaUser className={styles.playerAction}/>
+                      <FaUser className={styles.playerAction} />
                     </button>
                   )}
                 </div>
@@ -193,14 +185,14 @@ const WaitingRoom: React.FC = () => {
                               handleGiveOwnerClick(player.username!)
                             }
                           >
-                            <IoMdArrowUp className={styles.playerAction2}/>
+                            <IoMdArrowUp className={styles.playerAction2} />
                           </button>
 
                           <button
                             className={styles.kickBtn}
                             onClick={() => kickPlayer(player.username!)}
                           >
-                            <RxCross2 className={styles.playerAction}/>
+                            <RxCross2 className={styles.playerAction} />
                           </button>
 
                           {player?.id && (
@@ -208,7 +200,7 @@ const WaitingRoom: React.FC = () => {
                               className={styles.showProfileBtn}
                               onClick={() => showProfileModal(player.id)}
                             >
-                              <FaUser className={styles.playerAction}/>
+                              <FaUser className={styles.playerAction} />
                             </button>
                           )}
                         </div>
@@ -231,11 +223,13 @@ const WaitingRoom: React.FC = () => {
           </div>
         </MainBox>
       </MainContainer>
-      <ConfirmationModal show={showConfirmModal}
-                         setShow={setShowConfirmModal}
-                         onConfirm={confirmGiveOwner}
-                         confirmText={"Tak, zmień właściciela"}
-                         title={"Zmiana właściciela"}>
+      <ConfirmationModal
+        show={showConfirmModal}
+        setShow={setShowConfirmModal}
+        onConfirm={confirmGiveOwner}
+        confirmText={"Tak, zmień właściciela"}
+        title={"Zmiana właściciela"}
+      >
         Czy na pewno chcesz zmienić właściciela pokoju na {selectedPlayer}?
       </ConfirmationModal>
     </>

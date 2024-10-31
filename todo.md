@@ -11,7 +11,7 @@
 - [x] naprawic settingsy - na froncie sie nie aktualizuje po zmianie
 - [x] w SelectedCategoryPhase uzyc tego samego zielonego i czerwonego co w reszcie apki
 - [x] sprawdzic i naprawic i dodac zaokraglenia punktow w grze
-- [ ] odswiezenie gry jako niezalogowany przywraca do gry
+- [x] odswiezenie gry jako niezalogowany przywraca do gry
 - [x] osoba niezalogowana nie ma w ogole powiadomien
 - [ ] info ze ktos inny uzyl kola ratunkowego
 - [ ] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały
@@ -27,15 +27,11 @@
 - [x] zrobic modal z profilem innych graczy (figma)
 - [ ] zrobic zapraszanie do gry z poziomu poczekalni (sidebar) (modal z lista znajomych)
 - [ ] kolory avatarow na backendzie (avatar ma pierwsza litere nicku) (figma - kolory)
-- [ ] skonczyc znajomych i zaprosznia do gry
-- [ ] przycisk "zagraj ponownie" po zakonczeniu gry - na razie nie dziala wcale
-- [ ] w matchmakingu - zagraj kolejna gre - dolacza do kolejki na nowo
-- [ ] w historii - sortowanie po kolumnach - po kliknieciu nic sie nie dzieje <- nie rozumiem po co, jak i tak wyswietlamy 10 ostatnich czy tam 20
+- [x] skonczyc znajomych i zaprosznia do gry
+- [x] przycisk "zagraj ponownie" po zakonczeniu gry - na razie nie dziala wcale
+- [x] w matchmakingu - zagraj kolejna gre - dolacza do kolejki na nowo
 - [ ] zmiana maila i hasla
-- [ ] banowanie kont przez admina <- to bym wywalil bo nie jest to przedmiotem pracy jakby tak nam oleksiejuk mówił ostatnio ze jak cos nie jest strikte zwiazane z tematem to zeby nie robic
-- [ ] na profilu opcja do wyszukiwania graczy po nicku
-- [ ] w adminie wyszukiwanie graczy, banowanie i usuwanie kont <- to tez do przegadania
-- [ ] po 10 minutach bezczynnosci w lobby - gra usunieta
+- [x] na profilu opcja do wyszukiwania graczy po nicku
 - [ ] limit czlonkow w grze
 - [x] muzyka w trakcie gry - Łukasz
 - [x] w "zapros znajomych" w grze wyswietlenie kto jest "online" lub "w grze" aka "zajęty"
