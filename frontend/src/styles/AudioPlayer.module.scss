@@ -1,21 +1,32 @@
-.audioButton {
-  background-color: #f8f9fa;
-  border: none;
-  color: #212529;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition-duration: 0.4s;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+.audioButtonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  bottom: 1.5rem;
+  width: 100%;
 }
 
-@media screen and (max-width: 768px) {
-  .audioText {
-    display: none;
+.audioButton {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #a0a0a0;
   }
+}
+
+.audioIcon {
+  font-size: 2.2rem;
+}
+
+.audioText {
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
 }

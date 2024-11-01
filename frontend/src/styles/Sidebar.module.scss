@@ -8,6 +8,7 @@
   height: calc(100vh - 2.5rem);
   position: fixed;
   display: flex;
+  flex-direction: column;
   z-index: 100;
   margin-top: 2.5rem;
   overflow-y: auto;
@@ -16,6 +17,7 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+    flex: 1 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -43,6 +45,17 @@
   .sidebarLink {
     color: white;
     text-decoration: none;
+  }
+
+  .playMusicButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+
+    &:hover {
+      background-color: #09121a;
+    }
   }
 }
 

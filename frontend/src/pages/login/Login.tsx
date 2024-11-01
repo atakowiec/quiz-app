@@ -120,9 +120,9 @@ const Login = () => {
             {error && (
               <div className={`${styles.error} p-0 text-center`}>{error}</div>
             )}
-            <Button type="submit" className={styles.submitButton}>
+            <button type="submit" className={styles.submitButton}>
               Zaloguj się
-            </Button>
+            </button>
           </form>
           <div className={styles.registerLink}>
             Nie masz jeszcze konta?{" "}

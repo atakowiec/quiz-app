@@ -11,7 +11,6 @@ import FancyLogo from "./FancyLogo.tsx";
 import Notifications from "./Notifications.tsx";
 import { useState } from "react";
 import { useNotifications } from "../store/notificationsSlice.ts";
-import AudioPlayer from "./AudioPlayer.tsx";
 import QueueBox from "./QueueBox.tsx";
 
 const Header = () => {
@@ -46,15 +45,12 @@ const Header = () => {
 
   return (
     <>
-      <AudioPlayer />
-
       <header className={`${styles.headerTopStrip}`}>
         <div className={styles.headerContent}>
           <FancyLogo />
           <QueueBox />
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
-
               {user.loggedIn ? (
                 <div
                   className={`${styles.gap15} ${styles.notificationIconLink}`}
