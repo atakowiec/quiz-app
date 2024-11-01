@@ -51,9 +51,9 @@ export default class Game {
     this.gameService = gameService;
 
     this.settings = {
-      number_of_rounds: 1,
-      number_of_questions_per_round: 1,
-      number_of_categories_per_voting: 5,
+      number_of_rounds: 5,
+      number_of_questions_per_round: 5,
+      number_of_categories_per_voting: 6,
       time_for_answer: 30,
       max_number_of_players: 49,
     };

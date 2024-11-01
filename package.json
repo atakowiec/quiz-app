@@ -11,8 +11,8 @@
   "scripts": {
     "docker:compose": "docker-compose up -d",
     "frontend:dev": "npm run dev --workspace=frontend",
-    "backend:dev": "wait-on tcp:3369 && npm run start:dev --workspace=backend",
-    "start": "concurrently 'npm:docker:compose' 'npm:backend:dev' 'npm:frontend:dev'",
+    "backend:dev": "npm run start:dev --workspace=backend",
+    "start": "concurrently 'npm:backend:dev' 'npm:frontend:dev'",
     "stop": "docker-compose down"
   },
   "devDependencies": {
@@ -24,6 +24,7 @@
   "dependencies": {
     "@nestjs/platform-socket.io": "^10.4.2",
     "@nestjs/websockets": "^10.4.2",
+    "pg": "^8.13.1",
     "react-h5-audio-player": "^3.9.3"
   }
 }
