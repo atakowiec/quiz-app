@@ -11,13 +11,12 @@ async function bootstrap() {
 
   const clientPort = parseInt(configService.get("CLIENT_PORT")) || 5173;
   const port = parseInt(configService.get("SERVER_PORT")) || 3000;
-  app.enableCors({
-    credentials: true,
-    origin: [
-      `http://localhost:${clientPort}`,
-      new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
-    ],
-  });
+    app.enableCors({
+        credentials: true,
+        origin: [
+            `http://79.76.98.39:${clientPort}`,
+        ],
+    });
 
   app.useWebSocketAdapter(new SocketIOAdapter(app, configService));
 

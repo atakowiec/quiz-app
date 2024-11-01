@@ -90,7 +90,7 @@ const WaitingRoom: React.FC = () => {
     }
 
     await navigator.clipboard.writeText(
-      `http://localhost:5173/join-game?code=${id}`
+      `http://79.76.98.39:5173/join-game?code=${id}`
     ); // todo change to production url some day
 
     setCopyAnimationStage("copying");
