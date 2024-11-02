@@ -23,6 +23,14 @@ const gameSlice = createSlice({
 
       const newState = lodash.merge(state, updatePacket);
 
+      if (updatePacket.settings) {
+        newState.settings = {
+          ...newState.settings,
+          category_whitelist: updatePacket.settings.category_whitelist,
+          blackListedHelpers: updatePacket.settings.blackListedHelpers,
+        };
+      }
+
       // if there are no players or no update for the players we can return the new state with previous players
       if (!playersUpdate) {
         return newState;
@@ -32,21 +40,21 @@ const gameSlice = createSlice({
       if (playersUpdate.find((p) => p.username === newState.owner?.username)) {
         newState.owner = lodash.merge(
           newState.owner,
-          playersUpdate.find((p) => p.username === newState.owner?.username)
+          playersUpdate.find((p) => p.username === newState.owner?.username),
         );
       }
 
       if (playersUpdate.find((p) => p.username === newState.player?.username)) {
         newState.player = lodash.merge(
           newState.player,
-          playersUpdate.find((p) => p.username === newState.player?.username)
+          playersUpdate.find((p) => p.username === newState.player?.username),
         );
       }
 
       // iterate over the players and update them - hopefully it will work
       newState.players = newState.players?.map((player) => {
         const playerUpdate = playersUpdate.find(
-          (p) => p.username === player.username
+          (p) => p.username === player.username,
         );
         return lodash.merge(player, playerUpdate);
       });

@@ -3,6 +3,7 @@ import { Modal, ModalBody } from "react-bootstrap";
 import { FaCheckSquare, FaSquare } from "react-icons/fa";
 import styles from "./Settings.module.scss";
 import MainTitle from "../../../components/MainTitle";
+import { GameSettings } from "@shared/game";
 
 interface Category {
   id: number;
@@ -18,6 +19,8 @@ interface CategoriesModalProps {
   handleCategoryClick: (index: number) => void;
   selectAllCategories: () => void;
   deselectAllCategories: () => void;
+  isOwner: boolean; // Indicates if the user is the owner
+  gameSettings?: GameSettings;
 }
 
 const CategoriesModal: React.FC<CategoriesModalProps> = ({
@@ -28,6 +31,8 @@ const CategoriesModal: React.FC<CategoriesModalProps> = ({
   handleCategoryClick,
   selectAllCategories,
   deselectAllCategories,
+  isOwner,
+  gameSettings, // Destructure gameSettings for non-owner
 }) => {
   return (
     <Modal
@@ -43,9 +48,17 @@ const CategoriesModal: React.FC<CategoriesModalProps> = ({
             <div
               key={category.id}
               className={`${styles.categoriesChoice} ${
-                selectedCategories.includes(category.id) ? styles.active : ""
+                isOwner
+                  ? selectedCategories.includes(category.id)
+                    ? styles.active
+                    : ""
+                  : gameSettings?.category_whitelist?.includes(category.id)
+                    ? styles.active
+                    : ""
               }`}
-              onClick={() => handleCategoryClick(category.id)}
+              onClick={
+                isOwner ? () => handleCategoryClick(category.id) : undefined
+              } // Disable click if not owner
             >
               <img
                 src={`/assets/categories/${category.img || "default.jpg"}`}
@@ -57,17 +70,31 @@ const CategoriesModal: React.FC<CategoriesModalProps> = ({
           ))}
         </div>
         <div className={styles.settButtons}>
-          <button className={styles.saveBut} onClick={handleClose}>
-            Zapisz
-          </button>
-          <div className={styles.markButtons}>
-            <button className={styles.markBut} onClick={selectAllCategories}>
-              <FaCheckSquare />
+          {isOwner ? (
+            <>
+              <button className={styles.saveBut} onClick={handleClose}>
+                Zapisz
+              </button>
+              <div className={styles.markButtons}>
+                <button
+                  className={styles.markBut}
+                  onClick={selectAllCategories}
+                >
+                  <FaCheckSquare />
+                </button>
+                <button
+                  className={styles.markBut}
+                  onClick={deselectAllCategories}
+                >
+                  <FaSquare />
+                </button>
+              </div>
+            </>
+          ) : (
+            <button className={styles.saveBut} onClick={handleClose}>
+              Zamknij
             </button>
-            <button className={styles.markBut} onClick={deselectAllCategories}>
-              <FaSquare />
-            </button>
-          </div>
+          )}
         </div>
       </ModalBody>
     </Modal>

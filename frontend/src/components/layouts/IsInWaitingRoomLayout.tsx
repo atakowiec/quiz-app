@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 interface IsInWaitingRoomLayoutProps {
   isInLobby: boolean;
@@ -9,7 +9,6 @@ const IsInWaitingRoomLayout = ({
   isInLobby,
   ifHasToBeNavigatedTo,
 }: IsInWaitingRoomLayoutProps) => {
-  console.log(isInLobby, ifHasToBeNavigatedTo);
   if (isInLobby && ifHasToBeNavigatedTo) {
     return <Navigate to="/waiting-room" />;
   }

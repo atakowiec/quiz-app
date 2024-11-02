@@ -208,7 +208,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (game.owner.username !== playerSocket.data.username) {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
-
+    this.logger.log(`Changing settings for game ${game.id}`);
     game.changeSettings(settings);
   }
 
@@ -225,7 +225,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (game.owner.username !== playerSocket.data.username) {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
-
+    this.logger.log(`Changing helpers for game ${game.id}`);
     game.changeSettingsHelpers(blackListedHelpers);
   }
 
@@ -242,12 +242,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (game.owner.username !== playerSocket.data.username) {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
+    this.logger.log(`Changing categories for game ${game.id}`);
 
     game.changeSettingsCategories(whiteListedCategories);
   }
 
   @SubscribeMessage("join_queue")
-  joinQueue(@ConnectedSocket() playerSocket: SocketType): string{
+  joinQueue(@ConnectedSocket() playerSocket: SocketType): string {
     if (playerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
@@ -259,14 +260,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     } else {
       return "NO_GAME";
     }
-
   }
 
   @SubscribeMessage("leave_queue")
   leaveQueue(@ConnectedSocket() playerSocket: SocketType): number {
-      this.logger.log(`Player ${playerSocket.data.username} left the queue`);
-      this.matchMakingService.tryRemovePlayerFromQueue(playerSocket);
-      return 200;
+    this.logger.log(`Player ${playerSocket.data.username} left the queue`);
+    this.matchMakingService.tryRemovePlayerFromQueue(playerSocket);
+    return 200;
   }
 
   @SubscribeMessage("play_again")

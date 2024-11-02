@@ -4,7 +4,7 @@ import Sidebar, { SidebarItem } from "../../../components/SideBar";
 import MainContainer from "../../../components/MainContainer";
 import MainBox from "../../../components/MainBox";
 import MainTitle from "../../../components/MainTitle";
-import { IoArrowBack, IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
+import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import styles from "./Settings.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { GameSettings, HelperType } from "@shared/game";
@@ -12,7 +12,7 @@ import { useSocket } from "../../../socket/useSocket";
 import { useGlobalData } from "../../../store/globalDataSlice";
 import CategoriesModal from "./CategoriesModal";
 import HelpersModal from "./HelpersModal";
-import { useNavigate } from "react-router-dom";
+import { useGame } from "../../../store/gameSlice.ts";
 
 const Settings: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -21,39 +21,32 @@ const Settings: React.FC = () => {
   ];
 
   const socket = useSocket();
-  const navigate = useNavigate();
+  const game = useGame();
+  const isOwner = game?.owner?.username === game?.player?.username;
 
-  // Load initial values from localStorage, or use default values
-  const [number_of_rounds, setNumberOfRounds] = useState(() => {
-    const savedValue = localStorage.getItem("number_of_rounds");
-    return savedValue !== null ? Number(savedValue) : 2; // default value
-  });
-
-  const [number_of_questions_per_round, setNumberOfQuestions] = useState(() => {
-    const savedValue = localStorage.getItem("number_of_questions_per_round");
-    return savedValue !== null ? Number(savedValue) : 5; // default value
-  });
-
+  const [number_of_rounds, setNumberOfRounds] = useState(
+    game?.settings.number_of_rounds || 5,
+  );
+  const [number_of_questions_per_round, setNumberOfQuestions] = useState(
+    game?.settings.number_of_questions_per_round || 5,
+  );
   const [number_of_categories_per_voting, setNumberOfCategoriesInVoting] =
-    useState(() => {
-      const savedValue = localStorage.getItem(
-        "number_of_categories_per_voting"
-      );
-      return savedValue !== null ? Number(savedValue) : 5; // default value
-    });
+    useState(game?.settings.number_of_categories_per_voting || 5);
+  const [time_for_answer, setTimeForAnswer] = useState(
+    game?.settings.time_for_answer || 30,
+  );
 
-  const [time_for_answer, setTimeForAnswer] = useState(() => {
-    const savedValue = localStorage.getItem("time_for_answer");
-    return savedValue !== null ? Number(savedValue) : 30; // default value
-  });
-
-  // if settings have been changed, send event to update this settings
-  const prevSettings = useRef({
+  const DEBOUNCE_DELAY = 50;
+  // if settings has been changed send event to update this settings
+  const initialSettings = useRef({
     number_of_rounds,
     number_of_questions_per_round,
     number_of_categories_per_voting,
     time_for_answer,
   });
+  // Refs for previous settings and debounce timeout
+  const prevSettings = useRef(initialSettings.current);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     let updatedSettings: Partial<GameSettings> = {};
@@ -72,8 +65,19 @@ const Settings: React.FC = () => {
     if (prevSettings.current.time_for_answer !== time_for_answer)
       updatedSettings = { ...updatedSettings, time_for_answer };
 
-    if (Object.keys(updatedSettings).length > 0) {
-      socket.emit("change_settings", updatedSettings);
+    // Check if updatedSettings differs from initial settings
+    const settingsChanged =
+      JSON.stringify(updatedSettings) !==
+      JSON.stringify(initialSettings.current);
+
+    if (settingsChanged && Object.keys(updatedSettings).length > 0) {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
+      debounceTimeoutRef.current = setTimeout(() => {
+        socket.emit("change_settings", updatedSettings);
+      }, DEBOUNCE_DELAY);
     }
 
     // Update previous settings reference
@@ -84,17 +88,11 @@ const Settings: React.FC = () => {
       time_for_answer,
     };
 
-    // Save updated settings to localStorage
-    localStorage.setItem("number_of_rounds", number_of_rounds.toString());
-    localStorage.setItem(
-      "number_of_questions_per_round",
-      number_of_questions_per_round.toString()
-    );
-    localStorage.setItem(
-      "number_of_categories_per_voting",
-      number_of_categories_per_voting.toString()
-    );
-    localStorage.setItem("time_for_answer", time_for_answer.toString());
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
   }, [
     number_of_rounds,
     number_of_questions_per_round,
@@ -115,7 +113,10 @@ const Settings: React.FC = () => {
     img: category.img || "",
   }));
 
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>(
+    game?.settings?.category_whitelist || [],
+  );
+  const initialSelectedCategories = useRef(selectedCategories);
 
   const handleCategoryClick = (index: number) => {
     if (selectedCategories.includes(index)) {
@@ -126,7 +127,29 @@ const Settings: React.FC = () => {
   };
 
   useEffect(() => {
-    socket.emit("change_settings_categories", selectedCategories);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    // Check if selectedCategories has changed from its initial state
+    const categoriesChanged =
+      JSON.stringify(selectedCategories) !==
+      JSON.stringify(initialSelectedCategories.current);
+
+    if (categoriesChanged) {
+      debounceTimeoutRef.current = setTimeout(() => {
+        socket.emit("change_settings_categories", selectedCategories);
+      }, DEBOUNCE_DELAY);
+    }
+
+    // Update initial selected categories reference
+    initialSelectedCategories.current = selectedCategories;
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
   }, [selectedCategories, socket]);
 
   const selectAllCategories = () => {
@@ -136,33 +159,31 @@ const Settings: React.FC = () => {
   const deselectAllCategories = () => {
     setSelectedCategories([]);
   };
-
-  const [helperStates, setHelperStates] = useState<boolean[]>([
-    true,
-    true,
-    true,
-  ]);
-
   const helpersNames: HelperType[] = [
     "cheat_from_others",
     "extend_time",
     "fifty_fifty",
   ];
 
+  const [helperStates, setHelperStates] = useState<boolean[]>(
+    game?.settings?.blackListedHelpers
+      ? helpersNames.map(
+          (helper) => !game?.settings?.blackListedHelpers?.includes(helper),
+        )
+      : [true, true, true],
+  );
+
   const handleToggle = (index: number) => {
     const updatedStates = [...helperStates];
-    updatedStates[index] = !updatedStates[index]; // Change state
+    updatedStates[index] = !updatedStates[index]; // Zmiana stanu
 
     const blackListedHelpers = helpersNames.filter(
-      (_, i) => !updatedStates[i]
+      (_, i) => !updatedStates[i],
     ) as HelperType[];
 
+    console.log("new", blackListedHelpers);
     socket.emit("change_settings_helpers", blackListedHelpers);
-    setHelperStates(updatedStates); // Update state
-  };
-
-  const handleBackClick = () => {
-    navigate("/waiting-room");
+    setHelperStates(updatedStates); // Aktualizacja stanu
   };
 
   return (
@@ -177,71 +198,85 @@ const Settings: React.FC = () => {
             <div className={styles.singleSetting}>
               <div className={styles.settingsTitle}>Liczba rund</div>
               <div className={styles.choiceBox}>
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setNumberOfRounds(Math.max(1, number_of_rounds - 1))
-                  }
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={number_of_rounds}
-                  className={styles.choiceValue}
-                  onChange={(e) => {
-                    const value = Math.min(
-                      Math.max(1, Number(e.target.value)),
-                      25
-                    ); // Limit value between 1 and 25
-                    setNumberOfRounds(value);
-                  }}
-                />
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setNumberOfRounds(Math.min(25, number_of_rounds + 1))
-                  }
-                >
-                  +
-                </button>
+                {isOwner ? (
+                  <>
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setNumberOfRounds(Math.max(1, number_of_rounds - 1))
+                      }
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      value={number_of_rounds}
+                      className={styles.choiceValue}
+                      onChange={(e) => {
+                        if (Number(e.target.value) > 25) e.target.value = "25";
+                        else if (Number(e.target.value) < 1)
+                          e.target.value = "1";
+                        setNumberOfRounds(Number(e.target.value));
+                      }}
+                    />
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setNumberOfRounds(Math.min(25, number_of_rounds + 1))
+                      }
+                    >
+                      +
+                    </button>
+                  </>
+                ) : (
+                  <div className={styles.choiceValue}>
+                    {game?.settings.number_of_rounds}
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.singleSetting}>
               <div className={styles.settingsTitle}>Liczba pytań na rundę</div>
               <div className={styles.choiceBox}>
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setNumberOfQuestions(
-                      Math.max(1, number_of_questions_per_round - 1)
-                    )
-                  }
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={number_of_questions_per_round}
-                  className={styles.choiceValue}
-                  onChange={(e) => {
-                    const value = Math.min(
-                      Math.max(1, Number(e.target.value)),
-                      25
-                    ); // Limit value between 1 and 25
-                    setNumberOfQuestions(value);
-                  }}
-                />
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setNumberOfQuestions(
-                      Math.min(25, number_of_questions_per_round + 1)
-                    )
-                  }
-                >
-                  +
-                </button>
+                {isOwner ? (
+                  <>
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setNumberOfQuestions(
+                          Math.max(1, number_of_questions_per_round - 1),
+                        )
+                      }
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      value={number_of_questions_per_round}
+                      className={styles.choiceValue}
+                      onChange={(e) => {
+                        if (Number(e.target.value) > 25) e.target.value = "25";
+                        else if (Number(e.target.value) < 1)
+                          e.target.value = "1";
+                        setNumberOfQuestions(Number(e.target.value));
+                      }}
+                    />
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setNumberOfQuestions(
+                          Math.min(25, number_of_questions_per_round + 1),
+                        )
+                      }
+                    >
+                      +
+                    </button>
+                  </>
+                ) : (
+                  <div className={styles.choiceValue}>
+                    {game?.settings.number_of_questions_per_round}
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.singleSetting}>
@@ -249,38 +284,45 @@ const Settings: React.FC = () => {
                 Liczba kategorii podczas głosowania
               </div>
               <div className={styles.choiceBox}>
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setNumberOfCategoriesInVoting(
-                      Math.max(1, number_of_categories_per_voting - 1)
-                    )
-                  }
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={number_of_categories_per_voting}
-                  className={styles.choiceValue}
-                  onChange={(e) => {
-                    const value = Math.min(
-                      Math.max(1, Number(e.target.value)),
-                      10
-                    ); // Limit value between 1 and 10
-                    setNumberOfCategoriesInVoting(value);
-                  }}
-                />
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setNumberOfCategoriesInVoting(
-                      Math.min(10, number_of_categories_per_voting + 1)
-                    )
-                  }
-                >
-                  +
-                </button>
+                {isOwner ? (
+                  <>
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setNumberOfCategoriesInVoting(
+                          Math.max(1, number_of_categories_per_voting - 1),
+                        )
+                      }
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      value={number_of_categories_per_voting}
+                      className={styles.choiceValue}
+                      onChange={(e) => {
+                        if (Number(e.target.value) > 10) e.target.value = "10";
+                        else if (Number(e.target.value) < 1)
+                          e.target.value = "1";
+                        setNumberOfCategoriesInVoting(Number(e.target.value));
+                      }}
+                    />
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setNumberOfCategoriesInVoting(
+                          Math.min(10, number_of_categories_per_voting + 1),
+                        )
+                      }
+                    >
+                      +
+                    </button>
+                  </>
+                ) : (
+                  <div className={styles.choiceValue}>
+                    {game?.settings.number_of_categories_per_voting}
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.singleSetting}>
@@ -288,49 +330,56 @@ const Settings: React.FC = () => {
                 Czas na udzielenie odpowiedzi
               </div>
               <div className={styles.choiceBox}>
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setTimeForAnswer(Math.max(1, time_for_answer - 1))
-                  }
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={time_for_answer}
-                  className={styles.choiceValue}
-                  onChange={(e) => {
-                    const value = Math.min(
-                      Math.max(1, Number(e.target.value)),
-                      120
-                    ); // Limit value between 1 and 120
-                    setTimeForAnswer(value);
-                  }}
-                />
-                <button
-                  className={styles.changeButton}
-                  onClick={() =>
-                    setTimeForAnswer(Math.min(120, time_for_answer + 1))
-                  }
-                >
-                  +
-                </button>
+                {isOwner ? (
+                  <>
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setTimeForAnswer(Math.max(1, time_for_answer - 1))
+                      }
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      value={time_for_answer}
+                      className={styles.choiceValue}
+                      onChange={(e) => {
+                        if (Number(e.target.value) > 120)
+                          e.target.value = "120";
+                        else if (Number(e.target.value) < 1)
+                          e.target.value = "1";
+                        setTimeForAnswer(Number(e.target.value));
+                      }}
+                    />
+                    <button
+                      className={styles.changeButton}
+                      onClick={() =>
+                        setTimeForAnswer(Math.min(120, time_for_answer + 1))
+                      }
+                    >
+                      +
+                    </button>
+                  </>
+                ) : (
+                  <div className={styles.choiceValue}>
+                    {game?.settings.time_for_answer}
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.settingsButtons}>
-              <button className={styles.settings2} onClick={handleBackClick}>
-                <IoArrowBack /> Powrót
-              </button>
-              <button className={styles.settings} onClick={handleModalShow}>
-                Wybór kategorii
-              </button>
-              <button
-                className={styles.settings}
-                onClick={handleLifelineModalShow}
-              >
-                Ustawienia kół ratunkowych
-              </button>
+              <>
+                <button className={styles.settings} onClick={handleModalShow}>
+                  Wybór kategorii
+                </button>
+                <button
+                  className={styles.settings}
+                  onClick={handleLifelineModalShow}
+                >
+                  Ustawienia kół ratunkowych
+                </button>
+              </>
             </div>
           </div>
         </MainBox>
@@ -344,6 +393,8 @@ const Settings: React.FC = () => {
         handleCategoryClick={handleCategoryClick}
         selectAllCategories={selectAllCategories}
         deselectAllCategories={deselectAllCategories}
+        isOwner={isOwner}
+        gameSettings={game?.settings}
       />
 
       {/* Modal Ustawień Kół Ratunkowych */}
@@ -352,6 +403,9 @@ const Settings: React.FC = () => {
         handleClose={handleLifelineModalHide}
         helperStates={helperStates}
         handleToggle={handleToggle}
+        isOwner={isOwner}
+        gameSettings={game?.settings}
+        helpersNames={helpersNames}
       />
     </>
   );
