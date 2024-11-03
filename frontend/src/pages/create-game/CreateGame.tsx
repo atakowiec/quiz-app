@@ -2,8 +2,8 @@ import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../components/Meta.tsx";
 import styles from "./CreateGame.module.scss";
 import {
-  IoPersonSharp,
   IoPeopleSharp,
+  IoPersonSharp,
   IoPodiumSharp,
   IoStatsChartSharp,
 } from "react-icons/io5";
@@ -22,8 +22,8 @@ import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
 import { toast } from "react-toastify";
-import {setInQueue, useQueue} from "../../store/queueSlice.ts";
-import {useDispatch} from "react-redux";
+import { setInQueue, useQueue } from "../../store/queueSlice.ts";
+import { useDispatch } from "react-redux";
 
 const CreateGame: React.FC = () => {
   const socket = useSocket();
@@ -59,6 +59,7 @@ const CreateGame: React.FC = () => {
     }
     newGame(gameType);
   }
+
   function newGame(gameType: string) {
     if (gameType === "matchmaking") {
       if (queue.inQueue) {
@@ -70,7 +71,7 @@ const CreateGame: React.FC = () => {
         console.log("gameId", gameId);
         if (gameId === "NO_GAME") {
           dispatch(setInQueue(true));
-          toast.error("Dołączono do kolejki");
+          toast.info("Dołączono do kolejki");
         }
       });
     } else {
@@ -79,8 +80,8 @@ const CreateGame: React.FC = () => {
   }
 
   /*
-    if client has a game in "waiting_for_players" status, redirect to waiting room
-  */
+      if client has a game in "waiting_for_players" status, redirect to waiting room
+    */
 
   return (
     <>

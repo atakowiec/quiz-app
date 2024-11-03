@@ -59,13 +59,14 @@ export class MatchmakingService {
   public tryRemovePlayerFromQueue(playerSocket: SocketType): void {
     if (playerSocket.rooms.has(MatchmakingService.ROOM_NAME)) {
       playerSocket.leave(MatchmakingService.ROOM_NAME);
+      playerSocket.emit("queue_left");
 
-      if (playerSocket.data.user?.id)
-      {
+      if (!playerSocket.data.user?.id) {
         playerSocket.disconnect();
       }
     }
   }
+
   public isPlayerInQueue(playerSocket: SocketType): boolean {
     return playerSocket.rooms.has(MatchmakingService.ROOM_NAME);
   }

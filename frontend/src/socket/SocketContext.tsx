@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useMemo } from "react";
+import { createContext, ReactNode, useEffect, useMemo } from "react";
 import { io, Socket } from "socket.io-client";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/socket";
 import { useDispatch } from "react-redux";
@@ -7,6 +7,7 @@ import { gameActions } from "../store/gameSlice";
 import { notificationsActions } from "../store/notificationsSlice.ts";
 import { toast } from "react-toastify";
 import { userActions } from "../store/userSlice.ts";
+import { clearQueue } from "../store/queueSlice.ts";
 
 export type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -32,46 +33,48 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     newSocket.on("set_game", (game) => dispatch(gameActions.setGame(game)));
 
     newSocket.on("update_game", (game) =>
-      dispatch(gameActions.updateGame(game))
+      dispatch(gameActions.updateGame(game)),
     );
+
+    newSocket.on("queue_left", () => dispatch(clearQueue()));
 
     // todo - stringyfing the message is a temporary solution - now we can see a json object in the toast
     newSocket.on("exception", (message) =>
-      toast.error(typeof message === "string" ? message : message.message)
+      toast.error(typeof message === "string" ? message : message.message),
     );
 
     newSocket.on("notification", (message) => toast.info(message));
 
     newSocket.on("new_notification", (notification) =>
-      dispatch(notificationsActions.newNotification(notification))
+      dispatch(notificationsActions.newNotification(notification)),
     );
 
     newSocket.on("set_notifications", (notifications) =>
-      dispatch(notificationsActions.setNotifications(notifications))
+      dispatch(notificationsActions.setNotifications(notifications)),
     );
 
     newSocket.on("remove_notification", (notificationId) =>
-      dispatch(notificationsActions.removeNotification(notificationId))
+      dispatch(notificationsActions.removeNotification(notificationId)),
     );
 
     newSocket.on("set_friend_requests", (friendRequests) =>
-      dispatch(userActions.setFriendRequests(friendRequests))
+      dispatch(userActions.setFriendRequests(friendRequests)),
     );
 
     newSocket.on("remove_friend_request", (friendRequestId) =>
-      dispatch(userActions.removeFriendRequest(friendRequestId))
+      dispatch(userActions.removeFriendRequest(friendRequestId)),
     );
 
     newSocket.on("new_friend_request", (friendRequest) =>
-      dispatch(userActions.newFriendRequest(friendRequest))
+      dispatch(userActions.newFriendRequest(friendRequest)),
     );
 
     newSocket.on("set_friends", (friends) =>
-      dispatch(userActions.setFriendships(friends))
+      dispatch(userActions.setFriendships(friends)),
     );
 
     newSocket.on("new_friend", (friend) =>
-      dispatch(userActions.newFriendship(friend))
+      dispatch(userActions.newFriendship(friend)),
     );
 
     newSocket.on("update_friend_status", (friendId, newStatus) =>
@@ -79,12 +82,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         userActions.updateFriendStatus({
           friendId,
           newStatus,
-        })
-      )
+        }),
+      ),
     );
 
     newSocket.on("remove_friend", (friendId) =>
-      dispatch(userActions.removeFriendship(friendId))
+      dispatch(userActions.removeFriendship(friendId)),
     );
     return newSocket;
   }, []);
