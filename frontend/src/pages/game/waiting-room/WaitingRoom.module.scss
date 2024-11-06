@@ -163,6 +163,7 @@
   padding: $button-padding;
   box-shadow: $button-shadow-green;
   color: white;
+  border-radius: $container-border-radius;
   font-size: $button-font-size;
   font-weight: $button-font-weight;
 
@@ -179,6 +180,7 @@
   padding: $button-padding;
   box-shadow: $button-shadow-black;
   font-size: $button-font-size;
+  border-radius: $container-border-radius;
   font-weight: $button-font-weight;
 
   &:hover {

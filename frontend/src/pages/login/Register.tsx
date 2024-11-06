@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import Meta from "../../components/Meta.tsx";
-import { Breadcrumb, Button } from "react-bootstrap";
+import { Breadcrumb } from "react-bootstrap";
 import * as yup from "yup";
 import styles from "./Login.module.scss";
 import CustomInput from "../../components/CustomInput.tsx";
@@ -86,8 +86,8 @@ const Register = () => {
 
   return (
     <>
-      <Meta title={"Rejestracja"}/>
-      <Breadcrumb title="Rejestracja"/>
+      <Meta title={"Rejestracja"} />
+      <Breadcrumb title="Rejestracja" />
       <MainContainer>
         <MainBox>
           <MainTitle>Rejestracja</MainTitle>
@@ -179,9 +179,9 @@ const Register = () => {
                 )}
             </div>
             {error && <div className="error p-0 text-center">{error}</div>}
-            <Button type="submit" className={styles.submitButton}>
+            <button type="submit" className={styles.submitButton}>
               Zarejestruj się
-            </Button>
+            </button>
           </form>
           <div className={styles.registerLink}>
             Masz już konto?{" "}

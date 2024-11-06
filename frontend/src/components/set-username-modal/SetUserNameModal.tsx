@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import styles from "./setUserNameModal.module.scss";
 import getApi from "../../api/axios.ts";
 import { useDispatch } from "react-redux";
@@ -66,8 +66,7 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
         {usernameError && <div className={styles.error}>{usernameError}</div>}
       </Modal.Body>
       <Modal.Footer className={styles.modalButtons}>
-        <Button
-          variant="primary"
+        <button
           className={styles.confirmButton}
           onClick={() => {
             if (userNameRef.current?.value) {
@@ -78,14 +77,10 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
           }}
         >
           {props.confirmBtnText}
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={props.onClose}
-          className={styles.cancelButton}
-        >
+        </button>
+        <button onClick={props.onClose} className={styles.cancelButton}>
           Anuluj
-        </Button>
+        </button>
       </Modal.Footer>
     </Modal>
   );

@@ -1,5 +1,5 @@
 import styles from "../pages/game/waiting-room/WaitingRoom.module.scss";
-import { Button, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { ReactNode } from "react";
 
 type ConfirmationModalProps = {
@@ -11,7 +11,7 @@ type ConfirmationModalProps = {
   children: ReactNode;
   confirmText?: string;
   cancelText?: string;
-}
+};
 
 export default function ConfirmationModal(props: ConfirmationModalProps) {
   function confirm() {
@@ -37,26 +37,16 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className={styles.modalBody}>
-          {props.children}
-        </div>
+        <div className={styles.modalBody}>{props.children}</div>
       </Modal.Body>
       <Modal.Footer className={styles.modalButtons}>
-        <Button
-          variant="primary"
-          onClick={confirm}
-          className={styles.modalConfirmBut}
-        >
+        <button onClick={confirm} className={styles.modalConfirmBut}>
           {props.confirmText ?? "Potwierdź"}
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={cancel}
-          className={styles.modalCancelBut}
-        >
+        </button>
+        <button onClick={cancel} className={styles.modalCancelBut}>
           {props.cancelText ?? "Anuluj"}
-        </Button>
+        </button>
       </Modal.Footer>
     </Modal>
-  )
+  );
 }
