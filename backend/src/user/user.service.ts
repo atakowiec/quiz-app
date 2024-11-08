@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { User } from "./user.model";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { FriendsService } from "../friends/friends.service";
 import { TokenPayload } from "../auth/auth";
 import {UpdateUserDto} from "./user";
 import * as bcrypt from "bcrypt";
+
 
 @Injectable()
 export class UserService {
@@ -67,9 +68,22 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
-    if (updateUserDto.email) user.email = updateUserDto.email;
-    if (updateUserDto.password) user.password = await this.hashPassword(updateUserDto.password);
-    await this.repository.save(user);
+
+    if (updateUserDto.email) {
+      user.email = updateUserDto.email;
+    }
+
+    if (updateUserDto.password && updateUserDto.currentPassword) {
+      const isMatch = await bcrypt.compare(updateUserDto.currentPassword, user.password);
+      if (!isMatch) {
+        throw new BadRequestException("Obecne hasło jest niepoprawne");
+      }
+      user.password = await this.hashPassword(updateUserDto.password);
+    } else if (updateUserDto.password && !updateUserDto.currentPassword) {
+      throw new BadRequestException("Proszę podać obecne hasło");
+    }
+
+   await this.repository.save(user);
     return user;
   }
 

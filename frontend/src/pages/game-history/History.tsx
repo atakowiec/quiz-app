@@ -36,7 +36,11 @@ const History: React.FC = () => {
       setError("");
       try {
         const response = await getApi().get(`history/user/${userId}`);
-        setGameHistory(response.data);
+        const sortedData = response.data.sort(
+          (a: GameHistoryPlayerItem, b: GameHistoryPlayerItem) =>
+            new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
+        );
+        setGameHistory(sortedData);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);

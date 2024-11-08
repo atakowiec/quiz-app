@@ -19,6 +19,24 @@ import StatsModal from "./StatsModal.tsx";
 import { ProfileStats } from "@shared/game.js";
 import getApi from "../../api/axios.ts";
 
+const getGameWordForm = (count: number) => {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (
+    count === 0 ||
+    (lastTwoDigits >= 10 && lastTwoDigits <= 20) ||
+    lastDigit === 0 ||
+    lastDigit >= 5
+  ) {
+    return "gier";
+  } else if (lastDigit === 1) {
+    return "gra";
+  } else {
+    return "gry";
+  }
+};
+
 const Stats: React.FC = () => {
   const user = useUser();
 
@@ -41,7 +59,13 @@ const Stats: React.FC = () => {
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
-  const [profileStats, setProfileStats] = useState<ProfileStats>([]);
+  const [profileStats, setProfileStats] = useState<ProfileStats>({
+    rankingPlaces: [],
+    gamesPlayed: 0,
+    totalScore: 0,
+    averageScore: 0,
+    maxScore: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -78,39 +102,29 @@ const Stats: React.FC = () => {
             <RankingVisualization rankingData={profileStats.rankingPlaces} />
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
-                <div>Liczba zagranych gier</div>
+                <div>
+                  Liczba zagranych {getGameWordForm(profileStats.gamesPlayed)}
+                </div>
                 <div>{profileStats.gamesPlayed}</div>
               </div>
-              <button className={styles.rankingIcon}>
-                <IoIosStats />
-              </button>
             </div>
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Liczba zdobytych punktów</div>
                 <div>{profileStats.totalScore}</div>
               </div>
-              <button className={styles.rankingIcon}>
-                <IoIosStats />
-              </button>
             </div>
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Średnia liczba punktów na grę</div>
                 <div>{profileStats.averageScore}</div>
               </div>
-              <button className={styles.rankingIcon}>
-                <IoIosStats />
-              </button>
             </div>
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Największa liczba punktów w grze</div>
                 <div>{profileStats.maxScore}</div>
               </div>
-              <button className={styles.rankingIcon}>
-                <IoIosStats />
-              </button>
             </div>
             <div className={styles.rankingButtons}>
               <button className={styles.rankingButton} onClick={openModal}>
@@ -121,9 +135,7 @@ const Stats: React.FC = () => {
                 handleClose={closeModal}
                 userId={user?.id}
               />
-              <button className={styles.rankingButton}>
-                Statystyki jakies
-              </button>
+              <button className={styles.rankingButton}>Wykres punktów</button>
             </div>
           </div>
         </MainBox>

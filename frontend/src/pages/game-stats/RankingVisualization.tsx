@@ -1,8 +1,27 @@
 import { RankingPlace } from "@shared/game";
 import styles from "./Stats.module.scss";
+
 interface RankingVisualizationProps {
   rankingData: RankingPlace[];
 }
+
+const getWordForm = (count: number) => {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (
+    count === 0 ||
+    (lastTwoDigits >= 10 && lastTwoDigits <= 20) ||
+    lastDigit === 0 ||
+    lastDigit >= 5
+  ) {
+    return "gier";
+  } else if (lastDigit === 1) {
+    return "gra";
+  } else if (lastDigit >= 2 && lastDigit <= 4) {
+    return "gry";
+  }
+};
 
 const RankingVisualization: React.FC<RankingVisualizationProps> = ({
   rankingData,
@@ -21,7 +40,7 @@ const RankingVisualization: React.FC<RankingVisualizationProps> = ({
             }`}
           >
             <div className={styles.count}>
-              {item.count} {item.unit}
+              {item.count} {getWordForm(item.count)}
             </div>
             <div className={styles.percentage}>{item.percentage}%</div>
           </div>

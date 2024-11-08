@@ -39,7 +39,12 @@ const userSlice = createSlice({
         friends: [],
         friendRequests: []
       };
+      
     },
+    updateEmail: (state, action) => {
+      state.email = action.payload;
+    },
+    
     newFriendship(state, action) {
       const friends: Friend[] = state.friends ?? [];
       const newFriend: Friend = action.payload;

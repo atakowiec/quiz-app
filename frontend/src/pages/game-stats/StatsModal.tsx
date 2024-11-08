@@ -12,6 +12,24 @@ interface StatsModalProps {
   userId: number | undefined;
 }
 
+const getWordForm = (count: number) => {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (
+    count === 0 ||
+    (lastTwoDigits >= 10 && lastTwoDigits <= 20) ||
+    lastDigit === 0 ||
+    lastDigit >= 5
+  ) {
+    return "gier";
+  } else if (lastDigit === 1) {
+    return "gra";
+  } else if (lastDigit >= 2 && lastDigit <= 4) {
+    return "gry";
+  }
+};
+
 const StatsModal: React.FC<StatsModalProps> = ({
   show,
   handleClose,
@@ -39,10 +57,7 @@ const StatsModal: React.FC<StatsModalProps> = ({
 
   const findImageFromCategoryName = (categoryName: string) => {
     const category = categories.find((cat) => cat.name === categoryName);
-    if (category) {
-      return category?.img;
-    }
-    return "";
+    return category ? category.img : "";
   };
 
   const fetchCategoryStats = async () => {
@@ -60,8 +75,12 @@ const StatsModal: React.FC<StatsModalProps> = ({
       for (const category of gamesResponse.data) {
         category.img = findImageFromCategoryName(category.category_name);
       }
-      avgResponse.data.sort((a, b) => b.number - a.number);
-      gamesResponse.data.sort((a, b) => b.number - a.number);
+      avgResponse.data.sort(
+        (a: CategoryScore, b: CategoryScore) => b.number - a.number
+      );
+      gamesResponse.data.sort(
+        (a: CategoryScore, b: CategoryScore) => b.number - a.number
+      );
       setAvgCategoryPoints(avgResponse.data);
       setGamesPerCategory(gamesResponse.data);
     } catch (err) {
@@ -96,7 +115,9 @@ const StatsModal: React.FC<StatsModalProps> = ({
           {activeButton === "points" ? (
             <span>{stat.number} pkt</span>
           ) : (
-            <span>{stat.number} gier</span>
+            <span>
+              {stat.number} {getWordForm(stat.number)}
+            </span>
           )}
         </div>
       </div>

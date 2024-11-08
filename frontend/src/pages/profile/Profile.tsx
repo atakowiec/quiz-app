@@ -14,11 +14,12 @@ import {
 import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
-import { FaEdit } from "react-icons/fa";
-import { FaLock } from "react-icons/fa";
+import { FaEdit, FaLock } from "react-icons/fa";
 import { UserState } from "../../store/userSlice.ts";
 import FriendCard from "./components/FriendCard.tsx";
 import AddFriendsModal from "./components/AddFriendsModal.tsx";
+import UpdateEmailModal from "./Edit/UpdateEmailModal.tsx";
+import ChangePasswordModal from "./Edit/ChangePasswordModal.tsx";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -28,57 +29,84 @@ const Profile: React.FC = () => {
     { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
   ];
 
-  const [addFriendsVisible, setAddFriendsVisible] = useState<boolean>(false);
-  const [searchFriend, setSearchFriend] = useState<string>("");
-  const user = useSelector<State, UserState>(state => state.user);
+  const [addFriendsVisible, setAddFriendsVisible] = useState(false);
+  const [updateEmailVisible, setUpdateEmailVisible] = useState(false);
+  const [searchFriend, setSearchFriend] = useState("");
+  const [changePasswordVisible, setChangePasswordVisible] = useState(false);
+
+  const user = useSelector<State, UserState>((state) => state.user);
 
   return (
     <>
-      <Meta title={"Profil"}/>
-      <Breadcrumb title="Profil"/>
-      <Sidebar items={sidebarItems}/>
+      <Meta title={"Profil"} />
+      <Breadcrumb title="Profil" />
+      <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle>Twój Profil</MainTitle>
           <div className={styles.profileBox}>
             <div className={styles.iconAndName}>
-              <div className={styles.profileIcon}>{user.username?.[0] ?? "-"}</div>
+              <div className={styles.profileIcon}>
+                {user.username?.[0] ?? "-"}
+              </div>
               <div className={styles.nameEmail}>
                 <div className={styles.profileName}>
                   {user.username}
-                  <FaEdit className={styles.editIcon}/>
+                  <FaEdit
+                    className={styles.editIcon}
+                    onClick={() => setUpdateEmailVisible(true)}
+                  />
                 </div>
                 <div className={styles.profileEmail}>{user.email}</div>
               </div>
             </div>
-            <button className={styles.changePass}>
-              <FaLock className={styles.lockIcon}/> Zmień hasło
+            <button
+              className={styles.changePass}
+              onClick={() => setChangePasswordVisible(true)}
+            >
+              <FaLock className={styles.lockIcon} /> Zmień hasło
             </button>
           </div>
           <div className={styles.friendsText}>Lista znajomych</div>
           <div className={styles.friendsBox}>
-            <input type={"text"}
-                   placeholder={"Wyszukaj..."}
-                   className={styles.searchFriendInput}
-                   value={searchFriend}
-                   onChange={e => setSearchFriend(e.target.value)}/>
+            <input
+              type="text"
+              placeholder="Wyszukaj..."
+              className={styles.searchFriendInput}
+              value={searchFriend}
+              onChange={(e) => setSearchFriend(e.target.value)}
+            />
             {user.friends &&
               user.friends
-                .filter(friend => friend.username.includes(searchFriend))
-                .map(friend => (
-                  <FriendCard key={friend.id} friend={friend}/>
+                .filter((friend) => friend.username.includes(searchFriend))
+                .map((friend) => (
+                  <FriendCard key={friend.id} friend={friend} />
                 ))}
-            {
-              user.friends?.length === 0 &&
-                <div className={styles.noFriends}>Lista znajomych jest pusta</div>
-            }
-            <button className={styles.addFriends} onClick={() => setAddFriendsVisible(true)}>
+            {user.friends?.length === 0 && (
+              <div className={styles.noFriends}>Lista znajomych jest pusta</div>
+            )}
+            <button
+              className={styles.addFriends}
+              onClick={() => setAddFriendsVisible(true)}
+            >
               Wyszukaj znajomych
             </button>
           </div>
         </MainBox>
       </MainContainer>
-      <AddFriendsModal show={addFriendsVisible} setShow={setAddFriendsVisible}/>
+      <AddFriendsModal
+        show={addFriendsVisible}
+        setShow={setAddFriendsVisible}
+      />
+      <UpdateEmailModal
+        show={updateEmailVisible}
+        handleClose={() => setUpdateEmailVisible(false)}
+        userId={user.id}
+      />
+      <ChangePasswordModal
+        show={changePasswordVisible}
+        handleClose={() => setChangePasswordVisible(false)}
+      />
     </>
   );
 };

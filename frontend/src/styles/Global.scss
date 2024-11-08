@@ -75,8 +75,9 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 80vw;
   max-width: 600px;
-  transition: transform 0.5s ease-in-out,
-  opacity 0.5s ease-in-out;
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
 }
 
 .mainText {
@@ -89,6 +90,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   padding: 0.5rem;
   margin-bottom: 1rem;
   position: sticky;
+  font-size: 2rem;
 }
 
 * {
@@ -103,7 +105,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #D9D9D9;
+    background: #d9d9d9;
     border-radius: 10px;
   }
 
@@ -150,7 +152,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 
 @media (max-width: $phone-breakpoint) {
   .mainText {
-    font-size: 1rem;
+    font-size: 1.5rem;
     margin-bottom: 0;
   }
 }

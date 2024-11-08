@@ -13,8 +13,15 @@
 - [x] sprawdzic i naprawic i dodac zaokraglenia punktow w grze
 - [x] odswiezenie gry jako niezalogowany przywraca do gry
 - [x] osoba niezalogowana nie ma w ogole powiadomien
-- [ ] info ze ktos inny uzyl kola ratunkowego
-- [ ] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały
+- [x] info ze ktos inny uzyl kola ratunkowego
+- [x] jak jest admin to ma dostępność do wszystkiego- teraz ma tylko do admina
+- [ ] niedostepne kola usunac z gry
+- [ ] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały (jak pol ekranu na lapku np. profil)
+- [ ] ten ranking by sie wyswietlal u znajomych plus zagrane gry
+- [ ] responsywność historia gier
+- [ ] responsywnosc pytania (jak jest za duzy obraz to na lapku ucieka kontener)
+- [ ] ikonka do muzyki poprawic
+- [ ] rozmiar kół ratunkowych na innych urzadzeniach
 
 ## Co jeszcze trzeba zrobic
 
@@ -22,16 +29,20 @@
 - [x] tryb jednoosobowy - nie zapisuja sie pierwsze miejsca itp (kwerendy nie biorą pod uwagę singleplayer)
 - [x] zapis do bazy gry dla zalogowanych
 - [chyba?] skonczyc admina - zmiana stylow, zrobic ladne i dzialajace i spójne z reszta aplikacji
+- [ ] admin wyszukiwanie
 - [x] dodac sprawdzanie permisji/autoryzacji np na profilu lub adminie
 - [x] zrobic od nowa profil
 - [x] zrobic modal z profilem innych graczy (figma)
 - [ ] zrobic zapraszanie do gry z poziomu poczekalni (sidebar) (modal z lista znajomych)
 - [ ] kolory avatarow na backendzie (avatar ma pierwsza litere nicku) (figma - kolory)
+- [ ] kolory na frontend poprawic jak beda na backend
 - [x] skonczyc znajomych i zaprosznia do gry
 - [x] przycisk "zagraj ponownie" po zakonczeniu gry - na razie nie dziala wcale
 - [x] w matchmakingu - zagraj kolejna gre - dolacza do kolejki na nowo
-- [ ] zmiana maila i hasla (backend jest PATCH: /users/update-profile z body {email?, password?})
+- [x] zmiana maila i hasla (backend jest PATCH: /users/update-profile z body {email?, password?})
 - [x] na profilu opcja do wyszukiwania graczy po nicku
-- [X] limit czlonkow w grze
+- [x] limit czlonkow w grze
 - [x] muzyka w trakcie gry - Łukasz
 - [x] w "zapros znajomych" w grze wyswietlenie kto jest "online" lub "w grze" aka "zajęty"
+- [ ] wykres do tych statystyk
+- [ ] button do powrotu z ustawien

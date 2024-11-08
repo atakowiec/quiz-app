@@ -14,36 +14,46 @@ import { useUser } from "../../store/userSlice.ts";
 import { getFriend, translateUserStatus } from "../../utils/utils.ts";
 import { FriendshipButton } from "./components/FriendshipButton.tsx";
 
-
 interface ProfileModalProps {
   show: boolean;
   handleClose: () => void;
   userId: number;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }) => {
+const ProfileModal: React.FC<ProfileModalProps> = ({
+  show,
+  handleClose,
+  userId,
+}) => {
   const socket = useSocket();
-  const { loaded, data: user } = useApi<UserDetails>(`/users/get-by-id/${userId}`, "get")
+  const { loaded, data: user } = useApi<UserDetails>(
+    `/users/get-by-id/${userId}`,
+    "get"
+  );
   const userLoaded = loaded && !!user;
-  const game = useGame()
-  const loggedUser = useUser()
+  const game = useGame();
+  const loggedUser = useUser();
   const isOwnUser = loggedUser?.id === userId;
 
   const friend = getFriend(loggedUser, userId);
 
-  const canInviteToGame = !isOwnUser && userLoaded && friend && friend.status == "online" && game?.status == "waiting_for_players";
+  const canInviteToGame =
+    !isOwnUser &&
+    userLoaded &&
+    friend &&
+    friend.status == "online" &&
+    game?.status == "waiting_for_players";
 
   function inviteToGame() {
-    if (!user)
-      return
+    if (!user) return;
 
     if (game?.status != "waiting_for_players") {
-      toast.warning("Nie możesz tego teraz zrobić!")
+      toast.warning("Nie możesz tego teraz zrobić!");
 
-      return
+      return;
     }
 
-    socket.emit("send_game_invite", user.id)
+    socket.emit("send_game_invite", user.id);
   }
 
   return (
@@ -57,31 +67,31 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ show, handleClose, userId }
                 {user?.username?.[0] ?? "-"}
               </div>
               <div className={styles.nameEmail}>
-                <div className={styles.profileName}>{userLoaded ? user.username : "-"}</div>
-                {
-                  friend &&
-                  <div className={`${styles.status} ${styles[friend.status ?? "offline"]}`}>
-                    <FaCircle className={styles.circle}/>
+                <div className={styles.profileName}>
+                  {userLoaded ? user.username : "-"}
+                </div>
+                {friend && (
+                  <div
+                    className={`${styles.status} ${styles[friend.status ?? "offline"]}`}
+                  >
+                    <FaCircle className={styles.circle} />
                     {translateUserStatus(friend.status ?? "offline")}
                   </div>
-                }
+                )}
               </div>
             </div>
             <div className={styles.rightSide}>
-              {
-                canInviteToGame &&
-                  <button className={styles.inviteF} onClick={inviteToGame}>
-                      <GiGamepad className={styles.gamePad}/>
-                      Zaproś do gry
-                  </button>
-              }
-              {
-                !isOwnUser && userLoaded && <FriendshipButton user={user} />
-              }
+              {canInviteToGame && (
+                <button className={styles.inviteF} onClick={inviteToGame}>
+                  <GiGamepad className={styles.gamePad} />
+                  Zaproś do gry
+                </button>
+              )}
+              {!isOwnUser && userLoaded && <FriendshipButton user={user} />}
             </div>
           </div>
           <div className={styles.friendRanking}>
-            <RankingVisualization/>
+            <RankingVisualization rankingData={[]} />
             <div className={styles.friendStats}>
               <div>Zagranych Gier</div>
               <div>1500</div>
