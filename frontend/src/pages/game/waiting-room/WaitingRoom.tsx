@@ -87,8 +87,8 @@ const WaitingRoom: React.FC = () => {
     }
 
     await navigator.clipboard.writeText(
-      `http://localhost:5173/join-game?code=${id}`,
-    ); // todo change to production url some day
+      `${import.meta.env.VITE_API_URL}/join-game?code=${id}`,
+    );
 
     setCopyAnimationStage("copying");
 
@@ -105,7 +105,7 @@ const WaitingRoom: React.FC = () => {
     }, 2300);
   }
 
-  function renderTooltip(props: any) {
+  function renderTooltip(props: object) {
     return (
       game?.gameType !== "matchmaking" && (
         <Tooltip id="button-tooltip" {...props}>

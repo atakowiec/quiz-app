@@ -16,7 +16,7 @@ export const SocketContext = createContext<SocketType | null>(null);
 export function SocketProvider({ children }: { children: ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
   const socket: SocketType = useMemo(() => {
-    const newSocket: SocketType = io("http://localhost:3000", {
+    const newSocket: SocketType = io(import.meta.env.VITE_API_URL, {
       withCredentials: true, // this will to send a cookie with token automatically with the handshake
       autoConnect: false, // we don't want to connect immediately - socket will connect only when the user will enter its name or log in.
       transports: ["websocket"], // dunno why, but I guess it won't work without this

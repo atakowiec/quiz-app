@@ -14,6 +14,7 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     origin: [
+      configService.get("CLIENT_URL"),
       `http://localhost:${clientPort}`,
       new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
     ],
