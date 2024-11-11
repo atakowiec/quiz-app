@@ -28,7 +28,7 @@ export class SocketIOAdapter extends IoAdapter {
     const cors: CorsOptions = {
       credentials: true,
       origin: [
-        this.configService.get("CLIENT_URL")
+        this.configService.get("CLIENT_URL"),
         `http://localhost:${clientPort}`,
         new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
       ],
@@ -51,39 +51,39 @@ export class SocketIOAdapter extends IoAdapter {
 
 const createTokenMiddleware =
   (authService: AuthService, userService: UserService, logger: Logger) =>
-  async (socket: SocketType, next: NextFunction) => {
-    logger.log("Middleware for socket.io connection");
-    if (!socket.handshake.headers.cookie) {
-      return next(new UnauthorizedException("No auth cookie provided"));
-    }
-    try {
-      const user = authService.extractTokenPayloadFromSocket(socket);
+    async (socket: SocketType, next: NextFunction) => {
+      logger.log("Middleware for socket.io connection");
+      if (!socket.handshake.headers.cookie) {
+        return next(new UnauthorizedException("No auth cookie provided"));
+      }
+      try {
+        const user = authService.extractTokenPayloadFromSocket(socket);
 
-      if (user.id) {
-        const dbUser = await userService.repository.findOne({
-          where: { id: user.id },
-        });
+        if (user.id) {
+          const dbUser = await userService.repository.findOne({
+            where: { id: user.id },
+          });
 
-        if (!dbUser) {
-          logger.warn(`User with id ${user.id} not found in the database - removing token.`);
-          authService.clearTokenFromSocket(socket);
-          return next(new UnauthorizedException("User not found"));
+          if (!dbUser) {
+            logger.warn(`User with id ${user.id} not found in the database - removing token.`);
+            authService.clearTokenFromSocket(socket);
+            return next(new UnauthorizedException("User not found"));
+          } else {
+            logger.log(`User [ID:${dbUser.id}] ${dbUser.username} found in the database.`);
+            socket.data = {
+              user: dbUser,
+              username: dbUser.username,
+            };
+          }
         } else {
-          logger.log(`User [ID:${dbUser.id}] ${dbUser.username} found in the database.`);
+          logger.log(`User ${user.username} has no account.`);
           socket.data = {
-            user: dbUser,
-            username: dbUser.username,
+            username: user.username,
           };
         }
-      } else {
-        logger.log(`User ${user.username} has no account.`);
-        socket.data = {
-          username: user.username,
-        };
+        next();
+      } catch (error) {
+        logger.error("Error in token middleware:", error);
+        next(new UnauthorizedException("Invalid token"));
       }
-      next();
-    } catch (error) {
-      logger.error("Error in token middleware:", error);
-      next(new UnauthorizedException("Invalid token"));
-    }
-  };
+    };
