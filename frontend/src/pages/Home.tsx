@@ -78,7 +78,7 @@ const Home: React.FC = () => {
           </div>
           <div className={styles.imageWrapper}>
             <img
-              src="/assets/homePhoto.png"
+              src={"https://img.cieszczyk.pl/content/homePhoto.avif"}
               alt="1"
               className={`img-fluid ${styles.img1}`}
             />
