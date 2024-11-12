@@ -19,7 +19,7 @@ const SelectedCategoryPhase = () => {
           <div className={`${styles.categoryChosen}`}>
             <img
               className={styles.categoryChosenImage}
-              src={"https://via.placeholder.com/250"}
+              src={game.round.category.img}
               alt={game.round.category.name}
             />
             <div className={styles.categoryTitle}>
@@ -48,7 +48,7 @@ const SelectedCategoryPhase = () => {
                     }}
                   />
                 );
-              }
+              },
             )}
           </div>
         </MainBox>
