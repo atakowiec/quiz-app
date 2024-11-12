@@ -61,7 +61,7 @@ const CategoriesModal: React.FC<CategoriesModalProps> = ({
               } // Disable click if not owner
             >
               <img
-                src={`/assets/categories/${category.img || "default.jpg"}`}
+                src={`${category.img}`}
                 alt={category.name}
                 className={styles.categoryImage}
               />

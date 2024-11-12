@@ -36,7 +36,7 @@ const StatsModal: React.FC<StatsModalProps> = ({
   userId,
 }) => {
   const [avgCategoryPoints, setAvgCategoryPoints] = useState<CategoryScore[]>(
-    []
+    [],
   );
   const [gamesPerCategory, setGamesPerCategory] = useState<CategoryScore[]>([]);
   const [activeButton, setActiveButton] = useState<string>("points");
@@ -102,11 +102,7 @@ const StatsModal: React.FC<StatsModalProps> = ({
         <div className={styles.imgName}>
           <img
             className={styles.categoryImage}
-            src={
-              stat.img
-                ? `/assets/categories/${stat.img}`
-                : "/api/placeholder/50/50"
-            }
+            src={stat.img ? `${stat.img}` : "/api/placeholder/50/50"}
             alt={stat.category_name}
           />
           <div className={styles.categoryName}>{stat.category_name}</div>

@@ -7,12 +7,13 @@ interface CategoryElementProps {
   description?: string;
   img?: string;
 }
+
 export default function CategoryElement(props: CategoryElementProps) {
   return (
     <div className={styles.catBox}>
       <Link to={`/admin/categories/${props.name}`}>
         <img
-          src={`/assets/categories/${props.img}`}
+          src={`${props.img}`}
           alt={props.name}
           className={styles.categoryImage}
         />
