@@ -85,9 +85,10 @@ const WaitingRoom: React.FC = () => {
     if (!id || copyAnimationStage !== "none") {
       return;
     }
+    const fromURL = new URL(window.location.href).hostname;
 
     await navigator.clipboard.writeText(
-      `${import.meta.env.VITE_API_URL}/join-game?code=${id}`,
+      `https://${fromURL}/join-game?code=${id}`,
     );
 
     setCopyAnimationStage("copying");
