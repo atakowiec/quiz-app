@@ -8,7 +8,7 @@ import {
   CreateQuestionParams,
   UpdateQuestionParams,
 } from "src/questions/questions";
-import { Repository } from "typeorm";
+import { Brackets, Like, Repository } from "typeorm";
 
 @Injectable()
 export class QuestionsService {
@@ -220,36 +220,51 @@ export class QuestionsService {
     await this.questionRepository.save(question);
     return question;
   }
+
   async findQuestions(
-    category: string,
-    page: number,
-    limit: number
-  ): Promise<{ questions: Question[]; total: number }> {
-    const [questions, total] = await this.questionRepository.findAndCount({
-      where: { category: { name: category }, isActive: true },
-      relations: ["category", "distractors"],
-      skip: (page - 1) * limit,
-      take: limit,
-      order: { createdAt: "DESC" },
-    });
+  category: string,
+  page?: number,
+  limit?: number,
+  content?: string
+): Promise<{ questions: Question[]; total: number }> {
+  const queryBuilder = this.questionRepository.createQueryBuilder("question")
+    .leftJoinAndSelect("question.category", "category")
+    .leftJoinAndSelect("question.distractors", "distractors")
+    .where("category.name = :category", { category })
+    .andWhere("question.isActive = :isActive", { isActive: true });
 
-    return { questions, total };
-
-    return {
-      questions: [],
-      total: 0,
-    } as { questions: Question[]; total: number };
+  if (content) {
+    queryBuilder.andWhere(
+      new Brackets(qb => {
+        qb.where("LOWER(question.question) LIKE LOWER(:content)", { content: `%${content}%` })
+          .orWhere("LOWER(distractors.content) LIKE LOWER(:content)", { content: `%${content}%` });
+      })
+    );
   }
 
+  if (!content) {
+    queryBuilder.skip((page - 1) * limit).take(limit);
+  }
+
+  queryBuilder.orderBy("question.createdAt", "DESC");
+
+  const [questions, total] = await queryBuilder.getManyAndCount();
+
+  return { questions, total };
+}
+
+  
   async getQuestionsPaginate(
     category: string,
     page: number,
-    limit: number
+    limit: number,
+    content?: string
   ): Promise<{ questions: Question[]; totalQuestions: number }> {
     const { questions, total } = await this.findQuestions(
       category,
       page,
-      limit
+      limit,
+      content
     );
     return { questions, totalQuestions: total };
   }

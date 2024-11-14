@@ -15,7 +15,7 @@
 - [x] osoba niezalogowana nie ma w ogole powiadomien
 - [x] info ze ktos inny uzyl kola ratunkowego
 - [ ] jak jest admin to ma dostępność do wszystkiego- teraz ma tylko do admina
-- [ ] niedostepne kola usunac z gry
+- [x] niedostepne kola usunac z gry
 - [x] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały (jak pol ekranu na lapku np. profil)
 - [ ] ten ranking by sie wyswietlal u znajomych plus zagrane gry
 - [ ] responsywność historia gier
@@ -29,7 +29,7 @@
 - [x] tryb jednoosobowy - nie zapisuja sie pierwsze miejsca itp (kwerendy nie biorą pod uwagę singleplayer)
 - [x] zapis do bazy gry dla zalogowanych
 - [x] skonczyc admina - zmiana stylow, zrobic ladne i dzialajace i spójne z reszta aplikacji
-- [ ] admin wyszukiwanie
+- [x] admin wyszukiwanie
 - [x] dodac sprawdzanie permisji/autoryzacji np na profilu lub adminie
 - [x] zrobic od nowa profil
 - [x] zrobic modal z profilem innych graczy (figma)

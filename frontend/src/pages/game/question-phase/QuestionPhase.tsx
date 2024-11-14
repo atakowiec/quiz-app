@@ -53,8 +53,11 @@ const QuestionPhase = () => {
     socket.emit("use_helper", helper);
   }
 
+  const blackListedHelpers = game.settings.blackListedHelpers || [];
   // Filtrujemy tylko dostępne koła ratunkowe na podstawie availableHelpers
-  const availableHelpers = game.player.availableHelpers;
+  const availableHelpers = game.player.availableHelpers.filter(
+    (helper: HelperType) => !blackListedHelpers.includes(helper)
+  );
 
   return (
     <>

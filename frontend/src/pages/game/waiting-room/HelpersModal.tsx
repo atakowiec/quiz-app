@@ -77,7 +77,7 @@ const HelpersModal: React.FC<HelpersModalProps> = ({
           <div className={styles.helpers}>
             {helpersNames.map((helperName, index) => {
               const isBlackListed = !gameSettings?.blackListedHelpers?.includes(
-                helperName as HelperType,
+                helperName as HelperType
               );
               return (
                 <div key={index} className={styles.singleHelper}>

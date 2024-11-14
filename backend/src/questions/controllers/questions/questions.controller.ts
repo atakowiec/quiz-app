@@ -30,11 +30,12 @@ export class QuestionsController {
   getQuestionsPaginate(
     @Param("category") category: string,
     @Param("page") page: number,
-    @Query("limit") limit: number
+    @Query("limit") limit: number,
+    @Query("content") content?: string
   ) {
     limit = limit ? limit : 25;
 
-    return this.questionsService.getQuestionsPaginate(category, page, limit);
+    return this.questionsService.getQuestionsPaginate(category, page, limit, content);
   }
 
   @Post()

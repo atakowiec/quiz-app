@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { ICategory } from "@shared/game";
 import QuestionElement from "./components/QuestionElement";
 import styles from "./questions.module.scss";
+
 export interface Pagination {
   questions: Question[];
   totalQuestions: number;
@@ -25,32 +26,42 @@ export interface Distractor {
 
 export default function Questions() {
   const { categoryName } = useParams();
-
-  const [questions, setQuestions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const questionsPerPage = 10;
   const maxVisiblePages = 5;
 
-  const fetchedQuestions = useApi(
-    `/questions/paginate/${categoryName}/${currentPage}?limit=${questionsPerPage}`,
-    "get"
-  );
+  // Determine API path based on whether there is a search term
+  const apiPath = searchTerm
+    ? `/questions/paginate/${categoryName}/1?limit=${questionsPerPage}&content=${searchTerm}`
+    : `/questions/paginate/${categoryName}/${currentPage}?limit=${questionsPerPage}`;
 
-  console.log(fetchedQuestions);
+  // Use useApi with the dynamically determined path
+  const { data, error, loaded } = useApi<Pagination>(apiPath, "get");
 
+  // Update state with fetched questions and pagination
+  const questions = data?.questions || [];
+  const totalPages = Math.ceil((data?.totalQuestions || 0) / questionsPerPage);
+
+  // Debounced search effect for better performance
   useEffect(() => {
-    if (fetchedQuestions && fetchedQuestions.data) {
-      console.log(fetchedQuestions.data.questions);
-      setQuestions(fetchedQuestions.data.questions);
-      setTotalPages(
-        Math.ceil(fetchedQuestions.data.totalQuestions / questionsPerPage)
-      );
-    }
-  }, [fetchedQuestions]);
+    const timeoutId = setTimeout(() => {
+      if (searchTerm) {
+        setSearchTerm(searchTerm); // Triggers useApi to re-fetch with updated search term
+      } else {
+        setCurrentPage(1); // Reset to first page if search is cleared
+      }
+    }, 50); // 50ms debounce delay
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
   const renderPagination = () => {
@@ -115,21 +126,27 @@ export default function Questions() {
       <h1 className={styles.questionsTitle}>Pytania z {categoryName}</h1>
       <input
         type="text"
-        placeholder="Wyszukaj pytanie"
+        placeholder="Wyszukaj pytanie lub odpowiedź"
         className={styles.searchBar}
+        value={searchTerm}
+        onChange={handleSearchChange}
       />
-      <ul className={`{list-unstyled flex ${styles.questions}}`}>
-        {questions.map((question: Question) =>
-          QuestionElement({
-            question: question.question,
-            correctAnswer: question.correctAnswer,
-            distractors: question.distractors,
-          })
-        )}
+      {error && <p>Wystąpił błąd: {error.message}</p>}
+      <ul className={`list-unstyled flex ${styles.questions}`}>
+        {questions.map((question: Question) => (
+          <QuestionElement
+            key={question.id}
+            question={question.question}
+            correctAnswer={question.correctAnswer}
+            distractors={question.distractors}
+          />
+        ))}
       </ul>
-      <Pagination className={styles.pagination}>
-        {renderPagination()}
-      </Pagination>
+      {!searchTerm && (
+        <Pagination className={styles.pagination}>
+          {renderPagination()}
+        </Pagination>
+      )}
     </div>
   );
 }
