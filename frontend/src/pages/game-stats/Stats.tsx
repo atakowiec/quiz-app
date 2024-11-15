@@ -102,28 +102,26 @@ const Stats: React.FC = () => {
             <RankingVisualization rankingData={profileStats.rankingPlaces} />
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
-                <div>
-                  Liczba zagranych {getGameWordForm(profileStats.gamesPlayed)}
-                </div>
+                <div>Liczba zagranych gier</div>
                 <div>{profileStats.gamesPlayed}</div>
               </div>
             </div>
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Liczba zdobytych punktów</div>
-                <div>{profileStats.totalScore}</div>
+                <div>{profileStats.totalScore || 0}</div>
               </div>
             </div>
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Średnia liczba punktów na grę</div>
-                <div>{profileStats.averageScore}</div>
+                <div>{profileStats.averageScore || 0}</div>
               </div>
             </div>
             <div className={styles.singleRanking}>
               <div className={styles.titleAndNumber}>
                 <div>Największa liczba punktów w grze</div>
-                <div>{profileStats.maxScore}</div>
+                <div>{profileStats.maxScore || 0}</div>
               </div>
             </div>
             <div className={styles.rankingButtons}>

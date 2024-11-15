@@ -14,10 +14,12 @@
 - [x] odswiezenie gry jako niezalogowany przywraca do gry
 - [x] osoba niezalogowana nie ma w ogole powiadomien
 - [x] info ze ktos inny uzyl kola ratunkowego
-- [ ] jak jest admin to ma dostępność do wszystkiego- teraz ma tylko do admina
+- [x] jak jest admin to ma dostępność do wszystkiego- teraz ma tylko do admina
 - [x] niedostepne kola usunac z gry
 - [x] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały (jak pol ekranu na lapku np. profil)
-- [ ] ten ranking by sie wyswietlal u znajomych plus zagrane gry
+- [x] poprawki history i stats by wyswietlalo odpowiednie komunikaty jak nie jest nic zagrane
+- [ ] backend, chodzi o czas createdat w notofication, jest on jakis zły. pokazuje mocno do tyłu. nie jest on rzeczywisty
+- [x] ten ranking by sie wyswietlal u znajomych plus zagrane gry
 - [ ] responsywność historia gier
 - [ ] responsywnosc pytania (jak jest za duzy obraz to na lapku ucieka kontener)
 - [ ] ikonka do muzyki poprawic
@@ -46,3 +48,4 @@
 - [x] w "zapros znajomych" w grze wyswietlenie kto jest "online" lub "w grze" aka "zajęty"
 - [ ] wykres do tych statystyk
 - [ ] button do powrotu z ustawien
+- [ ] admin button w nav (po kliknieciu na profil) by moc przechodzic na strone admina

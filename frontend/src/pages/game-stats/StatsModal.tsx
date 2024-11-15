@@ -36,7 +36,7 @@ const StatsModal: React.FC<StatsModalProps> = ({
   userId,
 }) => {
   const [avgCategoryPoints, setAvgCategoryPoints] = useState<CategoryScore[]>(
-    [],
+    []
   );
   const [gamesPerCategory, setGamesPerCategory] = useState<CategoryScore[]>([]);
   const [activeButton, setActiveButton] = useState<string>("points");
@@ -96,6 +96,10 @@ const StatsModal: React.FC<StatsModalProps> = ({
   const renderStats = () => {
     const statsData =
       activeButton === "points" ? avgCategoryPoints : gamesPerCategory;
+
+    if (statsData.length === 0) {
+      return <div className={styles.noGamesMessage}>Brak zagranych gier</div>;
+    }
 
     return statsData.map((stat) => (
       <div key={stat.category_name} className={styles.statItem}>

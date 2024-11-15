@@ -40,9 +40,11 @@ const RankingVisualization: React.FC<RankingVisualizationProps> = ({
             }`}
           >
             <div className={styles.count}>
-              {item.count} {getWordForm(item.count)}
+              {item.count || 0} {getWordForm(item.count)}
             </div>
-            <div className={styles.percentage}>{item.percentage}%</div>
+            <div className={styles.percentage}>
+              {(item.percentage * 100).toFixed(0) || 0}%
+            </div>
           </div>
           <div className={styles.place}>{item.place}</div>
         </div>

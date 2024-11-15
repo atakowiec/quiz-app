@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 type NotificationsProps = {
   show: boolean;
   setShow: (show: boolean) => void;
-}
+};
 
 function getNotificationMessage(notification: INotification) {
   switch (notification.type) {
@@ -24,59 +24,74 @@ function getNotificationMessage(notification: INotification) {
 }
 
 function getTimePretty(notification: INotification) {
-  const diff = new Date().getTime() - new Date(notification.createdAt).getTime();
+  const createdAt = new Date(notification.createdAt); // Parse the date
+  const now = new Date();
+  const diff = now.getTime() - createdAt.getTime();
+
+  // console.log({
+  //   createdAt: notification.createdAt,
+  //   parsedDate: new Date(notification.createdAt),
+  //   now: new Date(),
+  //   diff: new Date().getTime() - new Date(notification.createdAt).getTime(),
+  // });
 
   if (diff < 1000 * 60) {
-    return "teraz";
+    const seconds = Math.floor(diff / 1000);
+    return seconds < 5 ? "kilka sekund temu" : `${seconds} sekund temu`;
   } else if (diff < 1000 * 60 * 60) {
-    return `${Math.floor(diff / 1000 / 60)} minut temu`;
+    const minutes = Math.floor(diff / (1000 * 60));
+    return `${minutes} minut${minutes === 1 ? "ę" : ""} temu`;
   } else if (diff < 1000 * 60 * 60 * 24) {
-    return `${Math.floor(diff / 1000 / 60 / 60)} godzin temu`;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    return `${hours} godzin${hours === 1 ? "ę" : ""} temu`;
   } else {
-    return `${Math.floor(diff / 1000 / 60 / 60 / 24)} dni temu`;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    return `${days} dni temu`;
   }
 }
 
 export default function Notifications({ setShow, show }: NotificationsProps) {
-  const notifications = useNotifications()
+  const notifications = useNotifications();
 
   return (
     <>
-      {show && <div className={styles.notificationOverlay} onClick={() => setShow(false)}/>}
+      {show && (
+        <div
+          className={styles.notificationOverlay}
+          onClick={() => setShow(false)}
+        />
+      )}
       <div className={`${styles.notificationsBox} ${show ? "" : styles.hide}`}>
-        {
-          notifications.map((notification) => (
-            <Notification key={notification.id} notification={notification}/>
-          ))
-        }
-        {
-          notifications.length === 0 &&
-          <div className={styles.noNotifications}>
-            Brak powiadomień
-          </div>
-        }
+        {notifications.map((notification) => (
+          <Notification key={notification.id} notification={notification} />
+        ))}
+        {notifications.length === 0 && (
+          <div className={styles.noNotifications}>Brak powiadomień</div>
+        )}
       </div>
     </>
-  )
+  );
 }
 
 function Notification({ notification }: { notification: INotification }) {
-  const { showModal } = useProfileModal()
-  const socket = useSocket()
-  const navigate = useNavigate()
+  const { showModal } = useProfileModal();
+  const socket = useSocket();
+  const navigate = useNavigate();
 
   function acceptNotification() {
     if (notification.type === "game_invite") {
-      socket.emit("join_game", (notification as GameInviteNotification).gameId, () =>
-        navigate("/waiting-room")
-      )
+      socket.emit(
+        "join_game",
+        (notification as GameInviteNotification).gameId,
+        () => navigate("/waiting-room")
+      );
     } else if (notification.type === "friend_request") {
       socket.emit("invite_friend", notification.inviter.id);
     }
   }
 
   function declineNotification() {
-    socket.emit("decline_notification", notification)
+    socket.emit("decline_notification", notification);
   }
 
   return (
@@ -100,16 +115,19 @@ function Notification({ notification }: { notification: INotification }) {
           <button className={styles.secondary} onClick={declineNotification}>
             Odrzuć
           </button>
-          <button className={styles.secondary} onClick={() => showModal(notification.inviter.id)}>
-            <FaUser/>
+          <button
+            className={styles.secondary}
+            onClick={() => showModal(notification.inviter.id)}
+          >
+            <FaUser />
           </button>
         </div>
       </div>
       <div className={styles.closeButtonBox}>
         <div onClick={declineNotification}>
-          <CgClose/>
+          <CgClose />
         </div>
       </div>
     </div>
-  )
+  );
 }

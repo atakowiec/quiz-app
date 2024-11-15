@@ -75,6 +75,9 @@ const History: React.FC = () => {
             <div className={styles.grayHistoryBox}>
               {loading && <div>Loading...</div>}
               {error && <div>Error: {error}</div>}
+              {!loading && !error && gameHistory.length === 0 && (
+                <div className={styles.noGamesMessage}>Brak zagranych gier</div>
+              )}
               {gameHistory.map((history, index) => (
                 <div className={styles.singleHistory} key={index}>
                   <div className={styles.leftTitles}>

@@ -59,6 +59,13 @@
   font-size: 1rem;
 }
 
+.noGamesMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+
 .activeButton {
   border: 2px solid $green;
 }
