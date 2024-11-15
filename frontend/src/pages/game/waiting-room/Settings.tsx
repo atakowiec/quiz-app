@@ -4,7 +4,7 @@ import Sidebar, { SidebarItem } from "../../../components/SideBar";
 import MainContainer from "../../../components/MainContainer";
 import MainBox from "../../../components/MainBox";
 import MainTitle from "../../../components/MainTitle";
-import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
+import { IoArrowBack, IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import styles from "./Settings.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { GameSettings, HelperType } from "@shared/game";
@@ -13,6 +13,7 @@ import { useGlobalData } from "../../../store/globalDataSlice";
 import CategoriesModal from "./CategoriesModal";
 import HelpersModal from "./HelpersModal";
 import { useGame } from "../../../store/gameSlice.ts";
+import { useNavigate } from "react-router-dom";
 
 const Settings: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -22,18 +23,19 @@ const Settings: React.FC = () => {
 
   const socket = useSocket();
   const game = useGame();
+  const navigate = useNavigate();
   const isOwner = game?.owner?.username === game?.player?.username;
 
   const [number_of_rounds, setNumberOfRounds] = useState(
-    game?.settings.number_of_rounds || 5,
+    game?.settings.number_of_rounds || 5
   );
   const [number_of_questions_per_round, setNumberOfQuestions] = useState(
-    game?.settings.number_of_questions_per_round || 5,
+    game?.settings.number_of_questions_per_round || 5
   );
   const [number_of_categories_per_voting, setNumberOfCategoriesInVoting] =
     useState(game?.settings.number_of_categories_per_voting || 5);
   const [time_for_answer, setTimeForAnswer] = useState(
-    game?.settings.time_for_answer || 30,
+    game?.settings.time_for_answer || 30
   );
 
   const DEBOUNCE_DELAY = 50;
@@ -114,7 +116,7 @@ const Settings: React.FC = () => {
   }));
 
   const [selectedCategories, setSelectedCategories] = useState<number[]>(
-    game?.settings?.category_whitelist || [],
+    game?.settings?.category_whitelist || []
   );
   const initialSelectedCategories = useRef(selectedCategories);
 
@@ -168,9 +170,9 @@ const Settings: React.FC = () => {
   const [helperStates, setHelperStates] = useState<boolean[]>(
     game?.settings?.blackListedHelpers
       ? helpersNames.map(
-          (helper) => !game?.settings?.blackListedHelpers?.includes(helper),
+          (helper) => !game?.settings?.blackListedHelpers?.includes(helper)
         )
-      : [true, true, true],
+      : [true, true, true]
   );
 
   const handleToggle = (index: number) => {
@@ -178,7 +180,7 @@ const Settings: React.FC = () => {
     updatedStates[index] = !updatedStates[index]; // Zmiana stanu
 
     const blackListedHelpers = helpersNames.filter(
-      (_, i) => !updatedStates[i],
+      (_, i) => !updatedStates[i]
     ) as HelperType[];
 
     console.log("new", blackListedHelpers);
@@ -186,6 +188,9 @@ const Settings: React.FC = () => {
     setHelperStates(updatedStates); // Aktualizacja stanu
   };
 
+  const handleGoToWaitingRoom = () => {
+    navigate("/waiting-room");
+  };
   return (
     <>
       <Meta title={"Ustawienia"} />
@@ -244,7 +249,7 @@ const Settings: React.FC = () => {
                       className={styles.changeButton}
                       onClick={() =>
                         setNumberOfQuestions(
-                          Math.max(1, number_of_questions_per_round - 1),
+                          Math.max(1, number_of_questions_per_round - 1)
                         )
                       }
                     >
@@ -265,7 +270,7 @@ const Settings: React.FC = () => {
                       className={styles.changeButton}
                       onClick={() =>
                         setNumberOfQuestions(
-                          Math.min(25, number_of_questions_per_round + 1),
+                          Math.min(25, number_of_questions_per_round + 1)
                         )
                       }
                     >
@@ -290,7 +295,7 @@ const Settings: React.FC = () => {
                       className={styles.changeButton}
                       onClick={() =>
                         setNumberOfCategoriesInVoting(
-                          Math.max(1, number_of_categories_per_voting - 1),
+                          Math.max(1, number_of_categories_per_voting - 1)
                         )
                       }
                     >
@@ -311,7 +316,7 @@ const Settings: React.FC = () => {
                       className={styles.changeButton}
                       onClick={() =>
                         setNumberOfCategoriesInVoting(
-                          Math.min(10, number_of_categories_per_voting + 1),
+                          Math.min(10, number_of_categories_per_voting + 1)
                         )
                       }
                     >
@@ -370,6 +375,12 @@ const Settings: React.FC = () => {
             </div>
             <div className={styles.settingsButtons}>
               <>
+                <button
+                  className={styles.settings}
+                  onClick={handleGoToWaitingRoom}
+                >
+                  <IoArrowBack /> Powrót
+                </button>
                 <button className={styles.settings} onClick={handleModalShow}>
                   Wybór kategorii
                 </button>

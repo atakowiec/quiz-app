@@ -22,7 +22,7 @@
 - [x] ten ranking by sie wyswietlal u znajomych plus zagrane gry
 - [x] responsywność historia gier
 - [x] responsywnosc pytania (jak jest za duzy obraz to na lapku ucieka kontener)
-- [ ] ikonka do muzyki poprawic
+- [x] ikonka do muzyki poprawic
 - [x] rozmiar kół ratunkowych na innych urzadzeniach
 
 ## Co jeszcze trzeba zrobic
@@ -47,5 +47,5 @@
 - [x] muzyka w trakcie gry - Łukasz
 - [x] w "zapros znajomych" w grze wyswietlenie kto jest "online" lub "w grze" aka "zajęty"
 - [ ] wykres do tych statystyk
-- [ ] button do powrotu z ustawien
-- [ ] admin button w nav (po kliknieciu na profil) by moc przechodzic na strone admina
+- [x] button do powrotu z ustawien
+- [x] admin button w nav (po kliknieciu na profil) by moc przechodzic na strone admina

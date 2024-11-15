@@ -88,6 +88,15 @@ const Header = () => {
                     >
                       Profil
                     </Dropdown.Item>
+                    {user.permission === 1 && (
+                      <Dropdown.Item
+                        onClick={() => navigate("/admin/categories")}
+                        className={styles.dropdownItemCustom}
+                      >
+                        Admin
+                      </Dropdown.Item>
+                    )}
+
                     <Dropdown.Item
                       onClick={handleLogout}
                       className={styles.dropdownItemCustom}
