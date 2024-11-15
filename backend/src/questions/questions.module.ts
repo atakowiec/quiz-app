@@ -1,15 +1,17 @@
 import { Module } from "@nestjs/common";
-import { QuestionsService } from "./services/questions/questions.service";
+import { QuestionsService } from "./services/questions.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Distractor } from "./entities/distractor.model";
 import { Question } from "./entities/question.model";
-import { QuestionsController } from "./controllers/questions/questions.controller";
+import { QuestionsController } from "./controllers/questions.controller";
 import { Category } from "./entities/category.model";
+import { CategoryService } from "./services/category.service";
+import { CategoryController } from "./controllers/categoryController";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Distractor, Question, Category])],
-  providers: [QuestionsService],
-  controllers: [QuestionsController],
-  exports: [QuestionsService],
+  providers: [QuestionsService, CategoryService],
+  controllers: [QuestionsController, CategoryController],
+  exports: [QuestionsService, CategoryService],
 })
 export class QuestionsModule {}

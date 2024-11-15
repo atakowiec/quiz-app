@@ -9,12 +9,13 @@ import {
   UserGameDatabase,
 } from "@shared/game";
 import { Category } from "../../questions/entities/category.model";
-import { QuestionsService } from "../../questions/services/questions/questions.service";
+import { QuestionsService } from "../../questions/services/questions.service";
 import { ConfigService } from "@nestjs/config";
 import { log } from "console";
 import { GameMember } from "../classes/game-member";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { GameHistoryService } from "src/game-history/services/game-history.service";
+import { CategoryService } from "../../questions/services/category.service";
 
 @Injectable()
 export class GameService {
@@ -28,6 +29,8 @@ export class GameService {
     private readonly gameHistoryService: GameHistoryService,
     @Inject()
     public readonly questionsService: QuestionsService,
+    @Inject()
+    public readonly categoryService: CategoryService,
     @Inject()
     public readonly configService: ConfigService,
     @Inject()
@@ -93,7 +96,7 @@ export class GameService {
   }
 
   public async getCategories(): Promise<Category[]> {
-    return await this.questionsService.getCategories();
+    return await this.categoryService.getCategories();
   }
 
   public getAllGames() {
@@ -112,6 +115,7 @@ export class GameService {
   public getLengthOfTheQueue() {
     return this.gameGateway.server.sockets.adapter.rooms.get("queue").size;
   }
+
   public getPlayersFromQueue(): SocketType[] {
     return Array.from(
       this.gameGateway.server.sockets.adapter.rooms.get("queue").values()
@@ -140,10 +144,10 @@ export class GameService {
       userGameCategoryScores
     );
     game.getAllLoggedPlayers().forEach((member) => {
-      this.gameHistoryService.checkIfAverageScoreHasChanged(member.socket.data.user.id);
-    }
-    );
-
+      this.gameHistoryService.checkIfAverageScoreHasChanged(
+        member.socket.data.user.id
+      );
+    });
   }
 
   private getGameDatabaseObject(game: Game): GameDatabase {

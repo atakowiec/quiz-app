@@ -10,6 +10,33 @@
   gap: 2rem;
 }
 
+.fixedButton {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.createCategoryBtn {
+  color: black;
+  font-weight: $button-font-weight;
+  padding: $button-padding;
+  border: 1px solid #0c1a25;
+  border-radius: $button-border-radius;
+  cursor: pointer;
+  box-shadow: $button-shadow-black;
+  transition: 0.15s background-color ease-in-out;
+  background: white;
+
+
+  &:hover {
+    transition: 0.15s background-color ease-in-out;
+    background-color: #0c1a25;
+    color: white;
+  }
+}
+
 .catBox {
   display: flex;
   flex-direction: column;
@@ -38,6 +65,7 @@
   max-height: 20%;
   min-width: 10vw;
 }
+
 
 .categoryName {
   font-size: 1.4rem;

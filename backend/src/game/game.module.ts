@@ -5,7 +5,6 @@ import { AuthModule } from "src/auth/auth.module";
 import { GameController } from "./game.controller";
 import { QuestionsModule } from "../questions/questions.module";
 import { MatchmakingModule } from "src/matchmaking/matchmaking.module";
-import { GameHistoryService } from "src/game-history/services/game-history.service";
 import { GameHistoryModule } from "src/game-history/game-history.module";
 
 @Module({

@@ -1,29 +1,27 @@
 import {
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
+  Patch,
+  Post,
   Query,
 } from "@nestjs/common";
-import { Body } from "@nestjs/common";
-import { Post } from "@nestjs/common";
-import { Delete, Patch } from "@nestjs/common";
-import { Controller } from "@nestjs/common";
-import { CreateQuestionDto } from "src/questions/dtos/CreateQuestion.dto";
-import { UpdateQuestionDto } from "src/questions/dtos/UpdateQuestion.dto";
+import { CreateQuestionDto } from "../dtos/CreateQuestion.dto";
+import { UpdateQuestionDto } from "../dtos/UpdateQuestion.dto";
 
-import { QuestionsService } from "src/questions/services/questions/questions.service";
+import { QuestionsService } from "../services/questions.service";
+
 @Controller("questions")
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
+
   @Get()
   getQuestions() {
     return this.questionsService.getQuestions();
-  }
-
-  @Get("categories")
-  getCategories() {
-    return this.questionsService.getCategories();
   }
 
   @Get("paginate/:category/:page")
@@ -35,7 +33,12 @@ export class QuestionsController {
   ) {
     limit = limit ? limit : 25;
 
-    return this.questionsService.getQuestionsPaginate(category, page, limit, content);
+    return this.questionsService.getQuestionsPaginate(
+      category,
+      page,
+      limit,
+      content
+    );
   }
 
   @Post()
