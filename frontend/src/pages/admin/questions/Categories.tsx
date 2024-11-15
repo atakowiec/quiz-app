@@ -16,6 +16,7 @@ export default function Categories() {
   const categories = useSelector((state: State) => state.globalData.categories);
   const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false);
   const dispatch = useDispatch();
+  const api = getApi();
   if (!categories) {
     return <div>Loading...</div>;
   }
@@ -40,6 +41,27 @@ export default function Categories() {
     toast.error("Wystąpił error podczas tworzenia kategorii: " + error.message);
   }
 
+  async function onDeleteClick(
+      id: number
+  ) {
+      try {
+          await api.delete(`/categories/${id}`);
+          getApi()
+              .get("/categories")
+              .then((response: AxiosResponse) => {
+                  dispatch(globalDataActions.setData({ categories: response.data }));
+              })
+              .catch(() => {
+                  toast.error("Podczas pobierania kategorii wystąpił błąd");
+              });
+          toast.success("Pomyślnie usunięto kategorię");
+      } catch (error) {
+          console.error('Error deleting resource:', error);
+          toast.error("Wystąpił błąd podczas usuwania kategorii")
+      }
+  }
+  function onEditClick() {}
+
   return (
     <>
       <div className={styles.fixedButton}>
@@ -54,9 +76,11 @@ export default function Categories() {
         {categories.map((category: ICategory) => (
           <CategoryElement
             key={category.id}
+            id={category.id}
             name={category.name}
             description={category?.description}
             img={category?.img}
+            onDelete={onDeleteClick}
           />
         ))}
       </div>

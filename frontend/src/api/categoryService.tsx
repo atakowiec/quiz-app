@@ -1,4 +1,3 @@
-// categoryService.tsx
 
 import axios from "axios";
 
@@ -50,6 +49,7 @@ export class CategoryService {
       if (data.img) {
         imageUrl = await this.uploadImage(data.img);
       }
+      console.log(imageUrl);
 
       const response = await axios.post<CreateCategoryResponse>(API_URL, {
         name: data.categoryName,
