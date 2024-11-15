@@ -6,7 +6,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Distractor } from "./questions/entities/distractor.model";
 import { Question } from "./questions/entities/question.model";
-import { QuestionsController } from "./questions/controllers/questions/questions.controller";
+import { QuestionsController } from "./questions/controllers/questions.controller";
 import databaseConfig from "./config/database.config";
 import { Category } from "./questions/entities/category.model";
 import { ConfigService } from "@nestjs/config/dist/config.service";

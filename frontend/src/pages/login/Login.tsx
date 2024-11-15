@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import Meta from "../../components/Meta.tsx";
-import { Breadcrumb, Button } from "react-bootstrap";
+import { Breadcrumb } from "react-bootstrap";
 import * as yup from "yup";
 import styles from "./Login.module.scss";
 import CustomInput from "../../components/CustomInput.tsx";
@@ -56,7 +56,7 @@ const Login = () => {
 
           if (error.status == 409) {
             return setError(
-              "Użytkownik jest już połączony na innym urządzeniu"
+              "Użytkownik jest już połączony na innym urządzeniu",
             );
           }
 

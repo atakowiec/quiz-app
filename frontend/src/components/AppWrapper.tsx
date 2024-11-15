@@ -19,7 +19,10 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
   const [error, setError] = useState<AxiosError | null>(null);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
 
-  const everythingLoaded = categoriesLoaded && loaded && (!error || !isNaN(parseInt(error.code ?? "")));
+  const everythingLoaded =
+    categoriesLoaded &&
+    loaded &&
+    (!error || !isNaN(parseInt(error.code ?? "")));
 
   // on start of the application check whether the user has some valid token
   useEffect(() => {
@@ -36,33 +39,33 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
         setLoaded(true);
 
         if (refreshToken > 5) {
-          toast.info("Udało się połączyć z serwerem!")
+          toast.info("Udało się połączyć z serwerem!");
         }
       })
       .catch((error: AxiosError) => {
         dispatch(userActions.setUser(null));
-        setError(error)
+        setError(error);
         setLoaded(true);
 
         // if there was an error, try again in 3 seconds
         setTimeout(() => {
-          setRefreshToken(prevState => prevState + 1);
+          setRefreshToken((prevState) => prevState + 1);
           reloadApi();
-        }, 3000)
+        }, 3000);
       });
   }, [refreshToken]);
 
   // on the start of the application fetch the categories and store them in the global state
   useEffect(() => {
-    getApi().get("/questions/categories")
+    getApi()
+      .get("/categories")
       .then((response: AxiosResponse) => {
         dispatch(globalDataActions.setData({ categories: response.data }));
         setCategoriesLoaded(true);
       })
       .catch(() => {
-        if (!error)
-          setRefreshToken(prevState => prevState + 1);
-      })
+        if (!error) setRefreshToken((prevState) => prevState + 1);
+      });
   }, [refreshToken]);
 
   if (!everythingLoaded && refreshToken == 1) {
@@ -72,7 +75,7 @@ export default function AppWrapper({ children }: { children: ReactNode }) {
   return (
     <>
       {everythingLoaded && children}
-      <LoadingScreen visible={!everythingLoaded} attempt={refreshToken}/>
+      <LoadingScreen visible={!everythingLoaded} attempt={refreshToken} />
     </>
   );
 }

@@ -1,14 +1,11 @@
-import { BadRequestException } from "@nestjs/common";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Category } from "src/questions/entities/category.model";
-import { Distractor } from "src/questions/entities/distractor.model";
-import { Question } from "src/questions/entities/question.model";
-import {
-  CreateQuestionParams,
-  UpdateQuestionParams,
-} from "src/questions/questions";
-import { Brackets, Like, Repository } from "typeorm";
+import { Category } from "../entities/category.model";
+import { Distractor } from "../entities/distractor.model";
+import { Question } from "../entities/question.model";
+import { CreateQuestionParams, UpdateQuestionParams } from "../questions";
+import { Brackets, Repository } from "typeorm";
+import { CategoryService } from "./category.service";
 
 @Injectable()
 export class QuestionsService {
@@ -17,8 +14,8 @@ export class QuestionsService {
     private questionRepository: Repository<Question>,
     @InjectRepository(Distractor)
     private distractorRepository: Repository<Distractor>,
-    @InjectRepository(Category)
-    private categoryRepository: Repository<Category>
+    @Inject(CategoryService)
+    private categoryService: CategoryService
   ) {}
 
   async getQuestions(): Promise<Question[]> {
@@ -29,25 +26,7 @@ export class QuestionsService {
       .take(25);
     return questionsQuery.getMany();
   }
-  async getCategoryOrCreateByName(
-    categoryName: string,
-    description?: string
-  ): Promise<Category> {
-    let category = await this.categoryRepository.findOne({
-      where: { name: categoryName },
-    });
-    if (!category) {
-      category = this.categoryRepository.create({
-        name: categoryName,
-        description: description,
-      });
-      await this.categoryRepository.save(category);
-    } else {
-      category.description = description;
-      await this.categoryRepository.save(category);
-    }
-    return category;
-  }
+
   async createQuestion(questionDetails: CreateQuestionParams) {
     if (questionDetails.category.some((category) => !category.name)) {
       throw new BadRequestException({
@@ -77,7 +56,7 @@ export class QuestionsService {
 
     const categories = await Promise.all(
       questionDetails.category.map((category) =>
-        this.getCategoryOrCreateByName(category.name)
+        this.categoryService.getCategoryOrCreateByName(category.name)
       )
     );
     questionDetails.category = categories;
@@ -117,10 +96,6 @@ export class QuestionsService {
     return this.questionRepository.delete(questionId);
   }
 
-  async getCategories(): Promise<Category[]> {
-    return this.categoryRepository.find();
-  }
-
   async getQuestionsByCategory(category: Category): Promise<Question[]> {
     return this.questionRepository.find({
       where: { category: category },
@@ -156,7 +131,11 @@ export class QuestionsService {
       }
       const categories = await Promise.all(
         questionDetails.category.map((category) =>
-          this.getCategoryOrCreateByName(category.name, category.description)
+          this.categoryService.getCategoryOrCreateByName(
+            category.name,
+            category.description,
+            category.img
+          )
         )
       );
       question.category = categories;
@@ -222,38 +201,41 @@ export class QuestionsService {
   }
 
   async findQuestions(
-  category: string,
-  page?: number,
-  limit?: number,
-  content?: string
-): Promise<{ questions: Question[]; total: number }> {
-  const queryBuilder = this.questionRepository.createQueryBuilder("question")
-    .leftJoinAndSelect("question.category", "category")
-    .leftJoinAndSelect("question.distractors", "distractors")
-    .where("category.name = :category", { category })
-    .andWhere("question.isActive = :isActive", { isActive: true });
+    category: string,
+    page?: number,
+    limit?: number,
+    content?: string
+  ): Promise<{ questions: Question[]; total: number }> {
+    const queryBuilder = this.questionRepository
+      .createQueryBuilder("question")
+      .leftJoinAndSelect("question.category", "category")
+      .leftJoinAndSelect("question.distractors", "distractors")
+      .where("category.name = :category", { category })
+      .andWhere("question.isActive = :isActive", { isActive: true });
 
-  if (content) {
-    queryBuilder.andWhere(
-      new Brackets(qb => {
-        qb.where("LOWER(question.question) LIKE LOWER(:content)", { content: `%${content}%` })
-          .orWhere("LOWER(distractors.content) LIKE LOWER(:content)", { content: `%${content}%` });
-      })
-    );
+    if (content) {
+      queryBuilder.andWhere(
+        new Brackets((qb) => {
+          qb.where("LOWER(question.question) LIKE LOWER(:content)", {
+            content: `%${content}%`,
+          }).orWhere("LOWER(distractors.content) LIKE LOWER(:content)", {
+            content: `%${content}%`,
+          });
+        })
+      );
+    }
+
+    if (!content) {
+      queryBuilder.skip((page - 1) * limit).take(limit);
+    }
+
+    queryBuilder.orderBy("question.createdAt", "DESC");
+
+    const [questions, total] = await queryBuilder.getManyAndCount();
+
+    return { questions, total };
   }
 
-  if (!content) {
-    queryBuilder.skip((page - 1) * limit).take(limit);
-  }
-
-  queryBuilder.orderBy("question.createdAt", "DESC");
-
-  const [questions, total] = await queryBuilder.getManyAndCount();
-
-  return { questions, total };
-}
-
-  
   async getQuestionsPaginate(
     category: string,
     page: number,

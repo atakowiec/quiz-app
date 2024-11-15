@@ -1,13 +1,7 @@
-import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from "class-validator";
-import { Type } from "class-transformer";
+import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { DistractorDto } from "./Distractor.dto";
 import { CategoryDto } from "./Category.dto";
+
 export class CreateQuestionDto {
   @IsString({
     message: "Question has to be a string",
