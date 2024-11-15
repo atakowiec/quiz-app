@@ -3,6 +3,7 @@ import styles from "./Stats.module.scss";
 
 interface RankingVisualizationProps {
   rankingData: RankingPlace[];
+  className?: string;
 }
 
 const getWordForm = (count: number) => {
@@ -25,9 +26,10 @@ const getWordForm = (count: number) => {
 
 const RankingVisualization: React.FC<RankingVisualizationProps> = ({
   rankingData,
+  className,
 }) => {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className || ""}`}>
       {rankingData?.map((item, index) => (
         <div key={index} className={styles.rankItem}>
           <div

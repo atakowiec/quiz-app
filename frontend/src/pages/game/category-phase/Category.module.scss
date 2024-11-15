@@ -120,8 +120,16 @@
   background-color: $gray; // Domyślny kolor tła (szary)
   border: 2px solid #9999; // Domyślny kolor obramowania
 }
+@media (max-height: 780px) and (min-width: $phone-breakpoint) {
+  .boxWithTimebar {
+    margin-top: 2rem;
+  }
+}
 
 @media (max-width: $phone-breakpoint) {
+  .categoryVotingBox {
+    scale: 0.85;
+  }
   .voteCircle {
     width: 15px;
     height: 15px;
@@ -133,6 +141,17 @@
 
   .categoryTitle {
     font-size: 1.5rem;
+  }
+
+  .choice {
+    font-size: 0.9rem;
+    max-width: 13rem;
+    min-height: 0;
+  }
+
+  .choice img {
+    max-height: 7rem;
+    max-width: 7rem;
   }
 }
 

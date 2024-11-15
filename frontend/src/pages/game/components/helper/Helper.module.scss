@@ -12,12 +12,35 @@
   height: 80px;
   margin-bottom: 1rem;
   z-index: 999;
+  position: relative;
 }
 
 .lifeBouyIcon {
   color: black;
   text-align: center;
   font-size: 2.5rem;
+}
+
+.tooltip {
+  position: absolute;
+  left: 265%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  opacity: 0; /* Initially hidden */
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.lifeBouyContainer:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
 }
 
 @media (max-width: $phone-breakpoint) {
@@ -29,6 +52,15 @@
 
   .lifeBouyIcon {
     font-size: 2rem;
+  }
+
+  .tooltip {
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    z-index: 1100;
+    text-align: center;
   }
 }
 

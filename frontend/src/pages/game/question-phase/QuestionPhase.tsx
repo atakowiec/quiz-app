@@ -67,95 +67,103 @@ const QuestionPhase = () => {
         <div className={styles.lifebouys}>
           {availableHelpers.map((helper: HelperType) => {
             const IconComponent = helperIcons[helper]; // Pobranie odpowiedniej ikony na podstawie helpera
+            const helperDescriptions = {
+              cheat_from_others: "Podejrzyj odpowiedzi innych graczy",
+              extend_time: "Przedłuż czas na odpowiedź",
+              fifty_fifty: "Eliminuj dwie błędne odpowiedzi",
+            };
             return (
               <Helper
                 key={helper}
                 icon={IconComponent} // Ustawienie ikony dla danego koła ratunkowego
                 executeAction={() => executeHelper(helper)} // Akcja po kliknięciu
+                description={helperDescriptions[helper]}
               />
             );
           })}
         </div>
-        <MainBox before={<TimeBar />}>
-          <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
-          <div className={styles.question}>
-            {" "}
-            {game.round.question.text}{" "}
-            {game.round.question.photo && (
-              <img
-                src={game.round.question.photo}
-                alt={game.round.question.text}
-                className={styles.questionImage}
-              />
-            )}
-          </div>
-          <div className={styles.answersBox}>
-            {game.round.question.answers.map((answer, answerIndex) => {
-              const isHidden = game.player.hiddenAnswers.includes(answer);
-              const isSelected = selected === answer;
-              const isCorrect = game?.round?.correctAnswer === answer;
-              const playersChosen =
-                game?.players?.filter(
-                  (player) => player.chosenAnswer === answer
-                ) ?? [];
+        <div className={styles.boxWithTimebar}>
+          <MainBox before={<TimeBar />}>
+            <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
+            <div className={styles.question}>
+              {" "}
+              {game.round.question.text}{" "}
+              {game.round.question.photo && (
+                <img
+                  src={game.round.question.photo}
+                  alt={game.round.question.text}
+                  className={styles.questionImage}
+                />
+              )}
+            </div>
+            <div className={styles.answersBox}>
+              {game.round.question.answers.map((answer, answerIndex) => {
+                const isHidden = game.player.hiddenAnswers.includes(answer);
+                const isSelected = selected === answer;
+                const isCorrect = game?.round?.correctAnswer === answer;
+                const playersChosen =
+                  game?.players?.filter(
+                    (player) => player.chosenAnswer === answer
+                  ) ?? [];
 
-              const className = resultShown
-                ? isCorrect
-                  ? styles.correctAnswer
+                const className = resultShown
+                  ? isCorrect
+                    ? styles.correctAnswer
+                    : isSelected
+                      ? styles.incorrectAnswer
+                      : ""
                   : isSelected
-                    ? styles.incorrectAnswer
-                    : ""
-                : isSelected
-                  ? styles.selected
-                  : isHidden
-                    ? styles.hiddenAnswer
-                    : "";
+                    ? styles.selected
+                    : isHidden
+                      ? styles.hiddenAnswer
+                      : "";
 
-              const maxDisplayedPlayers = 5;
-              const extraPlayers =
-                playersChosen.length > maxDisplayedPlayers
-                  ? playersChosen.length - maxDisplayedPlayers
-                  : 0;
+                const maxDisplayedPlayers = 5;
+                const extraPlayers =
+                  playersChosen.length > maxDisplayedPlayers
+                    ? playersChosen.length - maxDisplayedPlayers
+                    : 0;
 
-              return (
-                <div
-                  className={`${styles.answerBox} ${className}`}
-                  key={answer}
-                  onClick={() => selectAnswer(answer)}
-                >
-                  {answer}
-                  {playersChosen.length > 0 && (
-                    <div className={styles.voteIcons}>
-                      {playersChosen
-                        .slice(0, maxDisplayedPlayers)
-                        .map((player, playerIndex) => (
-                          <div
-                            key={player.username}
-                            className={styles.voteCircle}
-                            style={{
-                              backgroundColor:
-                                colors[answerIndex * 5 + playerIndex], // Kolor przypisany na podstawie kategorii i indeksu gracza
-                            }}
-                          >
-                            <span className={styles.playerIcon}>
-                              {player.username
-                                ? player.username[0].toUpperCase()
-                                : "?"}{" "}
-                            </span>
-                          </div>
-                        ))}
-                      {extraPlayers > 0 && (
-                        <span className={styles.extraVotes}>
-                          +{extraPlayers}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </MainBox>
+                return (
+                  <div
+                    className={`${styles.answerBox} ${className}`}
+                    key={answer}
+                    onClick={() => selectAnswer(answer)}
+                  >
+                    {answer}
+                    {playersChosen.length > 0 && (
+                      <div className={styles.voteIcons}>
+                        {playersChosen
+                          .slice(0, maxDisplayedPlayers)
+                          .map((player, playerIndex) => (
+                            <div
+                              key={player.username}
+                              className={styles.voteCircle}
+                              style={{
+                                backgroundColor:
+                                  colors[answerIndex * 5 + playerIndex], // Kolor przypisany na podstawie kategorii i indeksu gracza
+                              }}
+                            >
+                              <span className={styles.playerIcon}>
+                                {player.username
+                                  ? player.username[0].toUpperCase()
+                                  : "?"}{" "}
+                              </span>
+                            </div>
+                          ))}
+                        {extraPlayers > 0 && (
+                          <span className={styles.extraVotes}>
+                            +{extraPlayers}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </MainBox>
+        </div>
       </MainContainer>
     </>
   );

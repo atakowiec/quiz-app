@@ -45,51 +45,53 @@ const LeaderboardPhase = () => {
       <Meta title={"Leaderboard"} />
       <Breadcrumb title="Leaderboard" />
       <MainContainer>
-        <MainBox before={<TimeBar />}>
-          <MainTitle>Tablica Wyników</MainTitle>
-          <div className={styles.playersBox}>
-            {game?.players && game.players.length > 0 ? (
-              game.players.map((player, index) => (
-                <div
-                  className={`${styles.singlePlayer} ${player.username === user.username ? styles.currentPlayer : ""}`}
-                >
-                  <div>
-                    {index + 1}. {player.username}
-                    {topPlayersUsernames?.includes(player.username) && (
-                      <PiMedalFill
-                        style={{ color: "gold", marginLeft: "8px" }}
-                        className={styles.medal}
-                      />
-                    )}
-                  </div>
+        <div className={styles.boxWithTimebar}>
+          <MainBox before={<TimeBar />} className={styles.time}>
+            <MainTitle>Tablica Wyników</MainTitle>
+            <div className={styles.playersBox}>
+              {game?.players && game.players.length > 0 ? (
+                game.players.map((player, index) => (
+                  <div
+                    className={`${styles.singlePlayer} ${player.username === user.username ? styles.currentPlayer : ""}`}
+                  >
+                    <div>
+                      {index + 1}. {player.username}
+                      {topPlayersUsernames?.includes(player.username) && (
+                        <PiMedalFill
+                          style={{ color: "gold", marginLeft: "8px" }}
+                          className={styles.medal}
+                        />
+                      )}
+                    </div>
 
-                  <div className={styles.helpersPoints}>
-                    <div className={styles.usedHelpers}>
-                      {allHelpers
-                        .filter(
-                          (helper) =>
-                            !player.availableHelpers?.includes(helper.type)
-                        )
-                        .map((helper) => {
-                          const HelperIcon = helper.icon;
-                          return (
-                            <HelperIcon
-                              key={helper.type}
-                              className={styles.helperIcon}
-                              title={`Użyto ${helper.type}`}
-                            />
-                          );
-                        })}
-                    </div>{" "}
-                    <div className={styles.points}>{player.score} pkt</div>
+                    <div className={styles.helpersPoints}>
+                      <div className={styles.usedHelpers}>
+                        {allHelpers
+                          .filter(
+                            (helper) =>
+                              !player.availableHelpers?.includes(helper.type)
+                          )
+                          .map((helper) => {
+                            const HelperIcon = helper.icon;
+                            return (
+                              <HelperIcon
+                                key={helper.type}
+                                className={styles.helperIcon}
+                                title={`Użyto ${helper.type}`}
+                              />
+                            );
+                          })}
+                      </div>{" "}
+                      <div className={styles.points}>{player.score} pkt</div>
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p>Brak graczy</p>
-            )}
-          </div>
-        </MainBox>
+                ))
+              ) : (
+                <p>Brak graczy</p>
+              )}
+            </div>
+          </MainBox>
+        </div>
       </MainContainer>
     </div>
   );

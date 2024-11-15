@@ -48,12 +48,11 @@ const SelectedCategoryPhase = () => {
                     }}
                   />
                 );
-              },
+              }
             )}
           </div>
         </MainBox>
       </MainContainer>
-      <TimeBar />
     </div>
   );
 };

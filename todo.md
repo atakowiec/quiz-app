@@ -20,10 +20,10 @@
 - [x] poprawki history i stats by wyswietlalo odpowiednie komunikaty jak nie jest nic zagrane
 - [ ] backend, chodzi o czas createdat w notofication, jest on jakis zły. pokazuje mocno do tyłu. nie jest on rzeczywisty
 - [x] ten ranking by sie wyswietlal u znajomych plus zagrane gry
-- [ ] responsywność historia gier
-- [ ] responsywnosc pytania (jak jest za duzy obraz to na lapku ucieka kontener)
+- [x] responsywność historia gier
+- [x] responsywnosc pytania (jak jest za duzy obraz to na lapku ucieka kontener)
 - [ ] ikonka do muzyki poprawic
-- [ ] rozmiar kół ratunkowych na innych urzadzeniach
+- [x] rozmiar kół ratunkowych na innych urzadzeniach
 
 ## Co jeszcze trzeba zrobic
 

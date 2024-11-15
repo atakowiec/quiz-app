@@ -288,6 +288,10 @@ button.addFriends {
   margin-top: 1rem;
 }
 
+.friendsStats {
+  scale: 0.85;
+}
+
 @media (max-width: $phone-breakpoint) {
   .friendsText {
     font-size: 1.15rem;

@@ -1,4 +1,5 @@
 @import "../../../styles/Global";
+@import "../components/time-bar/TimeBar.module.scss";
 
 .playersBox {
   background-color: $gray;
@@ -99,6 +100,11 @@
   &:hover {
     background-color: $button-gray-hover;
     color: black;
+  }
+}
+@media (max-height: 780px) and (min-width: $phone-breakpoint) {
+  .time {
+    margin-top: 1rem;
   }
 }
 

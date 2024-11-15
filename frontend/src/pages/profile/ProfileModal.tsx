@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import { useUser } from "../../store/userSlice";
 import { translateUserStatus } from "../../utils/utils";
 import { FriendshipButton } from "./components/FriendshipButton";
-import { Friend } from "@shared/friends";
 
 interface ProfileModalProps {
   show: boolean;
@@ -108,7 +107,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
         </div>
         <div className={styles.friendRanking}>
-          <RankingVisualization rankingData={rankingData} />
+          <RankingVisualization
+            rankingData={rankingData}
+            className={styles.friendsStats}
+          />
           <div className={styles.friendStats}>
             <div>Liczba zagranych gier</div>
             <div>{statsLoaded ? gamesPlayed : "Ładowanie..."}</div>

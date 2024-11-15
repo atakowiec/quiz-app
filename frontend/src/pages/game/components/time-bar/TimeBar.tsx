@@ -5,6 +5,7 @@ import { useGame } from "../../../../store/gameSlice.ts";
 interface TimeBarProps {
   startTime?: number;
   endTime?: number;
+  className?: string;
 }
 
 const TimeBar: React.FC<TimeBarProps> = ({ startTime, endTime }) => {

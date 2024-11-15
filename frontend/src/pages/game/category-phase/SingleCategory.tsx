@@ -8,7 +8,7 @@ export default function SingleCategory({ categoryId }: { categoryId: number }) {
   const socket = useSocket();
   const game = useGame();
   const category = useGlobalData().categories.find(
-    (category) => category.id === categoryId,
+    (category) => category.id === categoryId
   );
   if (!category) {
     return null;

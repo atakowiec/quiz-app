@@ -139,6 +139,21 @@
   color: gray;
 }
 
+@media (max-height: 780px) and (min-width: $phone-breakpoint) {
+  .lifebouys {
+    scale: 0.85;
+  }
+  .questionImage {
+    max-width: 12rem;
+    max-height: 10rem;
+  }
+  .boxWithTimebar {
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 @media (max-width: $phone-breakpoint) {
   .lifebouys {
     display: flex;
