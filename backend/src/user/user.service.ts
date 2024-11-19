@@ -40,6 +40,7 @@ export class UserService {
     return {
       id: user.id,
       username: user.username,
+      iconColor: user.iconColor,
       stats: {
         playedGames: 0,
         firstPlace: 0,
@@ -60,6 +61,7 @@ export class UserService {
     return found.map(user => ({
       id: user.id,
       username: user.username,
+      iconColor: user.iconColor
     }));
   }
 

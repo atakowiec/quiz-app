@@ -75,6 +75,12 @@
 .voteIcon {
   color: black;
   font-size: 12px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
 }
 
 .extraVotes {
@@ -120,6 +126,7 @@
   background-color: $gray; // Domyślny kolor tła (szary)
   border: 2px solid #9999; // Domyślny kolor obramowania
 }
+
 @media (max-height: 780px) and (min-width: $phone-breakpoint) {
   .boxWithTimebar {
     margin-top: 2rem;
@@ -133,10 +140,6 @@
   .voteCircle {
     width: 15px;
     height: 15px;
-  }
-
-  .voteIcon {
-    font-size: 8px;
   }
 
   .categoryTitle {

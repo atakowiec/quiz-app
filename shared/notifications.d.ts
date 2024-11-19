@@ -3,6 +3,7 @@ export type NotificationType = "game_invite" | "friend_request";
 export type NotificationUser = {
   id: number;
   username: string;
+  iconColor: string;
 }
 
 export type INotification = {

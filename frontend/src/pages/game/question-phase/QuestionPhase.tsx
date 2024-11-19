@@ -12,16 +12,7 @@ import { HelperType } from "@shared/game";
 import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
-
-// Generowanie unikalnej palety kolorów dla każdej kategorii
-function generateColors(numberOfCategories: number) {
-  const colors = [];
-  for (let i = 0; i < numberOfCategories * 5; i++) {
-    const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-    colors.push(color);
-  }
-  return colors;
-}
+import ProfileIcon from "../../../components/ProfileIcon.tsx";
 
 const helperIcons = {
   cheat_from_others: FaRegEye,
@@ -37,9 +28,6 @@ const QuestionPhase = () => {
 
   const resultShown = game.status === "question_result_phase";
   const selected = game.player.chosenAnswer;
-
-  const numberOfCategories = game.round.question.answers.length; // Liczba kategorii/pytania
-  const colors = generateColors(numberOfCategories); // Generowanie kolorów
 
   function selectAnswer(answer: string) {
     if (game?.status !== "question_phase" || game?.player.chosenAnswer) return;
@@ -61,8 +49,8 @@ const QuestionPhase = () => {
 
   return (
     <>
-      <Meta title={"Question"} />
-      <Breadcrumb title="Question" />
+      <Meta title={"Question"}/>
+      <Breadcrumb title="Question"/>
       <MainContainer>
         <div className={styles.lifebouys}>
           {availableHelpers.map((helper: HelperType) => {
@@ -83,7 +71,7 @@ const QuestionPhase = () => {
           })}
         </div>
         <div className={styles.boxWithTimebar}>
-          <MainBox before={<TimeBar />}>
+          <MainBox before={<TimeBar/>}>
             <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
             <div className={styles.question}>
               {" "}
@@ -97,7 +85,7 @@ const QuestionPhase = () => {
               )}
             </div>
             <div className={styles.answersBox}>
-              {game.round.question.answers.map((answer, answerIndex) => {
+              {game.round.question.answers.map((answer) => {
                 const isHidden = game.player.hiddenAnswers.includes(answer);
                 const isSelected = selected === answer;
                 const isCorrect = game?.round?.correctAnswer === answer;
@@ -135,21 +123,11 @@ const QuestionPhase = () => {
                       <div className={styles.voteIcons}>
                         {playersChosen
                           .slice(0, maxDisplayedPlayers)
-                          .map((player, playerIndex) => (
-                            <div
-                              key={player.username}
-                              className={styles.voteCircle}
-                              style={{
-                                backgroundColor:
-                                  colors[answerIndex * 5 + playerIndex], // Kolor przypisany na podstawie kategorii i indeksu gracza
-                              }}
-                            >
-                              <span className={styles.playerIcon}>
-                                {player.username
-                                  ? player.username[0].toUpperCase()
-                                  : "?"}{" "}
-                              </span>
-                            </div>
+                          .map((player) => (
+                            <ProfileIcon key={player.username}
+                                         className={styles.voteCircle}
+                                         username={player.username}
+                                         iconColor={player.iconColor}/>
                           ))}
                         {extraPlayers > 0 && (
                           <span className={styles.extraVotes}>

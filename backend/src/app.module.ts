@@ -20,6 +20,7 @@ import { NotificationsModule } from "./notifications/notifications.module";
 import { FriendsModule } from "./friends/friends.module";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { GameHistoryModule } from "./game-history/game-history.module";
+import { ColorsModule } from './colors/colors.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { GameHistoryModule } from "./game-history/game-history.module";
     FriendsModule,
     MatchmakingModule,
     GameHistoryModule,
+    ColorsModule,
   ],
   controllers: [AppController, QuestionsController],
   providers: [AppService],

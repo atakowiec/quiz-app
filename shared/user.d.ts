@@ -3,6 +3,7 @@ export type UserPacket = {
   username: string;
   email: string;
   permission: number;
+  iconColor: string;
 }
 
 export enum PermissionEnum {
@@ -26,6 +27,7 @@ export type FriendshipStatus = "friend" | "pending" | "requested" | "none"
 export type UserDetails = {
   id: number;
   username: string;
+  iconColor: string;
   stats: {
     playedGames: number
     firstPlace: number
@@ -40,4 +42,5 @@ export type UserDetails = {
 export type BasicUserDetails = {
   id: number;
   username: string;
+  iconColor: string;
 }

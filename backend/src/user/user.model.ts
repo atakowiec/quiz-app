@@ -16,6 +16,9 @@ export class User {
   email: string;
 
   @Column()
+  iconColor: string;
+
+  @Column()
   permission: number;
 
   @Column({ default: true })

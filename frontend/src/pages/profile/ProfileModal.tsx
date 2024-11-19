@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { useUser } from "../../store/userSlice";
 import { translateUserStatus } from "../../utils/utils";
 import { FriendshipButton } from "./components/FriendshipButton";
+import ProfileIcon from "../../components/ProfileIcon.tsx";
+import { UserDetails } from "@shared/user";
 
 interface ProfileModalProps {
   show: boolean;
@@ -38,27 +40,22 @@ interface ProfileStats {
 }
 
 const ProfileModal: React.FC<ProfileModalProps> = ({
-  show,
-  handleClose,
-  userId,
-}) => {
+                                                     show,
+                                                     handleClose,
+                                                     userId,
+                                                   }) => {
   const socket = useSocket();
-  const { friends } = useUser(); // Access friends from Redux
-  const friend = friends?.find((f) => f.id === userId); // Find the correct friend
+  const { friends, id: loggedUserId } = useUser();
+  const game = useGame();
+  const friend = friends?.find((f) => f.id === userId);
 
-  // Use useApi to fetch stats for the friend
-  const {
-    loaded: statsLoaded,
-    data: statsData,
-    error: statsError,
-  } = useApi<ProfileStats>(`/history/stats/${userId}`, "get");
+  const { data: user } = useApi<UserDetails>(`/users/get-by-id/${userId}`, "get")
+  const {loaded: statsLoaded, data: statsData} = useApi<ProfileStats>(`/history/stats/${userId}`, "get");
 
-  // Extract data from statsData
   const rankingData = statsData?.rankingPlaces || [];
   const gamesPlayed = Number(statsData?.gamesPlayed) || 0;
   const averageScore = Number(statsData?.averageScore) || 0;
 
-  const game = useGame();
   const canInviteToGame =
     friend &&
     friend.status === "online" &&
@@ -81,29 +78,28 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         <MainTitle>Profil</MainTitle>
         <div className={styles.profileBox}>
           <div className={styles.iconAndName}>
-            <div className={styles.profileIcon}>
-              {friend?.username?.[0] ?? "-"}
-            </div>
+            <ProfileIcon username={user?.username} iconColor={user?.iconColor} className={styles.profileIcon}/>
             <div className={styles.nameEmail}>
               <div className={styles.profileName}>
-                {friend?.username ?? "-"}
+                {user?.username ?? "-"}
               </div>
-              <div
-                className={`${styles.status} ${styles[friend?.status ?? "offline"]}`}
-              >
-                <FaCircle className={styles.circle} />
-                {translateUserStatus(friend?.status ?? "offline")}
-              </div>
+              {
+                friend &&
+                  <div className={`${styles.status} ${styles[friend?.status ?? "offline"]}`}>
+                      <FaCircle className={styles.circle}/>
+                    {translateUserStatus(friend?.status ?? "offline")}
+                  </div>
+              }
             </div>
           </div>
           <div className={styles.rightSide}>
             {canInviteToGame && (
               <button className={styles.inviteF} onClick={inviteToGame}>
-                <GiGamepad className={styles.gamePad} />
+                <GiGamepad className={styles.gamePad}/>
                 Zaproś do gry
               </button>
             )}
-            {friend && <FriendshipButton user={friend} />}
+            {user && userId != loggedUserId && <FriendshipButton user={user}/>}
           </div>
         </div>
         <div className={styles.friendRanking}>

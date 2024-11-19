@@ -6,6 +6,7 @@ import { Friend, IFriendRequest } from "@shared/friends";
 
 export type UserState = {
   loggedIn: boolean;
+  iconColor?: string;
   id?: number;
   username?: string;
   email?: string;
@@ -37,7 +38,8 @@ const userSlice = createSlice({
         email: userPacket.email,
         permission: userPacket.permission,
         friends: [],
-        friendRequests: []
+        friendRequests: [],
+        iconColor: userPacket.iconColor
       };
       
     },

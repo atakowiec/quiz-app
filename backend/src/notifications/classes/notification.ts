@@ -21,10 +21,12 @@ export default class Notification {
       inviter: {
         id: this.inviter.id,
         username: this.inviter.username,
+        iconColor: this.inviter.iconColor
       },
       invitee: {
         id: this.invitee.id,
-        username: this.invitee.username
+        username: this.invitee.username,
+        iconColor: this.invitee.iconColor
       },
       createdAt: this.createdAt,
     };

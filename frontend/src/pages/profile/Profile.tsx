@@ -20,6 +20,7 @@ import FriendCard from "./components/FriendCard.tsx";
 import AddFriendsModal from "./components/AddFriendsModal.tsx";
 import UpdateEmailModal from "./Edit/UpdateEmailModal.tsx";
 import ChangePasswordModal from "./Edit/ChangePasswordModal.tsx";
+import ProfileIcon from "../../components/ProfileIcon.tsx";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -46,9 +47,7 @@ const Profile: React.FC = () => {
           <MainTitle>Twój Profil</MainTitle>
           <div className={styles.profileBox}>
             <div className={styles.iconAndName}>
-              <div className={styles.profileIcon}>
-                {user.username?.[0] ?? "-"}
-              </div>
+              <ProfileIcon className={styles.profileIcon} username={user.username} iconColor={user.iconColor} />
               <div className={styles.nameEmail}>
                 <div className={styles.profileName}>
                   {user.username}

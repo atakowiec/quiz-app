@@ -5,6 +5,7 @@ export type Friend = {
   id: number;
   username: string;
   status: UserStatus;
+  iconColor: string;
 }
 
 export type IFriendRequest = INotification;

@@ -11,15 +11,23 @@ import { NextFunction } from "express";
 import { CorsOptions } from "cors";
 import { AuthService } from "./auth/auth.service";
 import { UserService } from "./user/user.service";
+import { ColorsService } from "./colors/colors.service";
 
 export class SocketIOAdapter extends IoAdapter {
   private readonly logger = new Logger(SocketIOAdapter.name);
+  private authService: AuthService;
+  private userService: UserService;
+  private colorsService: ColorsService;
 
   constructor(
     private app: INestApplicationContext,
     private configService: ConfigService
   ) {
     super(app);
+
+    this.authService = this.app.get(AuthService);
+    this.userService = this.app.get(UserService);
+    this.colorsService = this.app.get(ColorsService);
   }
 
   createIOServer(port: number, options?: ServerOptions) {
@@ -39,51 +47,50 @@ export class SocketIOAdapter extends IoAdapter {
       cors,
     };
 
-    const authService = this.app.get(AuthService);
-    const userService = this.app.get(UserService);
-
     const server: Server = super.createIOServer(port, optionsWithCORS);
 
-    server.use(createTokenMiddleware(authService, userService, this.logger));
+    server.use(this.createTokenMiddleware());
     return server;
   }
-}
 
-const createTokenMiddleware =
-  (authService: AuthService, userService: UserService, logger: Logger) =>
-    async (socket: SocketType, next: NextFunction) => {
-      logger.log("Middleware for socket.io connection");
+  createTokenMiddleware() {
+    return async (socket: SocketType, next: NextFunction) => {
+      this.logger.log("Middleware for socket.io connection");
       if (!socket.handshake.headers.cookie) {
         return next(new UnauthorizedException("No auth cookie provided"));
       }
       try {
-        const user = authService.extractTokenPayloadFromSocket(socket);
+        const user = this.authService.extractTokenPayloadFromSocket(socket);
 
         if (user.id) {
-          const dbUser = await userService.repository.findOne({
+          const dbUser = await this.userService.repository.findOne({
             where: { id: user.id },
           });
 
           if (!dbUser) {
-            logger.warn(`User with id ${user.id} not found in the database - removing token.`);
-            authService.clearTokenFromSocket(socket);
+            this.logger.warn(`User with id ${user.id} not found in the database - removing token.`);
+            this.authService.clearTokenFromSocket(socket);
             return next(new UnauthorizedException("User not found"));
           } else {
-            logger.log(`User [ID:${dbUser.id}] ${dbUser.username} found in the database.`);
+            this.logger.log(`User [ID:${dbUser.id}] ${dbUser.username} found in the database.`);
             socket.data = {
               user: dbUser,
               username: dbUser.username,
+              iconColor: dbUser.iconColor || this.colorsService.getRandomColor(),
             };
           }
         } else {
-          logger.log(`User ${user.username} has no account.`);
+          this.logger.log(`User ${user.username} has no account.`);
           socket.data = {
             username: user.username,
+            iconColor: this.colorsService.getRandomColor(),
           };
         }
         next();
       } catch (error) {
-        logger.error("Error in token middleware:", error);
+        this.logger.error("Error in token middleware:", error);
         next(new UnauthorizedException("Invalid token"));
       }
     };
+  }
+}

@@ -114,6 +114,7 @@ export class FriendsService {
       const friend: Friend = {
         id: friendship.user_2.id,
         username: friendship.user_2.username,
+        iconColor: friendship.user_2.iconColor,
         status: !user2Socket
           ? "offline"
           : user2Socket?.data.gameId
@@ -128,6 +129,7 @@ export class FriendsService {
       const friend: Friend = {
         id: friendship.user_1.id,
         username: friendship.user_1.username,
+        iconColor: friendship.user_1.iconColor,
         status: !user1Socket
           ? "offline"
           : user1Socket?.data.gameId
@@ -154,7 +156,7 @@ export class FriendsService {
 
   @OnEvent("friend_request_handled")
   notifyFriendRequestRemove(friendRequest: FriendRequest) {
-    let requestId = friendRequest.toINotification().id;
+    const requestId = friendRequest.toINotification().id;
 
     const inviteeSocket = this.getUserSocket(friendRequest.invitee.id);
     if (inviteeSocket) {
@@ -391,7 +393,7 @@ export class FriendsService {
     });
 
     return friendships
-      .map((friendship) => {
+      .map((friendship) : Friend => {
         const friend =
           friendship.user_1.id === user.id
             ? friendship.user_2
@@ -401,12 +403,13 @@ export class FriendsService {
         return {
           id: friend.id,
           username: friend.username,
+          iconColor: friend.iconColor,
           status: !friendSocket
             ? "offline"
             : friendSocket.data.gameId
             ? "ingame"
             : "online",
-        } as Friend;
+        };
       })
       .sort((a: Friend, b: Friend) => {
         // not sure if this is the best way to sort friends

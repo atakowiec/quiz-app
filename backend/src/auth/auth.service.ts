@@ -14,6 +14,7 @@ import { UserPacket } from "@shared/user";
 import { SocketType } from "src/game/game.types";
 import { parse } from "cookie";
 import { GameService } from "../game/services/game.service";
+import { ColorsService } from "../colors/colors.service";
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,8 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private readonly gameService: GameService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly colorsService: ColorsService
   ) {
     // empty
   }
@@ -69,7 +71,8 @@ export class AuthService {
       username: createUserDto.username,
       email: createUserDto.email,
       password: await this.hashPassword(createUserDto.password),
-      permission: 0,
+      iconColor: this.colorsService.getRandomColor(),
+      permission: 0
     });
 
     // save the user
@@ -84,6 +87,7 @@ export class AuthService {
       username: newUser.username,
       email: newUser.email,
       permission: newUser.permission,
+      iconColor: newUser.iconColor,
     };
   }
 
@@ -121,6 +125,7 @@ export class AuthService {
       username: user.username,
       email: user.email,
       permission: user.permission,
+      iconColor: user.iconColor,
     };
   }
 

@@ -52,6 +52,7 @@ export interface IGameMember {
   hiddenAnswers: IAnswer[];
   showOtherPlayersAnswers: boolean;
   cheatedAnswers?: IAnswer[];
+  iconColor: string;
 }
 
 export interface GameSettings {

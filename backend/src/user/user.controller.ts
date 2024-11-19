@@ -17,7 +17,6 @@ export class UserController {
   }
 
   @Get("/get-by-id/:id")
-  @UseGuards(AuthGuard)
   async getUserDataById(@Param('id') id: number) {
     return await this.userService.getUserDataById(id);
   }
