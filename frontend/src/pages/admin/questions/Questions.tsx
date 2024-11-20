@@ -37,7 +37,7 @@ export default function Questions() {
     : `/questions/paginate/${categoryName}/${currentPage}?limit=${questionsPerPage}`;
 
   // Use useApi with the dynamically determined path
-  const { data, error, loaded } = useApi<Pagination>(apiPath, "get");
+  const { data, error } = useApi<Pagination>(apiPath, "get");
 
   // Update state with fetched questions and pagination
   const questions = data?.questions || [];

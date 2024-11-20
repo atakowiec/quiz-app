@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody } from "react-bootstrap";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlineMoreTime, MdQueryStats } from "react-icons/md";

@@ -2,7 +2,6 @@ import Meta from "../../../components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
 import styles from "./Category.module.scss";
 import TimeBar from "../components/time-bar/TimeBar.tsx";
-import React from "react";
 import { useGame } from "../../../store/gameSlice.ts";
 import SingleCategory from "./SingleCategory.tsx";
 import MainContainer from "../../../components/MainContainer.tsx";

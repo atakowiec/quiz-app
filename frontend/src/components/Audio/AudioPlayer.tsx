@@ -1,5 +1,3 @@
-// AudioPlayer.tsx
-import React from "react";
 import { IoIosPlay, IoIosPause } from "react-icons/io";
 import styles from "../../styles/AudioPlayer.module.scss";
 import { useAudio } from "./AudioContext";

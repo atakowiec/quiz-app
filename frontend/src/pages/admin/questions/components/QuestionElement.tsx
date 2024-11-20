@@ -1,4 +1,3 @@
-import React from "react";
 import classes from "./styles/questionElement.module.scss";
 import { Distractor } from "../Questions";
 

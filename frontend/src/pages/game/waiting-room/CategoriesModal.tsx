@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody } from "react-bootstrap";
 import { FaCheckSquare, FaSquare } from "react-icons/fa";
 import styles from "./Settings.module.scss";

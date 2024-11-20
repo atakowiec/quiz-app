@@ -1,17 +1,17 @@
-import React from "react";
 import { Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import getApi from "../../../api/axios";
 import styles from "./ChangePassword.module.scss";
 import { toast } from "react-toastify";
+import { FC } from "react";
 
 interface ChangePasswordModalProps {
   show: boolean;
   handleClose: () => void;
 }
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
+const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
   show,
   handleClose,
 }) => {

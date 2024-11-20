@@ -1,4 +1,3 @@
-import React from "react";
 import Meta from "../components/Meta";
 import { Breadcrumb } from "react-bootstrap";
 import Sidebar, { SidebarItem } from "../components/SideBar";

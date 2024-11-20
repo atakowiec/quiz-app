@@ -17,7 +17,6 @@ interface UpdateEmailModalProps {
 const UpdateEmailModal: React.FC<UpdateEmailModalProps> = ({
   show,
   handleClose,
-  userId,
 }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");

@@ -1,4 +1,3 @@
-import TimeBar from "../components/time-bar/TimeBar.tsx";
 import { useGame } from "../../../store/gameSlice.ts";
 import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";

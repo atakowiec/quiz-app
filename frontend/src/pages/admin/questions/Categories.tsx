@@ -60,7 +60,6 @@ export default function Categories() {
           toast.error("Wystąpił błąd podczas usuwania kategorii")
       }
   }
-  function onEditClick() {}
 
   return (
     <>

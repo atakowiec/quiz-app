@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../pages/login/Login.module.scss";
 
 interface CustomInputProps {

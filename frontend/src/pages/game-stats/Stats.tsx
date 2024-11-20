@@ -14,28 +14,9 @@ import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
 import styles from "./Stats.module.scss";
 import RankingVisualization from "./RankingVisualization.tsx";
-import { IoIosStats } from "react-icons/io";
 import StatsModal from "./StatsModal.tsx";
 import { ProfileStats } from "@shared/game.js";
 import getApi from "../../api/axios.ts";
-
-const getGameWordForm = (count: number) => {
-  const lastDigit = count % 10;
-  const lastTwoDigits = count % 100;
-
-  if (
-    count === 0 ||
-    (lastTwoDigits >= 10 && lastTwoDigits <= 20) ||
-    lastDigit === 0 ||
-    lastDigit >= 5
-  ) {
-    return "gier";
-  } else if (lastDigit === 1) {
-    return "gra";
-  } else {
-    return "gry";
-  }
-};
 
 const Stats: React.FC = () => {
   const user = useUser();
