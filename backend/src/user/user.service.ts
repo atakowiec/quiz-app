@@ -1,13 +1,13 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from "./user.model";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BasicUserDetails, UserDetails } from "@shared/user";
 import { GameService } from "../game/services/game.service";
-import { FriendsService } from "../friends/friends.service";
 import { TokenPayload } from "../auth/auth";
-import {UpdateUserDto} from "./user";
+import { UpdateUserDto } from "./user";
 import * as bcrypt from "bcrypt";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 
 @Injectable()
@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     public readonly repository: Repository<User>,
     public readonly gameService: GameService,
-    public readonly friendsService: FriendsService
+    public readonly eventEmitter: EventEmitter2
   ) {
     // empty
   }
@@ -85,11 +85,24 @@ export class UserService {
       throw new BadRequestException("Proszę podać obecne hasło");
     }
 
-   await this.repository.save(user);
+    await this.repository.save(user);
     return user;
   }
 
   async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
+  }
+
+  async changeColor(userId: number, color: string) {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException(`Ten użytkownik nie istnieje`);
+    }
+
+    user.iconColor = color;
+
+    await this.repository.save(user);
+
+    this.eventEmitter.emit("user.icon_changed", user, color);
   }
 }

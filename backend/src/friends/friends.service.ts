@@ -38,37 +38,28 @@ export class FriendsService {
 
     // send the data to the client
     client.emit("set_friends", friends);
-    client.emit(
-      "set_friend_requests",
-      pendingRequests.map((request) => request.toINotification())
-    );
+    client.emit("set_friend_requests", pendingRequests.map((request) => request.toINotification()));
+
+    for (const friend of friends) {
+      client.join(`friend-${friend.id}`);
+    }
 
     // notify the friends that the user is online
-    this.notifyFriendsAboutStatusChange(client.data.user.id, "online", friends);
+    this.notifyFriendsAboutStatusChange(client.data.user.id, "online");
   }
 
   async onDisconnect(client: SocketType) {
     if (!client.data.user?.id) return; // not logged in
 
     // notify the friends that the user is offline
-    const friends = await this.getFriends(client.data.user);
-    this.notifyFriendsAboutStatusChange(
-      client.data.user.id,
-      "offline",
-      friends
-    );
+    this.notifyFriendsAboutStatusChange(client.data.user.id, "offline");
   }
 
   @OnEvent("game_join")
   async onGameJoin(socket: SocketType) {
     if (!socket.data.user?.id) return;
 
-    const friends = await this.getFriends(socket.data.user);
-    this.notifyFriendsAboutStatusChange(
-      socket.data.user?.id,
-      "ingame",
-      friends
-    );
+    this.notifyFriendsAboutStatusChange(socket.data.user?.id, "ingame");
   }
 
   @OnEvent("game_leave")
@@ -81,29 +72,14 @@ export class FriendsService {
     socket = this.getUserSocket(socket.data.user?.id); // try to get the socket again because the user might have disconnected
 
     if (!socket?.connected) {
-      console.log("User is not connected");
       return;
     }
 
-    const friends = await this.getFriends(socket.data.user);
-    this.notifyFriendsAboutStatusChange(
-      socket.data.user?.id,
-      "online",
-      friends
-    );
+    this.notifyFriendsAboutStatusChange(socket.data.user?.id, "online");
   }
 
-  notifyFriendsAboutStatusChange(
-    userId: number,
-    status: UserStatus,
-    friends: Friend[]
-  ) {
-    for (const friend of friends) {
-      const friendSocket = this.getUserSocket(friend.id);
-      if (friendSocket) {
-        friendSocket.emit("update_friend_status", userId, status);
-      }
-    }
+  notifyFriendsAboutStatusChange(userId: number, status: UserStatus) {
+    this.friendsGateway.server.to(`friend-${userId}`).emit("update_friend_status", userId, status);
   }
 
   notifyNewFriendship(friendship: Friendship) {
@@ -169,6 +145,11 @@ export class FriendsService {
     }
   }
 
+  @OnEvent("user.icon_changed")
+  async notifyIconChange(user: User, color: string) {
+    this.friendsGateway.server.to(`friend-${user.id}`).emit("update_friend_icon", user.id, color);
+  }
+
   async inviteFriend(inviterSocket: SocketType, inviteeId: number) {
     const inviter: User = inviterSocket.data.user;
     // check if the user is not inviting himself
@@ -225,9 +206,11 @@ export class FriendsService {
 
     // notify both users that the friendship has been removed
     socket.emit("remove_friend", userId);
+    socket.leave(`friend-${userId}`);
 
     const friendSocket = this.getUserSocket(userId);
     if (friendSocket) {
+      friendSocket.leave(`friend-${socket.data.user.id}`);
       friendSocket.emit("remove_friend", socket.data.user?.id);
     }
 
@@ -328,10 +311,7 @@ export class FriendsService {
     });
   }
 
-  private async acceptFriendRequest(
-    socket: SocketType,
-    friendRequest: FriendRequest
-  ) {
+  private async acceptFriendRequest(socket: SocketType, friendRequest: FriendRequest) {
     const friendship = this.friendshipRepository.create({
       user_1: {
         id: friendRequest.inviter.id,
@@ -344,12 +324,13 @@ export class FriendsService {
     });
 
     const newFriendship = await this.friendshipRepository.save(friendship);
+    await this.friendRequestRepository.remove(friendRequest);
+
+    socket.join(`friend-${friendRequest.inviter.id}`);
+    this.getUserSocket(friendRequest.inviter.id)?.join(`friend-${socket.data.user.id}`);
 
     this.eventEmitter.emit("friend_request_handled", friendRequest);
-
     this.notifyNewFriendship(newFriendship);
-
-    await this.friendRequestRepository.remove(friendRequest);
 
     socket.emit("notification", "Zaproszenie zostało zaakceptowane");
   }

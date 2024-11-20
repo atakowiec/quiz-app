@@ -21,6 +21,7 @@ import AddFriendsModal from "./components/AddFriendsModal.tsx";
 import UpdateEmailModal from "./Edit/UpdateEmailModal.tsx";
 import ChangePasswordModal from "./Edit/ChangePasswordModal.tsx";
 import ProfileIcon from "../../components/ProfileIcon.tsx";
+import ProfileIconPicker from "../../components/profile-icon-picker/ProfileIconPicker.tsx";
 
 const Profile: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
@@ -34,6 +35,7 @@ const Profile: React.FC = () => {
   const [updateEmailVisible, setUpdateEmailVisible] = useState(false);
   const [searchFriend, setSearchFriend] = useState("");
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
+  const [iconPickerVisible, setIconPickerVisible] = useState(false);
 
   const user = useSelector<State, UserState>((state) => state.user);
 
@@ -47,7 +49,10 @@ const Profile: React.FC = () => {
           <MainTitle>Twój Profil</MainTitle>
           <div className={styles.profileBox}>
             <div className={styles.iconAndName}>
-              <ProfileIcon className={styles.profileIcon} username={user.username} iconColor={user.iconColor} />
+              <ProfileIcon className={styles.profileIcon}
+                           username={user.username}
+                           onClick={() => setIconPickerVisible(true)}
+                           iconColor={user.iconColor}/>
               <div className={styles.nameEmail}>
                 <div className={styles.profileName}>
                   {user.username}
@@ -105,6 +110,10 @@ const Profile: React.FC = () => {
       <ChangePasswordModal
         show={changePasswordVisible}
         handleClose={() => setChangePasswordVisible(false)}
+      />
+      <ProfileIconPicker
+        visible={iconPickerVisible}
+        setVisible={setIconPickerVisible}
       />
     </>
   );

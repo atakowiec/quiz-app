@@ -41,12 +41,13 @@ const userSlice = createSlice({
         friendRequests: [],
         iconColor: userPacket.iconColor
       };
-      
+    },
+    setColor: (state, action) => {
+      state.iconColor = action.payload;
     },
     updateEmail: (state, action) => {
       state.email = action.payload;
     },
-    
     newFriendship(state, action) {
       const friends: Friend[] = state.friends ?? [];
       const newFriend: Friend = action.payload;
@@ -72,6 +73,16 @@ const userSlice = createSlice({
 
       if (friend) {
         friend.status = newStatus
+      }
+    },
+    updateFriendColor(state, action) {
+      const friends: Friend[] = state.friends ?? [];
+      const { friendId, color } = action.payload;
+
+      const friend = friends.find(friend => friend.id === friendId);
+
+      if (friend) {
+        friend.iconColor = color
       }
     },
     removeFriendship(state, action) {

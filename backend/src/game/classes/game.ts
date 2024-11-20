@@ -16,6 +16,7 @@ import Round from "./round";
 import { log } from "console";
 import GameInvite from "../../notifications/classes/game-invite";
 import { WsException } from "@nestjs/websockets";
+import { User } from "../../user/user.model";
 
 export default class Game {
   readonly logger: Logger;
@@ -637,6 +638,25 @@ export default class Game {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
+    }
+  }
+
+  onUserIconChanged(user: User, iconColor: string) {
+    for (const player of this.getAllPlayers()) {
+      if (player.username !== user.username)
+        continue;
+
+      player.socket.data.iconColor = iconColor;
+
+      this.broadcastUpdate({
+        players: [
+          {
+            username: user.username,
+            iconColor,
+          },
+        ]
+      })
+      return;
     }
   }
 }

@@ -13,9 +13,10 @@ import { QuestionsService } from "../../questions/services/questions.service";
 import { ConfigService } from "@nestjs/config";
 import { log } from "console";
 import { GameMember } from "../classes/game-member";
-import { EventEmitter2 } from "@nestjs/event-emitter";
+import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
 import { GameHistoryService } from "src/game-history/services/game-history.service";
 import { CategoryService } from "../../questions/services/category.service";
+import { User } from "../../user/user.model";
 
 @Injectable()
 export class GameService {
@@ -49,6 +50,11 @@ export class GameService {
     const game = new Game(owner, this, gameType);
     this.games.push(game);
     return game;
+  }
+
+  @OnEvent("user.icon_changed")
+  public onUserIconChanged(user: User, iconColor: string) {
+    this.getGameByUsername(user.username)?.onUserIconChanged(user, iconColor);
   }
 
   public getGameById(id: string): Game {

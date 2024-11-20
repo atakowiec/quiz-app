@@ -1,0 +1,37 @@
+.iconPicker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 1rem 0;
+  user-select: none;
+
+  .icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transition: scale 0.1s, color .3s;
+    cursor: pointer;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+    font-size: 1.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.selected {
+      scale: 1.1;
+    }
+
+    &:hover {
+      scale: 1.1;
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}

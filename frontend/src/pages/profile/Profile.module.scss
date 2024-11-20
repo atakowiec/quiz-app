@@ -33,6 +33,14 @@
   height: 3.5rem;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
   font-weight: 600;
+  cursor: pointer;
+  line-height: 0;
+  transition: filter 0.1s, scale 0.1s;
+
+  &:hover {
+    filter: brightness(.9);
+    scale: 1.05;
+  }
 }
 
 .nameEmail {
@@ -240,7 +248,7 @@ button.addFriends {
   border-radius: $container-border-radius;
   font-size: 1.2rem;
   background-color: $gray;
-  padding: 0rem 0.3rem;
+  padding: 0 0.3rem;
 }
 
 .inviteF {

@@ -156,6 +156,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
     margin-bottom: 0;
   }
 }
+
 @media (max-height: 780px) and (min-width: $phone-breakpoint) {
   .mainBox {
     max-height: 650px;
@@ -180,5 +181,40 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 
   .mainBox {
     margin-bottom: 9rem;
+  }
+}
+
+.button {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  margin: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  border: none;
+
+
+  &.primary {
+    background-color: $green;
+    color: white;
+
+    &:hover {
+      background-color: $green-black;
+      box-shadow: $button-shadow-black;
+    }
+  }
+
+  &.secondary {
+    background-color: $button-gray;
+    color: $blue;
+
+    &:hover {
+      background-color: $button-gray-hover;
+      box-shadow: $button-shadow-green;
+    }
   }
 }

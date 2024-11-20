@@ -6,6 +6,7 @@ import { IoMdPerson } from "react-icons/io";
 import { BasicUserDetails } from "@shared/user";
 import { FriendshipButton, FriendshipButtonProps } from "./FriendshipButton.tsx";
 import getApi from "../../../api/axios.ts";
+import ProfileIcon from "../../../components/ProfileIcon.tsx";
 
 interface AddFriendsModalProps {
   show: boolean;
@@ -66,9 +67,7 @@ function UserCard({ user }: FriendshipButtonProps) {
   return (
     <div className={`${styles.friend} ${styles.searchFriend}`}>
       <div className={styles.friendIconNick}>
-        <div className={styles.friendIcon}>
-          {user.username[0]}
-        </div>
+        <ProfileIcon className={styles.friendIcon} iconColor={user.iconColor} username={user.username}/>
         <div className={styles.nickStatus}>
           <div className={styles.friendNick}>
             {user.username}

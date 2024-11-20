@@ -26,6 +26,7 @@ export interface ServerToClientEvents {
   new_friend: (friend: Friend) => void;
   update_friend_status: (friendId: number, newStatus: UserStatus) => void;
   remove_friend: (friendId: number) => void;
+  update_friend_icon: (friendId: number, iconColor: string) => void;
 
   set_friend_requests: (friendRequests: IFriendRequest[]) => void;
   new_friend_request: (friendRequest: IFriendRequest) => void;

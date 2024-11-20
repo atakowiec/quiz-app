@@ -1,8 +1,8 @@
-import {Body, Controller, Get, Param, Patch, Req, UseGuards} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { UserService } from "./user.service";
 import { Request } from "../app";
 import { AuthGuard } from "../guards/auth.guard";
-import {UpdateUserDto} from "./user";
+import { UpdateUserDto } from "./user";
 
 @Controller('users')
 export class UserController {
@@ -23,13 +23,16 @@ export class UserController {
 
   @Patch("/update-profile")
   @UseGuards(AuthGuard)
-  async updateProfile(
-      @Req() req: Request,
-      @Body() updateUserDto: UpdateUserDto,
-  ) {
+  async updateProfile(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
     const userId = req.user.id;
     return await this.userService.updateProfile(userId, updateUserDto);
   }
 
-
+  @Post("/change-color")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  async changeColor(@Req() req: Request, @Body() color: { color: string }) {
+    const userId = req.user.id;
+    return await this.userService.changeColor(userId, color.color);
+  }
 }

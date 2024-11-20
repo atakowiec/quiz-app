@@ -12,7 +12,9 @@ export class ColorsService {
   }
 
   private async fetchColors(): Promise<string[]> {
-    const colors = await this.colorRepository.find();
+    const colors = await this.colorRepository.createQueryBuilder("color")
+      .select("DISTINCT LOWER(color.color)", "color")
+      .getRawMany();
 
     return colors.map(color => color.color);
   }

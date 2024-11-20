@@ -2,6 +2,16 @@ import { FriendshipStatus, UserStatus } from "@shared/user";
 import { UserState } from "../store/userSlice.ts";
 import { Friend, IFriendRequest } from "@shared/friends";
 
+export function getTextColor(backgroundColor: string) {
+    const hex = backgroundColor.replace("#", "");
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+
+    const luminance = 0.2126 * (r / 255) + 0.7152 * (g / 255) + 0.0722 * (b / 255);
+
+    return luminance > 0.8 ? "#000" : "#fff";
+}
 
 export function translateUserStatus(status: UserStatus) {
   return {

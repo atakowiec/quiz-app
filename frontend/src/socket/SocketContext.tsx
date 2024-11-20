@@ -86,6 +86,15 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       ),
     );
 
+    newSocket.on("update_friend_icon", (friendId, color) =>
+      dispatch(
+        userActions.updateFriendColor({
+          friendId,
+          color,
+        }),
+      ),
+    );
+
     newSocket.on("remove_friend", (friendId) =>
       dispatch(userActions.removeFriendship(friendId)),
     );
