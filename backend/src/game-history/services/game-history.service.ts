@@ -215,5 +215,11 @@ export class GameHistoryService {
     await this.avgHistoryRepository.save(avgHistory);
   }
 
+  async getUserAverageHistory(userId: number): Promise<AvgHistory[]> {
+    return this.avgHistoryRepository.find({
+      where: { userId },
+      order: { createdAt: "ASC" },
+    });
+  }  
 
 }

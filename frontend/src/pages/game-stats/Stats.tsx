@@ -17,6 +17,7 @@ import RankingVisualization from "./RankingVisualization.tsx";
 import StatsModal from "./StatsModal.tsx";
 import { ProfileStats } from "@shared/game.js";
 import getApi from "../../api/axios.ts";
+import AverageScoreChartModal from "./AvgScoreModal.tsx";
 
 const Stats: React.FC = () => {
   const user = useUser();
@@ -39,6 +40,10 @@ const Stats: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
+
+  const [showChartModal, setShowChartModal] = useState(false);
+  const openChartModal = () => setShowChartModal(true);
+  const closeChartModal = () => setShowChartModal(false);
 
   const [profileStats, setProfileStats] = useState<ProfileStats>({
     rankingPlaces: [],
@@ -114,7 +119,14 @@ const Stats: React.FC = () => {
                 handleClose={closeModal}
                 userId={user?.id}
               />
-              <button className={styles.rankingButton}>Wykres punktów</button>
+              <button className={styles.rankingButton} onClick={openChartModal}>
+                Wykres punktów
+              </button>
+              <AverageScoreChartModal
+                show={showChartModal}
+                handleClose={closeChartModal}
+                userId={user?.id}
+              />{" "}
             </div>
           </div>
         </MainBox>

@@ -30,4 +30,9 @@ export class GameHistoryController {
       new CountGamesPerCategoryForUser(userId)
     );
   }
+
+  @Get("stats/:userId/avg/history")
+  getUserAvgHistory(@Param("userId") userId: number) {
+    return this.gameHistoryService.getUserAverageHistory(userId);
+  }
 }
