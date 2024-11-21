@@ -34,7 +34,20 @@
     width: 100%;
 
     &:hover {
-      background-color: #09121a;
+      background-color: $blue;
+    }
+  }
+
+  .sidebarLink {
+    border: none;
+    background-color: $blue;
+
+    &:active {
+      background-color: $blue;
+    }
+
+    &:hover {
+      background-color: $blue;
     }
   }
 

@@ -14,11 +14,11 @@ export default function FriendCard({ friend }: { friend: Friend }) {
   const socket = useSocket();
   const game = useGame();
 
-  const canInvite = friend.status === "online" && game?.status == "waiting_for_players";
+  const canInvite =
+    friend.status === "online" && game?.status == "waiting_for_players";
 
   function sendGameInvite() {
-    if(!canInvite)
-      return;
+    if (!canInvite) return;
 
     socket.emit("send_game_invite", friend.id);
   }
@@ -26,28 +26,29 @@ export default function FriendCard({ friend }: { friend: Friend }) {
   return (
     <div className={styles.friend}>
       <div className={styles.friendIconNick}>
-        <ProfileIcon className={styles.friendIcon} username={friend.username} iconColor={friend.iconColor} />
+        <ProfileIcon
+          className={styles.friendIcon}
+          username={friend.username}
+          iconColor={friend.iconColor}
+        />
         <div className={styles.nickStatus}>
-          <div className={styles.friendNick}>
-            {friend.username}
-          </div>
           <div className={`${styles.status} ${styles[friend.status]}`}>
-            <FaCircle className={styles.circle}/>
+            <FaCircle className={styles.circle} />
             {translateUserStatus(friend.status)}
           </div>
         </div>
       </div>
       <div className={styles.rightSide}>
-        {
-          canInvite &&
-            <button className={styles.invite} onClick={sendGameInvite}>
-                <GiGamepad className={styles.gamePad}/> Zaproś do gry
-            </button>}
+        {canInvite && (
+          <button className={styles.invite} onClick={sendGameInvite}>
+            <GiGamepad className={styles.gamePad} /> Zaproś do gry
+          </button>
+        )}
         <button
           className={styles.friendModal}
           onClick={() => showModal(friend.id)}
         >
-          <IoMdPerson/>
+          <IoMdPerson />
         </button>
       </div>
     </div>

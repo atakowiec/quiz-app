@@ -100,6 +100,7 @@ export class NotificationsService {
     const invite = new GameInvite(inviter, invitee, game);
     game.invites.push(invite);
     this.sendNotification(invite.toINotification());
+    socket.emit("notification", `Zaproszono ${invitee.username} do gry`);
   }
 
   declineNotification(socket: SocketType, notification: INotification) {

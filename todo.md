@@ -35,7 +35,8 @@
 - [x] dodac sprawdzanie permisji/autoryzacji np na profilu lub adminie
 - [x] zrobic od nowa profil
 - [x] zrobic modal z profilem innych graczy (figma)
-- [ ] zrobic zapraszanie do gry z poziomu poczekalni (sidebar) (modal z lista znajomych)
+- [x] zrobic zapraszanie do gry z poziomu poczekalni (sidebar) (modal z lista znajomych)
+- [x] dodac toast po tym jak sie kogos zaprosi do gry
 - [ ] kolory avatarow na backendzie (avatar ma pierwsza litere nicku) (figma - kolory)
 - [ ] kolory na frontend poprawic jak beda na backend
 - [x] skonczyc znajomych i zaprosznia do gry
@@ -46,6 +47,6 @@
 - [x] limit czlonkow w grze
 - [x] muzyka w trakcie gry - Łukasz
 - [x] w "zapros znajomych" w grze wyswietlenie kto jest "online" lub "w grze" aka "zajęty"
-- [ ] wykres do tych statystyk
+- [x] wykres do tych statystyk
 - [x] button do powrotu z ustawien
 - [x] admin button w nav (po kliknieciu na profil) by moc przechodzic na strone admina

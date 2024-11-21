@@ -183,8 +183,9 @@ button.addFriends {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
   margin-left: 0.5rem;
+  margin-bottom: -25%;
 }
 
 .rightSide {

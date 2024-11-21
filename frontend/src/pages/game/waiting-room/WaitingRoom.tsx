@@ -20,14 +20,17 @@ import MainTitle from "../../../components/MainTitle.tsx";
 import TimeBar from "../components/time-bar/TimeBar.tsx";
 import useProfileModal from "../../../hooks/profile-modal/useProfileModal.ts";
 import ConfirmationModal from "../../../components/ConfirmationModal.tsx";
+import { IoIosSend } from "react-icons/io";
+import InviteModal from "./InviteModal.tsx";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems: SidebarItem[] = [
     { icon: IoHomeSharp, label: "Powrót", href: "/" },
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
+    { icon: IoIosSend, label: "Zaproś", href: "", onClick: openInviteModal },
   ];
   const [copyAnimationStage, setCopyAnimationStage] = useState(
-    "none" as "none" | "copying" | "copied" | "ending",
+    "none" as "none" | "copying" | "copied" | "ending"
   );
 
   const game: GameState = useSelector((state: State) => state.game);
@@ -38,6 +41,14 @@ const WaitingRoom: React.FC = () => {
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  function openInviteModal() {
+    setShowInviteModal(true);
+  }
+
+  function closeInviteModal() {
+    setShowInviteModal(false);
+  }
 
   useEffect(() => {
     console.log(game);
@@ -89,7 +100,7 @@ const WaitingRoom: React.FC = () => {
     const fromURL = window.location.host;
 
     await navigator.clipboard.writeText(
-      `${protocol}//${fromURL}/join-game?code=${id}`,
+      `${protocol}//${fromURL}/join-game?code=${id}`
     );
 
     setCopyAnimationStage("copying");
@@ -239,6 +250,7 @@ const WaitingRoom: React.FC = () => {
       >
         Czy na pewno chcesz zmienić właściciela pokoju na {selectedPlayer}?
       </ConfirmationModal>
+      <InviteModal show={showInviteModal} onClose={closeInviteModal} />
     </>
   );
 };
