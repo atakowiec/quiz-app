@@ -6,6 +6,7 @@ import { GameController } from "./game.controller";
 import { QuestionsModule } from "../questions/questions.module";
 import { MatchmakingModule } from "src/matchmaking/matchmaking.module";
 import { GameHistoryModule } from "src/game-history/game-history.module";
+import { MetricsModule } from "../metrics/metrics.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { GameHistoryModule } from "src/game-history/game-history.module";
     QuestionsModule,
     forwardRef(() => MatchmakingModule),
     forwardRef(() => GameHistoryModule),
+    MetricsModule,
   ],
   providers: [GameService, GameGateway],
   controllers: [GameController],

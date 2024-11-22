@@ -17,6 +17,7 @@ import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
 import { GameHistoryService } from "src/game-history/services/game-history.service";
 import { CategoryService } from "../../questions/services/category.service";
 import { User } from "../../user/user.model";
+import { MetricsService } from "../../metrics/services/metrics.service";
 
 @Injectable()
 export class GameService {
@@ -35,7 +36,9 @@ export class GameService {
     @Inject()
     public readonly configService: ConfigService,
     @Inject()
-    public readonly eventEmitter: EventEmitter2
+    public readonly eventEmitter: EventEmitter2,
+    @Inject()
+    private readonly metricsService: MetricsService
   ) {
     setInterval(() => this.tickGames(), 1000);
   }
@@ -49,6 +52,10 @@ export class GameService {
 
     const game = new Game(owner, this, gameType);
     this.games.push(game);
+
+    this.metricsService.incrementGameCreated();
+    this.metricsService.setActiveGamesCount(this.games.length);
+
     return game;
   }
 
@@ -65,6 +72,7 @@ export class GameService {
     const index = this.games.indexOf(game);
     if (index !== -1) {
       this.games.splice(index, 1);
+      this.metricsService.setActiveGamesCount(this.games.length);
     }
     game.destroy();
   }

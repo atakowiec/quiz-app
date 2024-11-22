@@ -20,7 +20,9 @@ import { NotificationsModule } from "./notifications/notifications.module";
 import { FriendsModule } from "./friends/friends.module";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { GameHistoryModule } from "./game-history/game-history.module";
-import { ColorsModule } from './colors/colors.module';
+import { ColorsModule } from "./colors/colors.module";
+
+import { MetricsModule } from "./metrics/metrics.module";
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { ColorsModule } from './colors/colors.module';
     MatchmakingModule,
     GameHistoryModule,
     ColorsModule,
+    MetricsModule,
   ],
   controllers: [AppController, QuestionsController],
   providers: [AppService],
