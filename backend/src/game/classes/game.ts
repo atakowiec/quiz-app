@@ -379,7 +379,7 @@ export default class Game {
     player.chosenCategory = categoryId;
 
     // if everyone selected the category, we can move to the next phase
-    if (this.players.every((player) => player.chosenCategory !== -1)) {
+    if (this.getAllPlayers().every((player) => player.chosenCategory !== -1)) {
       this.round.setTimer(0, this.round.endVoting.bind(this.round));
     }
 
@@ -495,10 +495,7 @@ export default class Game {
   }
 
   getAllPlayers() {
-    return [this.owner, ...this.players].filter((player) => {
-      if (!player) return false;
-      return player;
-    });
+    return [this.owner, ...this.players].filter(Boolean);
   }
 
   getAllLoggedPlayers() {
