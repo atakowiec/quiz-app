@@ -27,7 +27,7 @@
 
 ## Co jeszcze trzeba zrobic
 
-- [ ] po kliknieciu w zdjecie pytania w grze - powieksza sie zdjecie
+- [x] po kliknieciu w zdjecie pytania w grze - powieksza sie zdjecie
 - [x] tryb jednoosobowy - nie zapisuja sie pierwsze miejsca itp (kwerendy nie biorą pod uwagę singleplayer)
 - [x] zapis do bazy gry dla zalogowanych
 - [x] skonczyc admina - zmiana stylow, zrobic ladne i dzialajace i spójne z reszta aplikacji
@@ -37,8 +37,8 @@
 - [x] zrobic modal z profilem innych graczy (figma)
 - [x] zrobic zapraszanie do gry z poziomu poczekalni (sidebar) (modal z lista znajomych)
 - [x] dodac toast po tym jak sie kogos zaprosi do gry
-- [ ] kolory avatarow na backendzie (avatar ma pierwsza litere nicku) (figma - kolory)
-- [ ] kolory na frontend poprawic jak beda na backend
+- [x] kolory avatarow na backendzie (avatar ma pierwsza litere nicku) (figma - kolory)
+- [x] kolory na frontend poprawic jak beda na backend
 - [x] skonczyc znajomych i zaprosznia do gry
 - [x] przycisk "zagraj ponownie" po zakonczeniu gry - na razie nie dziala wcale
 - [x] w matchmakingu - zagraj kolejna gre - dolacza do kolejki na nowo

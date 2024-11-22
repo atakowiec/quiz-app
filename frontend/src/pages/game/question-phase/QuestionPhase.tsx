@@ -8,7 +8,7 @@ import { MdQueryStats } from "react-icons/md";
 import TimeBar from "../components/time-bar/TimeBar.tsx";
 import { useGame } from "../../../store/gameSlice.ts";
 import { useSocket } from "../../../socket/useSocket.ts";
-import { HelperType } from "@shared/game";
+import { HelperType, IQuestion } from "@shared/game";
 import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
@@ -42,7 +42,6 @@ const QuestionPhase = () => {
   }
 
   const blackListedHelpers = game.settings.blackListedHelpers || [];
-  // Filtrujemy tylko dostępne koła ratunkowe na podstawie availableHelpers
   const availableHelpers = game.player.availableHelpers.filter(
     (helper: HelperType) => !blackListedHelpers.includes(helper)
   );
@@ -54,7 +53,7 @@ const QuestionPhase = () => {
       <MainContainer>
         <div className={styles.lifebouys}>
           {availableHelpers.map((helper: HelperType) => {
-            const IconComponent = helperIcons[helper]; // Pobranie odpowiedniej ikony na podstawie helpera
+            const IconComponent = helperIcons[helper];
             const helperDescriptions = {
               cheat_from_others: "Podejrzyj odpowiedzi innych graczy",
               extend_time: "Przedłuż czas na odpowiedź",
@@ -63,8 +62,8 @@ const QuestionPhase = () => {
             return (
               <Helper
                 key={helper}
-                icon={IconComponent} // Ustawienie ikony dla danego koła ratunkowego
-                executeAction={() => executeHelper(helper)} // Akcja po kliknięciu
+                icon={IconComponent}
+                executeAction={() => executeHelper(helper)}
                 description={helperDescriptions[helper]}
               />
             );
@@ -74,15 +73,8 @@ const QuestionPhase = () => {
           <MainBox before={<TimeBar/>}>
             <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
             <div className={styles.question}>
-              {" "}
-              {game.round.question.text}{" "}
-              {game.round.question.photo && (
-                <img
-                  src={game.round.question.photo}
-                  alt={game.round.question.text}
-                  className={styles.questionImage}
-                />
-              )}
+              {game.round.question.text}
+              <QuestionImage question={game.round.question}/>
             </div>
             <div className={styles.answersBox}>
               {game.round.question.answers.map((answer) => {
@@ -146,5 +138,19 @@ const QuestionPhase = () => {
     </>
   );
 };
+
+function QuestionImage({question}: {question: IQuestion}) {
+  if(!question.photo) return null;
+
+  return (
+    <button className={styles.imageWrapper}>
+      <img
+        src={question.photo}
+        alt={question.text}
+        className={`${styles.questionImage}`}
+      />
+    </button>
+  )
+}
 
 export default QuestionPhase;
