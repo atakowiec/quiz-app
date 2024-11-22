@@ -184,6 +184,10 @@ export class GameService {
     };
   }
 
+  public incrementNumberOfEndedGamesMetric() {
+    this.metricsService.incrementGameFinished();
+  }
+
   private getUserGameCategoryScoreDatabaseObject(
     game: Game
   ): UserGameCategoryScoreDatabase[] {

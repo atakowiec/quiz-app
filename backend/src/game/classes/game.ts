@@ -488,6 +488,7 @@ export default class Game {
     if (this.gameType === "matchmaking") {
       this.gameService.removeGame(this);
     }
+    this.gameService.incrementNumberOfEndedGamesMetric();
     setTimeout(() => {
       this.gameService.removeGame(this);
     }, 300000); // after 5 minutes game will be removed and it can't be played again
@@ -643,8 +644,7 @@ export default class Game {
 
   onUserIconChanged(user: User, iconColor: string) {
     for (const player of this.getAllPlayers()) {
-      if (player.username !== user.username)
-        continue;
+      if (player.username !== user.username) continue;
 
       player.socket.data.iconColor = iconColor;
 
@@ -654,8 +654,8 @@ export default class Game {
             username: user.username,
             iconColor,
           },
-        ]
-      })
+        ],
+      });
       return;
     }
   }

@@ -8,6 +8,13 @@ import { Counter, Gauge } from "prom-client";
   providers: [
     MetricsService,
     {
+      provide: "PROM_METRIC_GAMES_FINISHED_TOTAL",
+      useValue: new Counter({
+        name: "games_finished_total",
+        help: "Total number of games that have finished",
+      }),
+    },
+    {
       provide: "PROM_METRIC_GAMES_CREATED_TOTAL",
       useValue: new Counter({
         name: "games_created_total",

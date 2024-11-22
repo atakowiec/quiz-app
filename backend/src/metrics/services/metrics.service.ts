@@ -8,7 +8,9 @@ export class MetricsService {
     @InjectMetric("games_created_total")
     private readonly gamesCreatedCounter: Counter<string>,
     @InjectMetric("games_active_total")
-    private readonly activeGamesGauge: Gauge<string>
+    private readonly activeGamesGauge: Gauge<string>,
+    @InjectMetric("games_finished_total")
+    private readonly gamesFinishedCounter: Counter<string>
   ) {}
 
   incrementGameCreated() {
@@ -17,5 +19,9 @@ export class MetricsService {
 
   setActiveGamesCount(count: number) {
     this.activeGamesGauge.set(count);
+  }
+
+  incrementGameFinished() {
+    this.gamesFinishedCounter.inc();
   }
 }
