@@ -7,6 +7,7 @@ import { BasicUserDetails } from "@shared/user";
 import { FriendshipButton, FriendshipButtonProps } from "./FriendshipButton.tsx";
 import getApi from "../../../api/axios.ts";
 import ProfileIcon from "../../../components/ProfileIcon.tsx";
+import useProfileModal from "../../../hooks/profile-modal/useProfileModal.ts";
 
 interface AddFriendsModalProps {
   show: boolean;
@@ -64,6 +65,8 @@ export default function AddFriendsModal(props: AddFriendsModalProps) {
 }
 
 function UserCard({ user }: FriendshipButtonProps) {
+  const {showModal} = useProfileModal();
+
   return (
     <div className={`${styles.friend} ${styles.searchFriend}`}>
       <div className={styles.friendIconNick}>
@@ -76,7 +79,7 @@ function UserCard({ user }: FriendshipButtonProps) {
       </div>
       <div className={styles.rightSide}>
         <FriendshipButton user={user}/>
-        <button className={styles.friendModal}>
+        <button className={styles.friendModal} onClick={() => showModal(user.id)}>
           <IoMdPerson/>
         </button>
       </div>

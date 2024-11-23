@@ -3,7 +3,7 @@ import ProfileModal from "../../pages/profile/ProfileModal.tsx";
 
 type ProfileModalContextType = {
   closeModal: () => void;
-  showModal: (username?: number) => void;
+  showModal: (userId?: number) => void;
 }
 
 export const ProfileModalContext = createContext<ProfileModalContextType>({ closeModal: () => {}, showModal: () => {} });

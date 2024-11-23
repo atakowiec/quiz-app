@@ -103,26 +103,26 @@ export class NotificationsService {
     socket.emit("notification", `Zaproszono ${invitee.username} do gry`);
   }
 
-  declineNotification(socket: SocketType, notification: INotification) {
+  async declineNotification(socket: SocketType, notification: INotification) {
     if (notification.type == "game_invite") {
       this.declineGameInvite(socket, notification as GameInviteNotification);
       return;
     }
 
     if (notification.type == "friend_request") {
-      this.declineFriendRequest(socket, notification);
+      await this.declineFriendRequest(socket, notification);
       return;
     }
 
     this.logger.error(`Nieobsługiwany typ powiadomienia ${notification.type}`);
   }
 
-  private declineFriendRequest(
+  private async declineFriendRequest(
     socket: SocketType,
     notification: INotification
   ) {
     this.sendRemoveNotification(socket, notification);
-    this.friendsService.declineRequest(
+    await this.friendsService.declineRequest(
       socket,
       notification.inviter.id,
       notification.invitee.id

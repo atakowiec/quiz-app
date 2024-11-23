@@ -94,8 +94,8 @@ export class FriendsService {
         status: !user2Socket
           ? "offline"
           : user2Socket?.data.gameId
-          ? "ingame"
-          : "online",
+            ? "ingame"
+            : "online",
       };
 
       user1Socket.emit("new_friend", friend);
@@ -109,8 +109,8 @@ export class FriendsService {
         status: !user1Socket
           ? "offline"
           : user1Socket?.data.gameId
-          ? "ingame"
-          : "online",
+            ? "ingame"
+            : "online",
       };
 
       user2Socket.emit("new_friend", friend);
@@ -202,7 +202,7 @@ export class FriendsService {
       throw new WsException("Nie jesteście znajomymi");
     }
 
-    await this.friendshipRepository.remove(friendship);
+    await this.friendshipRepository.delete(friendship.id);
 
     // notify both users that the friendship has been removed
     socket.emit("remove_friend", userId);
@@ -229,7 +229,7 @@ export class FriendsService {
 
     this.eventEmitter.emit("friend_request_handled", friendRequest);
 
-    await this.friendRequestRepository.remove(friendRequest);
+    await this.friendRequestRepository.delete(friendRequest.id);
 
     socket.emit("notification", "Anulowano zaproszenie");
   }
@@ -247,7 +247,7 @@ export class FriendsService {
 
     this.eventEmitter.emit("friend_request_handled", friendRequest);
 
-    await this.friendRequestRepository.remove(friendRequest);
+    await this.friendRequestRepository.delete(friendRequest.id);
 
     socket.emit("notification", "Odrzucono zaproszenie");
 
@@ -315,16 +315,16 @@ export class FriendsService {
     const friendship = this.friendshipRepository.create({
       user_1: {
         id: friendRequest.inviter.id,
-        username: friendRequest.inviter.username,
+        username: friendRequest.inviter.username
       },
       user_2: {
         id: friendRequest.invitee.id,
-        username: friendRequest.invitee.username,
+        username: friendRequest.invitee.username
       },
     });
 
     const newFriendship = await this.friendshipRepository.save(friendship);
-    await this.friendRequestRepository.remove(friendRequest);
+    await this.friendRequestRepository.delete(friendRequest.id);
 
     socket.join(`friend-${friendRequest.inviter.id}`);
     this.getUserSocket(friendRequest.inviter.id)?.join(`friend-${socket.data.user.id}`);
@@ -374,7 +374,7 @@ export class FriendsService {
     });
 
     return friendships
-      .map((friendship) : Friend => {
+      .map((friendship): Friend => {
         const friend =
           friendship.user_1.id === user.id
             ? friendship.user_2
@@ -388,8 +388,8 @@ export class FriendsService {
           status: !friendSocket
             ? "offline"
             : friendSocket.data.gameId
-            ? "ingame"
-            : "online",
+              ? "ingame"
+              : "online",
         };
       })
       .sort((a: Friend, b: Friend) => {
