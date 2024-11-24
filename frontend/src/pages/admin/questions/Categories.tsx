@@ -18,10 +18,10 @@ export default function Categories() {
   const dispatch = useDispatch();
   const api = getApi();
   if (!categories) {
-    return <div>Loading...</div>;
+    return <div>Ładowanie...</div>;
   }
 
-  function confirmAddingCategory(categoryData: CategoryFormData) {
+  async function confirmAddingCategory(categoryData: CategoryFormData) {
     getApi()
       .get("/categories")
       .then((response: AxiosResponse) => {
@@ -41,24 +41,21 @@ export default function Categories() {
     toast.error("Wystąpił error podczas tworzenia kategorii: " + error.message);
   }
 
-  async function onDeleteClick(
-      id: number
-  ) {
-      try {
-          await api.delete(`/categories/${id}`);
-          getApi()
-              .get("/categories")
-              .then((response: AxiosResponse) => {
-                  dispatch(globalDataActions.setData({ categories: response.data }));
-              })
-              .catch(() => {
-                  toast.error("Podczas pobierania kategorii wystąpił błąd");
-              });
-          toast.success("Pomyślnie usunięto kategorię");
-      } catch (error) {
-          console.error('Error deleting resource:', error);
-          toast.error("Wystąpił błąd podczas usuwania kategorii")
-      }
+  async function onDeleteClick(id: number) {
+    try {
+      await api.delete(`/categories/${id}`);
+      getApi()
+        .get("/categories")
+        .then((response: AxiosResponse) => {
+          dispatch(globalDataActions.setData({ categories: response.data }));
+        })
+        .catch(() => {
+          toast.error("Podczas pobierania kategorii wystąpił błąd");
+        });
+      toast.success("Pomyślnie usunięto kategorię");
+    } catch (error) {
+      toast.error("Wystąpił błąd podczas usuwania kategorii");
+    }
   }
 
   return (
@@ -68,7 +65,7 @@ export default function Categories() {
           className={styles.createCategoryBtn}
           onClick={() => handleGiveOwnerClick()}
         >
-          Add Category
+          Dodaj kategorię
         </button>
       </div>
       <div className={styles.container}>

@@ -1,44 +1,41 @@
-import styles from "./styles/CreateCategoryModal.module.scss";
+import { useState, ChangeEvent } from "react";
 import { Modal } from "react-bootstrap";
-import { ChangeEvent, useState } from "react";
-import { CategoryService } from "../../../../api/categoryService.tsx";
-import MainTitle from "../../../../components/MainTitle.tsx";
-import CustomInput from "../../../../components/CustomInput.tsx";
+import { CategoryService } from "../../../../api/categoryService";
+import MainTitle from "../../../../components/MainTitle";
+import styles from "./styles/CreateCategoryModal.module.scss";
+import CustomInput from "../../../../components/CustomInput";
+import { useDispatch } from "react-redux";
+import { globalDataActions } from "../../../../store/globalDataSlice";
+import { toast } from "react-toastify";
 
-export interface CategoryFormData {
-  categoryName: string;
-  description: string;
-  img: File | null;
-  imgPreview: string;
-}
-
-interface CategoryFormErrors {
-  categoryName: string;
-  img?: string;
-}
-
-type CreateCategoryModalProps = {
+interface EditCategoryModalProps {
   show: boolean;
   setShow: (show: boolean) => void;
-  onConfirm: (categoryData: CategoryFormData) => void;
-  onCancel?: () => void;
-  confirmText?: string;
-  cancelText?: string;
+  categoryId: number;
+  initialData: {
+    categoryName: string;
+    description: string;
+    imgPreview: string | null;
+  };
+  onConfirm: () => void;
   onError: (error: Error) => void;
-};
+}
 
-export default function CreateCategoryModal(props: CreateCategoryModalProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<CategoryFormData>({
-    categoryName: "",
-    description: "",
-    img: null,
-    imgPreview: "",
+export default function EditCategoryModal(props: EditCategoryModalProps) {
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({
+    categoryName: props.initialData.categoryName,
+    description: props.initialData.description,
+    img: null as File | null,
+    imgPreview: props.initialData.imgPreview,
   });
-  const [errors, setErrors] = useState<CategoryFormErrors>({
+
+  const [errors, setErrors] = useState<{ categoryName: string; img?: string }>({
     categoryName: "",
     img: "",
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -48,7 +45,6 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
       ...prev,
       [name]: value,
     }));
-
     if (name === "categoryName") {
       setErrors((prev) => ({
         ...prev,
@@ -68,7 +64,6 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
         }));
         return;
       }
-
       if (file.size > 5 * 1024 * 1024) {
         setErrors((prev) => ({
           ...prev,
@@ -76,7 +71,6 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
         }));
         return;
       }
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prev) => ({
@@ -86,7 +80,6 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
         }));
       };
       reader.readAsDataURL(file);
-
       setErrors((prev) => ({
         ...prev,
         img: "",
@@ -94,73 +87,77 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
     }
   };
 
-  const handleClose = (): void => {
-    setFormData({
-      categoryName: "",
-      description: "",
-      img: null,
-      imgPreview: "",
-    });
-    setErrors({
-      categoryName: "",
-      img: "",
-    });
+  const handleClose = () => {
+    props.setShow(false);
   };
 
-  async function confirm() {
-    if (!formData.categoryName.trim()) {
-      setErrors((prev) => ({
-        ...prev,
-        categoryName: "Nazwa kategorii jest wymagana",
-      }));
-      return;
+  const refreshCategories = async () => {
+    try {
+      const categories = await CategoryService.getCategories();
+      dispatch(globalDataActions.setData({ categories }));
+    } catch (error) {
+      toast.error("Nie udało się odświeżyć listy kategorii");
+    }
+  };
+
+  const handleSubmit = async () => {
+    const updatedData: Partial<{
+      categoryName: string;
+      description: string;
+      img: File;
+    }> = {};
+
+    if (formData.categoryName !== props.initialData.categoryName) {
+      updatedData.categoryName = formData.categoryName;
     }
 
-    if (!formData.img) {
-      setErrors((prev) => ({
-        ...prev,
-        img: "Zdjęcie jest wymagane",
-      }));
+    if (formData.description !== props.initialData.description) {
+      updatedData.description = formData.description;
+    }
+
+    if (formData.img) {
+      updatedData.img = formData.img;
+    }
+
+    if (Object.keys(updatedData).length === 0) {
+      handleClose();
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await CategoryService.createCategory({
-        categoryName: formData.categoryName,
-        description: formData.description,
-        img: formData.img,
-      });
-
-      props.onConfirm(formData);
-      props.setShow(false);
+      await CategoryService.updateCategory(props.categoryId, updatedData);
+      await refreshCategories();
+      toast.success("Kategoria została zaktualizowana");
+      props.onConfirm();
       handleClose();
     } catch (error) {
-      props.onError(error as Error);
+      console.error("Błąd podczas edycji kategorii:", error);
+      if (error instanceof Error) {
+        props.onError(error);
+        toast.error(`Błąd podczas edycji kategorii: ${error.message}`);
+      } else {
+        props.onError(new Error("Nieznany błąd podczas edycji kategorii"));
+        toast.error("Nieznany błąd podczas edycji kategorii");
+      }
     } finally {
       setIsSubmitting(false);
     }
-  }
-
-  function cancel() {
-    handleClose();
-    props.onCancel?.();
-    props.setShow(false);
-  }
+  };
 
   return (
     <Modal
       show={props.show}
-      onHide={() => props.setShow(false)}
+      onHide={handleClose}
       centered
       className={styles.modalCenter}
     >
       <Modal.Body>
-        <MainTitle>Dodaj kategorię</MainTitle>
+        <MainTitle>Edytuj kategorię</MainTitle>
         {isSubmitting ? (
           <div className={styles.loadingOverlay}>
             <div className={styles.loadingContainer}>
-              <p className={styles.loadingText}>Dodawanie kategorii...</p>
+              <p className={styles.loadingText}>Zapisywanie zmian...</p>
               <div className={styles.loading}></div>
             </div>
           </div>
@@ -173,28 +170,26 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
                 value={formData.categoryName}
                 onChange={handleInputChange}
                 className={errors.categoryName ? styles.error : ""}
-                placeholder="Wpisz nazwę kategorii"
+                placeholder="Nazwa kategorii"
               />
               {errors.categoryName && (
                 <p className={styles.error}>{errors.categoryName}</p>
               )}
             </div>
-
             <div className={styles.formElement}>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 className={styles.textarea}
-                placeholder="Podaj opis kategorii"
+                placeholder="Opis kategorii"
                 rows={3}
               />
             </div>
-
             <div className={styles.formElement}>
               <label className={styles.label}>Zdjęcie</label>
               <label htmlFor="file-upload" className={styles.customFileUpload}>
-                Prześlij zdjęcie
+                Prześlij nowe zdjęcie
               </label>
               <input
                 id="file-upload"
@@ -205,7 +200,7 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
               />
               {errors.img && <p className={styles.error}>{errors.img}</p>}
               {formData.imgPreview && (
-                <div className="relative">
+                <div>
                   <img
                     src={formData.imgPreview}
                     alt="Preview"
@@ -219,11 +214,11 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
       </Modal.Body>
       {!isSubmitting && (
         <Modal.Footer className={styles.modalButtons}>
-          <button onClick={confirm} className={styles.modalConfirmBut}>
-            {props.confirmText ?? "Potwierdź"}
+          <button onClick={handleSubmit} className={styles.modalConfirmBut}>
+            Zapisz
           </button>
-          <button onClick={cancel} className={styles.modalCancelBut}>
-            {props.cancelText ?? "Anuluj"}
+          <button onClick={handleClose} className={styles.modalCancelBut}>
+            Anuluj
           </button>
         </Modal.Footer>
       )}

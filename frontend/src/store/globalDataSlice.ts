@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ICategory } from "@shared/game";
 import { State } from "./index.ts";
 import { useSelector } from "react-redux";
@@ -18,7 +18,7 @@ const globalDataSlice = createSlice({
         ...state,
         ...action.payload
       }
-    },
+    }
   },
 });
 
