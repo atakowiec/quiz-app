@@ -203,11 +203,11 @@ export class GameService {
 
   getDefaultGameSettings(): GameSettings {
     return {
-      number_of_rounds: this.configService.get("DEFAULT_NUMBER_OF_ROUNDS") ?? 5,
-      number_of_questions_per_round: this.configService.get("DEFAULT_QUESTIONS_PER_ROUND") ?? 5,
-      number_of_categories_per_voting: this.configService.get("DEFAULT_CATEGORIES_PER_VOTING") ?? 10,
-      time_for_answer: this.configService.get("DEFAULT_TIME_FOR_ANSWER") ?? 20,
-      max_number_of_players: this.configService.get("MAX_PLAYERS") ?? 49,
+      number_of_rounds: parseInt(this.configService.get("DEFAULT_NUMBER_OF_ROUNDS")) ?? 5,
+      number_of_questions_per_round: parseInt(this.configService.get("DEFAULT_QUESTIONS_PER_ROUND")) ?? 5,
+      number_of_categories_per_voting: parseInt(this.configService.get("DEFAULT_CATEGORIES_PER_VOTING")) ?? 10,
+      time_for_answer: parseInt(this.configService.get("DEFAULT_TIME_FOR_ANSWER")) ?? 20,
+      max_number_of_players: parseInt(this.configService.get("MAX_PLAYERS")) ?? 49,
     }
   }
 }

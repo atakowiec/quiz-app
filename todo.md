@@ -35,10 +35,11 @@
 - [ ] usunac hover z przycisku play
 - [ ] Tryb jednoosobowy
 - [ ] Ankieta
-- [ ] zmiana ustawien w grze - mocno zwalone
+- [x] zmiana ustawien w grze - mocno zwalone
 - [ ] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp
 - [ ] Naprawić timebar
 - [ ] Przycisk do wyjscia z gry
+- [ ] sprawdzic title na kazdej stronie
 
 ## Co jeszcze trzeba zrobic
 
