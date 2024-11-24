@@ -18,7 +18,7 @@ const AudioPlayer: FC = () => {
         <IoIosPlay className={styles.audioIcon} />
       )}
       <span className={styles.audioText}>
-        {isPlaying ? "Pauza" : "Odtwórz"}
+        Muzyka
       </span>
     </button>
   );

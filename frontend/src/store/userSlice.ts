@@ -52,8 +52,6 @@ const userSlice = createSlice({
       const friends: Friend[] = state.friends ?? [];
       const newFriend: Friend = action.payload;
 
-      console.log("newFriend", newFriend);
-
       return {
         ...state,
         friends: [...friends, newFriend]
@@ -103,8 +101,6 @@ const userSlice = createSlice({
     newFriendRequest(state, action) {
       const friendRequests: IFriendRequest[] = state.friendRequests ?? [];
       const newFriendRequest: IFriendRequest = action.payload;
-
-      console.log(newFriendRequest)
 
       return {
         ...state,

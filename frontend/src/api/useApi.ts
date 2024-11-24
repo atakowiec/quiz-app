@@ -19,7 +19,6 @@ export default function useApi<DataType = any>(path: string, method: string, pay
 
     useEffect(() => {
         isLoaded.current = false;
-        console.log({path, method});
         (getApi() as any)[method.toLowerCase()](path, payload)
             .then((res: any) => {
                 setData(res.data);

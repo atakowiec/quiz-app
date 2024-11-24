@@ -35,7 +35,6 @@ export default function GameOverPhase() {
       });
     } else {
       socket.emit("join_queue", (gameId: string) => {
-        console.log("gameId", gameId);
         if (gameId === "NO_GAME") {
           dispatch(setInQueue(true));
           toast.info("Dołączono do kolejki");

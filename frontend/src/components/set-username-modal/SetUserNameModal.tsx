@@ -23,7 +23,6 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
     dispatch(userActions.setUser(null));
     socket.disconnect();
 
-    console.log("username", username);
     getApi()
       .post("/auth/username", { username: username })
       .then((response) => {

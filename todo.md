@@ -24,6 +24,21 @@
 - [x] responsywnosc pytania (jak jest za duzy obraz to na lapku ucieka kontener)
 - [x] ikonka do muzyki poprawic
 - [x] rozmiar kół ratunkowych na innych urzadzeniach
+- [ ] Poprawić modal z hasłem, nickname tworząc nowe konto
+- [ ] Przywrócic nicki znajomych na profilu
+- [ ] Naprawić pozycje nickow podczas wyszukiwania userow
+- [ ] 1,2 i 3 miejsce w statach
+- [ ] Front i back, edycja, dodawanie i usuwanie pytań
+- [ ] Zabezpieczyc endpointy admina
+- [ ] Poprawić responsywnosc glownego kontenera i ogolnie apki
+- [ ] Przyciski do modali profili graczy w poczekalni
+- [ ] usunac hover z przycisku play
+- [ ] Tryb jednoosobowy
+- [ ] Ankieta
+- [ ] zmiana ustawien w grze - mocno zwalone
+- [ ] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp
+- [ ] Naprawić timebar
+- [ ] Przycisk do wyjscia z gry
 
 ## Co jeszcze trzeba zrobic
 

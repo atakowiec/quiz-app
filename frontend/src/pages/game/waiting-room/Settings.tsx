@@ -103,6 +103,13 @@ const Settings: FC = () => {
     socket,
   ]);
 
+  console.log({
+    number_of_rounds,
+    number_of_questions_per_round,
+    number_of_categories_per_voting,
+    time_for_answer
+  })
+
   const [showModal, setShowModal] = useState(false);
   const [showLifelineModal, setShowLifelineModal] = useState(false);
   const handleModalShow = () => setShowModal(true);
@@ -183,7 +190,6 @@ const Settings: FC = () => {
       (_, i) => !updatedStates[i]
     ) as HelperType[];
 
-    console.log("new", blackListedHelpers);
     socket.emit("change_settings_helpers", blackListedHelpers);
     setHelperStates(updatedStates); // Aktualizacja stanu
   };
