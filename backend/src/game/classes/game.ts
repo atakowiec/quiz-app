@@ -181,8 +181,6 @@ export default class Game {
   }
 
   public broadcastUpdate(updatePacket: GameUpdatePacket) {
-    this.logger.log(`Changed settings for game ${this.id}`);
-    this.logger.log(`New settings: ${JSON.stringify(this.settings)}`);
     this.getAllPlayers().forEach((player) =>
       player.sendGameUpdate(updatePacket)
     );
