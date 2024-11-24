@@ -72,10 +72,6 @@ class AudioManager {
     return this.isPlaying;
   }
 
-  public getCurrentSongIndex(): number {
-    return this.currentSongIndex;
-  }
-
   private handleSongEnd = () => {
     this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
     localStorage.setItem("currentSongIndex", this.currentSongIndex.toString());

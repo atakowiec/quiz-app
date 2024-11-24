@@ -4,11 +4,11 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  Param, Patch,
   Post,
-  Put,
 } from "@nestjs/common";
 import { CreateCategoryDto } from "../dtos/CreateCategory.dto";
+import { UpdateCategoryDto } from "../dtos/UpdateCategory.dto";
 
 @Controller("categories")
 export class CategoryController {
@@ -34,11 +34,11 @@ export class CategoryController {
     return this.categoryService.deleteCategory(id);
   }
 
-  @Put(":id")
+  @Patch(":id")
   updateCategory(
     @Param("id") id: number,
-    @Body() createCategoryDto: CreateCategoryDto
+    @Body() updateCategoryDto: UpdateCategoryDto
   ) {
-    return this.categoryService.updateCategory(id, createCategoryDto);
+    return this.categoryService.updateCategory(id, updateCategoryDto);
   }
 }

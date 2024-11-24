@@ -48,3 +48,21 @@ export function getFriendshipStatus(user: UserState, userId: number): Friendship
 
   return "none";
 }
+
+export const getWordForm = (count: number) => {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (
+    count === 0 ||
+    (lastTwoDigits >= 10 && lastTwoDigits <= 20) ||
+    lastDigit === 0 ||
+    lastDigit >= 5
+  ) {
+    return "gier";
+  } else if (lastDigit === 1) {
+    return "gra";
+  } else if (lastDigit >= 2 && lastDigit <= 4) {
+    return "gry";
+  }
+};

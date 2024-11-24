@@ -10,8 +10,9 @@ import {
 } from "react-icons/io";
 import { useUser } from "../store/userSlice";
 import { useGame } from "../store/gameSlice";
+import { FC } from "react";
 
-const Home: React.FC = () => {
+const Home: FC = () => {
   const user = useUser();
   const game = useGame();
 

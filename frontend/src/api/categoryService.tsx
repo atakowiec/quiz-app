@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import getApi from "./axios.ts";
 
 export interface CreateCategoryRequest {
   categoryName: string;
@@ -84,16 +85,15 @@ export class CategoryService {
       if (data.description) updateData.description = data.description;
 
       if (data.img) {
-        const imageUrl = await this.uploadImage(data.img);
-        updateData.img = imageUrl;
+        updateData.img = await this.uploadImage(data.img);
       }
 
       if (Object.keys(updateData).length === 0) {
         throw new Error("Brak danych do aktualizacji");
       }
 
-      const response = await axios.put<CreateCategoryResponse>(
-        `${API_URL}/${id}`,
+      const response = await getApi().patch<CreateCategoryResponse>(
+        `/categories/${id}`,
         updateData,
         {
           headers: {

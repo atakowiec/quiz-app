@@ -1,4 +1,4 @@
-import { BasicUserDetails } from "@shared/user";
+import { UserDetails } from "@shared/user";
 import { useState } from "react";
 import styles from "../Profile.module.scss";
 import { BsPersonFillAdd, BsPersonFillCheck, BsPersonFillDown, BsPersonFillUp } from "react-icons/bs";
@@ -9,7 +9,7 @@ import { getFriendshipStatus } from "../../../utils/utils.ts";
 import { useUser } from "../../../store/userSlice.ts";
 
 export type FriendshipButtonProps = {
-  user: BasicUserDetails;
+  user: UserDetails;
 }
 
 

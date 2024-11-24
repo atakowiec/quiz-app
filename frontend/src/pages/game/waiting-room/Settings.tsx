@@ -6,7 +6,7 @@ import MainBox from "../../../components/MainBox";
 import MainTitle from "../../../components/MainTitle";
 import { IoArrowBack, IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
 import styles from "./Settings.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { GameSettings, HelperType } from "@shared/game";
 import { useSocket } from "../../../socket/useSocket";
 import { useGlobalData } from "../../../store/globalDataSlice";
@@ -15,7 +15,7 @@ import HelpersModal from "./HelpersModal";
 import { useGame } from "../../../store/gameSlice.ts";
 import { useNavigate } from "react-router-dom";
 
-const Settings: React.FC = () => {
+const Settings: FC = () => {
   const sidebarItems: SidebarItem[] = [
     { icon: IoHomeSharp, label: "Powrót", href: "/waiting-room" },
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },

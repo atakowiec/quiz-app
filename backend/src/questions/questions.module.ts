@@ -6,7 +6,7 @@ import { Question } from "./entities/question.model";
 import { QuestionsController } from "./controllers/questions.controller";
 import { Category } from "./entities/category.model";
 import { CategoryService } from "./services/category.service";
-import { CategoryController } from "./controllers/categoryController";
+import { CategoryController } from "./controllers/category.controller";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Distractor, Question, Category])],

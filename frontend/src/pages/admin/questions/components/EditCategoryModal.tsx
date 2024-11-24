@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { CategoryService } from "../../../../api/categoryService";
 import MainTitle from "../../../../components/MainTitle";
@@ -36,6 +36,15 @@ export default function EditCategoryModal(props: EditCategoryModalProps) {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setFormData({
+      categoryName: props.initialData.categoryName,
+      description: props.initialData.description,
+      img: null,
+      imgPreview: props.initialData.imgPreview,
+    });
+  }, [props.initialData]);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

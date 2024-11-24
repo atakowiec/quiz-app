@@ -1,30 +1,14 @@
 import { RankingPlace } from "@shared/game";
 import styles from "./Stats.module.scss";
+import { getWordForm } from "../../utils/utils.ts";
+import { FC } from "react";
 
 interface RankingVisualizationProps {
   rankingData: RankingPlace[];
   className?: string;
 }
 
-const getWordForm = (count: number) => {
-  const lastDigit = count % 10;
-  const lastTwoDigits = count % 100;
-
-  if (
-    count === 0 ||
-    (lastTwoDigits >= 10 && lastTwoDigits <= 20) ||
-    lastDigit === 0 ||
-    lastDigit >= 5
-  ) {
-    return "gier";
-  } else if (lastDigit === 1) {
-    return "gra";
-  } else if (lastDigit >= 2 && lastDigit <= 4) {
-    return "gry";
-  }
-};
-
-const RankingVisualization: React.FC<RankingVisualizationProps> = ({
+const RankingVisualization: FC<RankingVisualizationProps> = ({
   rankingData,
   className,
 }) => {

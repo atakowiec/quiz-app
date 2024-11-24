@@ -34,8 +34,6 @@ export interface ServerToClientEvents {
   game_joined: () => void;
 }
 
-export type ServerToClientEventsKeys = keyof ServerToClientEvents;
-
 export interface ClientToServerEvents {
   create_game: (gameMode: string, cb: () => void) => void;
   join_queue: (cb: (response: string) => void) => void;

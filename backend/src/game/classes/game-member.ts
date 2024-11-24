@@ -8,6 +8,7 @@ import {
   HelperType,
 } from "@shared/game";
 import Helper, { CheatFromOthers, ExtendTime, FifyFifty } from "./Helper";
+
 export class GameMember {
   public username: string;
   public socket: SocketType;
@@ -102,21 +103,5 @@ export class GameMember {
     }
 
     helper.execute(this.socket, this.game.gameService);
-  }
-  reset() {
-    this.score = 0;
-    this.roundScore = 0;
-    this.chosenCategory = -1;
-    this.chosenAnswer = null;
-    this.place = null;
-    this.hiddenAnswers = null;
-    this.showOtherPlayersAnswers = false;
-    this.timeToAnswer = null;
-    this.answerEndTime = null;
-    this.availableHelpers = [
-      new FifyFifty(),
-      new ExtendTime(),
-      new CheatFromOthers(),
-    ];
   }
 }

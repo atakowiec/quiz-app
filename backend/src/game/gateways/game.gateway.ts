@@ -39,9 +39,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: SocketType) {
-    this.logger.log(
-      `Client disconnected: ${client.data.username} [${client.id}]`
-    );
+    this.logger.log(`Client disconnected: ${client.data.username} [${client.id}]`);
     this.matchMakingService.tryRemovePlayerFromQueue(client);
 
     this.gameService
@@ -64,9 +62,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     game.owner.sendNotification("Utworzono grę");
 
-    this.logger.log(
-      `New game with id: ${game.id} created by ${ownerSocket.data.username}`
-    );
+    this.logger.log(`New game with id: ${game.id} created by ${ownerSocket.data.username}`);
 
     // return something so the client can redirect to the waiting room
     // look at the "start_game" event call in the frontend app - there is acknowledgement
@@ -290,7 +286,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       newGame.join(player.socket);
       player.socket.emit("game_joined");
     });
-    game.send;
+    game.send();
 
     return newGame.id;
   }

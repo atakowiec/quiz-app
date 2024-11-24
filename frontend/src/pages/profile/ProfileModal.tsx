@@ -13,6 +13,7 @@ import { translateUserStatus } from "../../utils/utils";
 import { FriendshipButton } from "./components/FriendshipButton";
 import ProfileIcon from "../../components/ProfileIcon.tsx";
 import { UserDetails } from "@shared/user";
+import { FC } from "react";
 
 interface ProfileModalProps {
   show: boolean;
@@ -38,7 +39,7 @@ interface ProfileStats {
   rankingPlaces: RankingPlace[];
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({
+const ProfileModal: FC<ProfileModalProps> = ({
                                                      show,
                                                      handleClose,
                                                      userId,

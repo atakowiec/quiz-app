@@ -1,5 +1,6 @@
 import { IconType } from "react-icons";
 import styles from "./Helper.module.scss";
+import { FC } from "react";
 
 interface HelperProps {
   icon: IconType;
@@ -7,7 +8,7 @@ interface HelperProps {
   description: string;
 }
 
-const Helper: React.FC<HelperProps> = ({
+const Helper: FC<HelperProps> = ({
   icon: Icon,
   executeAction,
   description,

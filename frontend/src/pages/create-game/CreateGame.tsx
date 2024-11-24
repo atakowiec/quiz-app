@@ -51,7 +51,6 @@ const CreateGame: React.FC = () => {
   ];
 
   function onNewGame(gameType: string) {
-    // todo allow not logged users to play the game - modal with username input
     setGameType(gameType);
     if (!user?.loggedIn) {
       setShowModal(true);

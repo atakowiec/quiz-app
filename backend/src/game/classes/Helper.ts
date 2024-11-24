@@ -10,7 +10,7 @@ export enum HelperEnum {
 abstract class Helper {
   name: HelperEnum;
 
-  constructor(name: HelperEnum) {
+  protected constructor(name: HelperEnum) {
     this.name = name;
   }
 

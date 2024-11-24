@@ -1,8 +1,9 @@
 import { IoIosPlay, IoIosPause } from "react-icons/io";
 import styles from "../../styles/AudioPlayer.module.scss";
 import { useAudio } from "./AudioContext";
+import { FC } from "react";
 
-const AudioPlayer: React.FC = () => {
+const AudioPlayer: FC = () => {
   const { isPlaying, togglePlayPause } = useAudio();
 
   return (

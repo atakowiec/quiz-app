@@ -38,7 +38,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     newSocket.on("queue_left", () => dispatch(clearQueue()));
 
-    // todo - stringyfing the message is a temporary solution - now we can see a json object in the toast
     newSocket.on("exception", (message) =>
       toast.error(typeof message === "string" ? message : message.message),
     );

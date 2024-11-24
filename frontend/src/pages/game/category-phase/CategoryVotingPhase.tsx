@@ -8,7 +8,7 @@ import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
 
-const CategoryVotingPhase: React.FC = () => {
+const CategoryVotingPhase: FC = () => {
   const game = useGame();
   if (!game?.round?.categories) {
     return;

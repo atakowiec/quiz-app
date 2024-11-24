@@ -433,9 +433,7 @@ export default class Game {
       player.availableHelpers.forEach((helper) => {
         if (!this.settings.blackListedHelpers?.includes(helper.name)) {
           player.score += 100;
-          log(
-            `Player ${player.username} got 100 points for not using ${helper.name}`
-          );
+          log(`Player ${player.username} got 100 points for not using ${helper.name}`);
         }
       });
     });
@@ -492,22 +490,6 @@ export default class Game {
 
   getAllLoggedPlayers() {
     return this.getAllPlayers().filter((player) => player.socket.data.user?.id);
-  }
-
-  checkPlayer(socket: SocketType): GameMember {
-    const player = this.getPlayer(socket);
-    if (!player) {
-      return;
-    }
-    if (this.gameStatus !== "question_phase") {
-      player.sendNotification("Nie możesz teraz tego zrobić!");
-      return;
-    }
-    if (player.chosenAnswer || player.answerEndTime <= Date.now()) {
-      player.sendNotification("Nie możesz teraz tego zrobić!");
-      return;
-    }
-    return player;
   }
 
   fiftyFifty(socket: SocketType) {

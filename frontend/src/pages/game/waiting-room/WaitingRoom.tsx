@@ -59,10 +59,6 @@ const WaitingRoom: React.FC = () => {
 
   if (!game) return null;
 
-  //TODO: make settings for an owner of the room
-  //TODO: make invite link/ player
-  //TODO: make player unable to join the same game twice and more
-
   function leaveGame() {
     socket.emit("leave_game");
   }

@@ -5,7 +5,6 @@ import {
   ManyToMany,
   OneToMany,
   JoinTable,
-  ManyToOne,
 } from "typeorm";
 import { Category } from "./category.model";
 import { Distractor } from "./distractor.model";
