@@ -8,14 +8,12 @@
 }
 
 .categoryChoiceBox {
-  display: flex;
+  overflow: auto;
+  flex: 1;
+  margin-top: 1rem;
+  padding: 1rem 0;
+  height: auto;
   justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  margin: 2rem;
-  max-height: 500px;
 }
 
 .choice {
@@ -25,27 +23,30 @@
   flex-direction: column;
   align-items: center;
   font-weight: $container-font-weight;
-  padding: 0.8rem;
   cursor: pointer;
   border: 2px solid #f0f4f3;
   font-size: 1rem;
-  transition: 0.15s border ease-in-out;
-  margin: 1rem 0 0.5rem 0;
+  transition: 0.15s all ease-in-out;
+  margin-bottom: 1rem;
   text-align: center;
   min-height: 220px;
+  padding: .2rem;
 
   img {
     width: 100%;
     border-radius: 8px;
     margin-bottom: 0.7rem;
+    aspect-ratio: 1;
+    object-position: center;
+    object-fit: cover;
   }
 
   &:hover {
-    border: 2px solid $green;
+    scale: 1.05;
   }
 
   &.selected {
-    border: 2px solid $green;
+    border: 1px solid $green;
   }
 }
 
@@ -108,6 +109,7 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  padding: 0 .5rem;
 }
 
 .voteCircle {
@@ -129,9 +131,6 @@
 }
 
 @media (max-width: $phone-breakpoint) {
-  .categoryVotingBox {
-    scale: 0.85;
-  }
   .voteCircle {
     width: 15px;
     height: 15px;
@@ -145,11 +144,12 @@
     font-size: 0.9rem;
     max-width: 13rem;
     min-height: 0;
+    padding: .5rem;
   }
 
   .choice img {
-    max-height: 7rem;
-    max-width: 7rem;
+    max-height: 8rem;
+    max-width: 8rem;
   }
 }
 

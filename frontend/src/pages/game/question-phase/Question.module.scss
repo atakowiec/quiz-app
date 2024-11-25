@@ -36,7 +36,6 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding-bottom: 1rem;
-  overflow-y: auto;
 }
 
 .answerBox {
@@ -188,14 +187,5 @@
     max-height: 10rem;
     height: auto;
     vertical-align: middle;
-  }
-}
-
-@media (max-height: 375px) and (max-width: 670px) {
-  .lifebouys {
-    top: -50px;
-    left: -30%;
-    flex-direction: column;
-    margin-top: 0;
   }
 }
