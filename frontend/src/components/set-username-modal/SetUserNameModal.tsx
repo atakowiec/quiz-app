@@ -5,6 +5,7 @@ import getApi from "../../api/axios.ts";
 import { useDispatch } from "react-redux";
 import { useSocket } from "../../socket/useSocket.ts";
 import { userActions } from "../../store/userSlice.ts";
+import MainTitle from "../MainTitle.tsx";
 
 interface SetUserNameModalProps {
   confirmBtnText: string;
@@ -50,19 +51,17 @@ export default function SetUserNameModal(props: SetUserNameModalProps) {
       centered
       className={styles.modalCenter}
     >
-      <Modal.Header closeButton>
-        <Modal.Title className={styles.modalTitle}>
-          Ustaw nick w grze
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body className={styles.inputBox}>
-        <input
-          type={"text"}
-          placeholder={"Twoja nazwa"}
-          className={styles.input}
-          ref={userNameRef}
-        />
-        {usernameError && <div className={styles.error}>{usernameError}</div>}
+      <Modal.Body>
+        <MainTitle>Ustaw nick w grze</MainTitle>
+        <div className={styles.center}>
+          <input
+            type={"text"}
+            placeholder={"Twoja nazwa"}
+            className={styles.input}
+            ref={userNameRef}
+          />
+          {usernameError && <div className={styles.error}>{usernameError}</div>}
+        </div>
       </Modal.Body>
       <Modal.Footer className={styles.modalButtons}>
         <button

@@ -88,20 +88,21 @@ export class GameHistoryService {
     const profileStats: ProfileStats = result[0];
 
     profileStats.rankingPlaces = [
-      {
-        place: "I Miejsce",
-        count: profileStats.firstPlace,
-        unit: this.getUnitByNumberOfGames(profileStats.firstPlace),
-        percentage: this.roundToTwoDecimals(
-          profileStats.firstPlace / profileStats.gamesPlayed
-        ),
-      },
+      
       {
         place: "II Miejsce",
         count: profileStats.secondPlace,
         unit: this.getUnitByNumberOfGames(profileStats.secondPlace),
         percentage: this.roundToTwoDecimals(
           profileStats.secondPlace / profileStats.gamesPlayed
+        ),
+      },
+      {
+        place: "I Miejsce",
+        count: profileStats.firstPlace,
+        unit: this.getUnitByNumberOfGames(profileStats.firstPlace),
+        percentage: this.roundToTwoDecimals(
+          profileStats.firstPlace / profileStats.gamesPlayed
         ),
       },
       {

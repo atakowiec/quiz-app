@@ -6,16 +6,9 @@
   margin-top: 0.25rem;
   text-align: center;
 }
-
-.modalTitle {
+.center {
   display: flex;
   justify-content: center;
-}
-
-.inputBox {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
   align-items: center;
 }
 
@@ -47,9 +40,9 @@
 }
 
 .confirmButton {
-  background-color: $green;
+  background-color: $green-black;
   border: none;
-  color: white;
+  color: black;
   padding: $button-padding;
   border-radius: $button-border-radius;
   font-size: $button-font-size;
@@ -64,9 +57,9 @@
 }
 
 .cancelButton {
-  background-color: #999;
+  background-color: $button-gray;
   border: none;
-  color: white;
+  color: black;
   padding: $button-padding;
   border-radius: $button-border-radius;
   font-size: $button-font-size;

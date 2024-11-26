@@ -32,6 +32,7 @@ export default function FriendCard({ friend }: { friend: Friend }) {
           iconColor={friend.iconColor}
         />
         <div className={styles.nickStatus}>
+          <div className={styles.friendNick}>{friend.username}</div>
           <div className={`${styles.status} ${styles[friend.status]}`}>
             <FaCircle className={styles.circle} />
             {translateUserStatus(friend.status)}

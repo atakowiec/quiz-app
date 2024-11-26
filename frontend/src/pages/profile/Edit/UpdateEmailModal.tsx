@@ -7,6 +7,7 @@ import styles from "./Update.module.scss";
 import getApi from "../../../api/axios";
 import { userActions } from "../../../store/userSlice";
 import { State } from "../../../store";
+import MainTitle from "../../../components/MainTitle";
 
 interface UpdateEmailModalProps {
   show: boolean;
@@ -61,10 +62,8 @@ const UpdateEmailModal: React.FC<UpdateEmailModalProps> = ({
 
   return (
     <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Zmień e-mail</Modal.Title>
-      </Modal.Header>
       <Modal.Body className={styles.modalBody}>
+        <MainTitle> Zmień e-mail</MainTitle>
         <div className={styles.customForm}>
           <label htmlFor="email" className={styles.formLabel}>
             Nowy e-mail

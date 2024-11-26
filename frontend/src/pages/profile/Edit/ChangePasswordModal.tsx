@@ -5,6 +5,8 @@ import getApi from "../../../api/axios";
 import styles from "./ChangePassword.module.scss";
 import { toast } from "react-toastify";
 import { FC } from "react";
+import MainTitle from "../../../components/MainTitle";
+import CustomInput from "../../../components/CustomInput";
 
 interface ChangePasswordModalProps {
   show: boolean;
@@ -65,15 +67,12 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
 
   return (
     <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Zmień hasło</Modal.Title>
-      </Modal.Header>
       <Modal.Body className={styles.modalBody}>
+        <MainTitle>Zmień hasło</MainTitle>
         <form onSubmit={formik.handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label htmlFor="currentPassword">Obecne hasło</label>
-            <input
-              id="currentPassword"
+            <CustomInput
               name="currentPassword"
               type="password"
               onChange={formik.handleChange}
@@ -94,8 +93,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="newPassword">Nowe hasło</label>
-            <input
-              id="newPassword"
+            <CustomInput
               name="newPassword"
               type="password"
               onChange={formik.handleChange}
@@ -113,8 +111,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="confirmNewPassword">Potwierdź nowe hasło</label>
-            <input
-              id="confirmNewPassword"
+            <CustomInput
               name="confirmNewPassword"
               type="password"
               onChange={formik.handleChange}
