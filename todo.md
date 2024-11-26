@@ -18,7 +18,8 @@
 - [x] niedostepne kola usunac z gry
 - [x] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały (jak pol ekranu na lapku np. profil)
 - [x] poprawki history i stats by wyswietlalo odpowiednie komunikaty jak nie jest nic zagrane
-- [ ] backend, chodzi o czas createdat w notofication, jest on jakis zły. pokazuje mocno do tyłu. nie jest on rzeczywisty
+- [ ] backend, chodzi o czas createdat w notofication, jest on jakis zły. pokazuje mocno do tyłu. nie jest on
+  rzeczywisty
 - [x] ten ranking by sie wyswietlal u znajomych plus zagrane gry
 - [x] responsywność historia gier
 - [x] responsywnosc pytania (jak jest za duzy obraz to na lapku ucieka kontener)
@@ -28,7 +29,8 @@
 - [ ] Przywrócic nicki znajomych na profilu
 - [ ] Naprawić pozycje nickow podczas wyszukiwania userow
 - [ ] 1,2 i 3 miejsce w statach
-- [ ] Front i back, edycja, dodawanie i usuwanie pytań
+- [ ] Front, edycja, dodawanie i usuwanie pytań, backend jednak był do dodawania i modyfikacji pytań więc tylko frontend
+  pod to
 - [ ] Zabezpieczyc endpointy admina
 - [ ] Poprawić responsywnosc glownego kontenera i ogolnie apki
 - [ ] Przyciski do modali profili graczy w poczekalni
@@ -38,7 +40,8 @@
 - [x] zmiana ustawien w grze - mocno zwalone
 - [ ] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp
 - [ ] Naprawić timebar
-- [ ] Przycisk do wyjscia z gry
+- [ ] Przycisk do wyjscia z gry (event "leave_not_ended_game" powinien działać) (ewentualnie czyścić token na froncie
+  gdy jest niezalogowany a wyszedł)
 - [ ] sprawdzic title na kazdej stronie
 
 ## Co jeszcze trzeba zrobic

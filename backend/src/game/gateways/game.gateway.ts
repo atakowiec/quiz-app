@@ -39,7 +39,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: SocketType) {
-    this.logger.log(`Client disconnected: ${client.data.username} [${client.id}]`);
+    this.logger.log(
+      `Client disconnected: ${client.data.username} [${client.id}]`
+    );
     this.matchMakingService.tryRemovePlayerFromQueue(client);
 
     this.gameService
@@ -62,7 +64,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     game.owner.sendNotification("Utworzono grę");
 
-    this.logger.log(`New game with id: ${game.id} created by ${ownerSocket.data.username}`);
+    this.logger.log(
+      `New game with id: ${game.id} created by ${ownerSocket.data.username}`
+    );
 
     // return something so the client can redirect to the waiting room
     // look at the "start_game" event call in the frontend app - there is acknowledgement
@@ -289,5 +293,22 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     game.send();
 
     return newGame.id;
+  }
+
+  /**
+   * Handles player disconnecting from the game using button in the game
+   * Player is removed from the game and the game is removed if there are no players left
+   * @param playerSocket
+   */
+  @SubscribeMessage("leave_not_ended_game")
+  leaveNotEndedGame(@ConnectedSocket() playerSocket: SocketType) {
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    game.removePlayer(game.getPlayer(playerSocket));
+    if (game.players.length === 0) {
+      this.gameService.removeGame(game);
+    }
   }
 }

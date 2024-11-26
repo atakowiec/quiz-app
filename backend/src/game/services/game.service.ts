@@ -225,4 +225,6 @@ export class GameService {
         parseInt(this.configService.get("MAX_PLAYERS")) ?? 49,
     };
   }
+
+  leaveGame() {}
 }
