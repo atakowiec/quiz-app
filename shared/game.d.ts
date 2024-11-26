@@ -66,8 +66,6 @@ export interface GameSettings {
   blackListedHelpers?: HelperType[];
 }
 
-export type SettingType = keyof GameSettings;
-
 /**
  * Represents a packet that stores all the information about the game for the client
  */

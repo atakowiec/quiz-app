@@ -2,6 +2,7 @@ import { IconType } from "react-icons";
 import styles from "../styles/Sidebar.module.scss";
 import { Link } from "react-router-dom";
 import AudioPlayer from "./Audio/AudioPlayer";
+import { FC } from "react";
 
 export interface SidebarItem {
   icon: IconType;
@@ -13,7 +14,7 @@ interface SidebarProps {
   items: SidebarItem[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ items }) => {
+const Sidebar: FC<SidebarProps> = ({ items }) => {
   return (
     <div className={styles.sidebar}>
       <ul>

@@ -10,8 +10,9 @@ import {
 } from "react-icons/io";
 import { useUser } from "../store/userSlice";
 import { useGame } from "../store/gameSlice";
+import { FC } from "react";
 
-const Home: React.FC = () => {
+const Home: FC = () => {
   const user = useUser();
   const game = useGame();
 
@@ -40,8 +41,8 @@ const Home: React.FC = () => {
   ];
   return (
     <>
-      <Meta title={"Stwórz grę"} />
-      <Breadcrumb title="Stwórz grę" />
+      <Meta title={"QuizBase"} />
+      <Breadcrumb title="QuizBase" />
       <Sidebar items={sidebarItems} />
       <div className={`col-12 ${styles.picturesContainer}`}>
         <div className={`${styles.pictureWrapper}`}>

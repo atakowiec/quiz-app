@@ -53,15 +53,6 @@
 }
 
 @media (max-width: 768px) {
-  .questionsTable {
-    font-size: 0.9rem;
-
-    th,
-    td {
-      padding: 0.75rem 0.5rem;
-    }
-  }
-
   .distractors {
     flex-direction: column;
   }

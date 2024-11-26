@@ -25,13 +25,6 @@
   max-width: 100%;
   border-radius: $container-border-radius;
 }
-@media (max-height: 800px) and (min-width: $phone-breakpoint) {
-  .timeBarWrapper {
-    scale: 0.85;
-    margin-top: 3rem;
-    margin-bottom: -1rem;
-  }
-}
 
 @media (min-width: $large-desktop-breakpoint) {
   .timeBarWrapper {

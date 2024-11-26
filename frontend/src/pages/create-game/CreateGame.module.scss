@@ -1,19 +1,6 @@
 @import "../../styles/Global";
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
-
-.createText {
-  background-color: #0c1a25;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 600;
-  padding: 0.5rem;
-  font-style: italic;
-  margin-bottom: 0.25rem;
-}
-
 .modeText {
   text-align: center;
   font-size: 1.25rem;
@@ -69,16 +56,6 @@ a {
 
 // Media query dla ekranów mniejszych niż 1000px
 @media (max-width: 1000px) {
-  .createBox {
-    width: calc(100% - #{$sidebar-width});
-    max-width: 60%;
-    padding: 1.5rem;
-  }
-
-  .createText {
-    font-size: 2rem;
-  }
-
   .modeText {
     font-size: 1rem;
   }

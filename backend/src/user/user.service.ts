@@ -2,8 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { User } from "./user.model";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BasicUserDetails, UserDetails } from "@shared/user";
-import { GameService } from "../game/services/game.service";
+import { UserDetails } from "@shared/user";
 import { TokenPayload } from "../auth/auth";
 import { UpdateUserDto } from "./user";
 import * as bcrypt from "bcrypt";
@@ -15,7 +14,6 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     public readonly repository: Repository<User>,
-    public readonly gameService: GameService,
     public readonly eventEmitter: EventEmitter2
   ) {
     // empty
@@ -36,21 +34,14 @@ export class UserService {
       return null;
     }
 
-    // todo implement hardcoded data
     return {
       id: user.id,
       username: user.username,
       iconColor: user.iconColor,
-      stats: {
-        playedGames: 0,
-        firstPlace: 0,
-        secondPlace: 0,
-        thirdPlace: 0
-      }
     }
   }
 
-  async findUsers(user: TokenPayload, query: string): Promise<BasicUserDetails[]> {
+  async findUsers(user: TokenPayload, query: string): Promise<UserDetails[]> {
     const found = await this.repository
       .createQueryBuilder('user')
       .where("user.username LIKE :query", { query: `%${query}%` })

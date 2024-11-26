@@ -19,7 +19,7 @@ const QueueBox = () => {
 
     const updateWaitTime = () => {
       const now = new Date();
-      const fromDateParsed = new Date(fromDate); // Safely parse `fromDate`
+      const fromDateParsed = new Date(fromDate);
 
       if (isNaN(fromDateParsed.getTime())) {
         setWaitTime("Invalid date");
@@ -64,16 +64,16 @@ const QueueBox = () => {
       <div className={styles.queueInfo}>
         <div>
           <Loader2 className={`${styles.spin} ${styles.icon}`} />
-          <span>You are in queue</span>
+          <span>Jesteś w kolejce</span>
         </div>
         <div>
           <Clock className={styles.icon} />
-          <span>Wait time: {waitTime}</span>
+          <span>{waitTime}</span>
         </div>
       </div>
       <div>
         <button onClick={handleLeaveQueue} className={styles.leaveQueueButton}>
-          Leave Queue
+          Opuść kolejkę
         </button>
       </div>
     </div>

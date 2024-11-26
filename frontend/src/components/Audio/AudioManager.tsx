@@ -48,8 +48,8 @@ class AudioManager {
   public play() {
     this.isPlaying = true;
     localStorage.setItem("isPlaying", "true");
-    this.audio.play().catch((error) => {
-      console.log("Autoplay został zablokowany:", error);
+
+    this.audio.play().catch(() => {
       this.isPlaying = false;
     });
   }
@@ -70,10 +70,6 @@ class AudioManager {
 
   public getIsPlaying(): boolean {
     return this.isPlaying;
-  }
-
-  public getCurrentSongIndex(): number {
-    return this.currentSongIndex;
   }
 
   private handleSongEnd = () => {

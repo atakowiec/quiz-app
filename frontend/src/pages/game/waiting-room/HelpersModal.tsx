@@ -4,6 +4,7 @@ import { MdOutlineMoreTime, MdQueryStats } from "react-icons/md";
 import styles from "./Settings.module.scss";
 import MainTitle from "../../../components/MainTitle";
 import { GameSettings, HelperType } from "@shared/game";
+import { FC } from "react";
 
 interface HelpersModalProps {
   show: boolean;
@@ -15,7 +16,7 @@ interface HelpersModalProps {
   helpersNames: string[];
 }
 
-const HelpersModal: React.FC<HelpersModalProps> = ({
+const HelpersModal: FC<HelpersModalProps> = ({
   show,
   handleClose,
   helperStates,

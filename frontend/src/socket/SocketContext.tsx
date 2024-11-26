@@ -22,14 +22,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       transports: ["websocket"], // dunno why, but I guess it won't work without this
     });
 
-    newSocket.on("connect", () => {
-      console.log("Connected to server");
-    });
-
-    newSocket.on("disconnect", () => {
-      console.log("Disconnected from server");
-    });
-
     newSocket.on("set_game", (game) => dispatch(gameActions.setGame(game)));
 
     newSocket.on("update_game", (game) =>
@@ -38,7 +30,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     newSocket.on("queue_left", () => dispatch(clearQueue()));
 
-    // todo - stringyfing the message is a temporary solution - now we can see a json object in the toast
     newSocket.on("exception", (message) =>
       toast.error(typeof message === "string" ? message : message.message),
     );

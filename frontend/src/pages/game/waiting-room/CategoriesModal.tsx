@@ -3,6 +3,7 @@ import { FaCheckSquare, FaSquare } from "react-icons/fa";
 import styles from "./Settings.module.scss";
 import MainTitle from "../../../components/MainTitle";
 import { GameSettings } from "@shared/game";
+import { FC } from "react";
 
 interface Category {
   id: number;
@@ -22,7 +23,7 @@ interface CategoriesModalProps {
   gameSettings?: GameSettings;
 }
 
-const CategoriesModal: React.FC<CategoriesModalProps> = ({
+const CategoriesModal: FC<CategoriesModalProps> = ({
   show,
   handleClose,
   categories,

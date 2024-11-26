@@ -28,19 +28,4 @@ export type UserDetails = {
   id: number;
   username: string;
   iconColor: string;
-  stats: {
-    playedGames: number
-    firstPlace: number
-    secondPlace: number
-    thirdPlace: number
-  }
-}
-
-/**
- * This is simplified version of the user data
- */
-export type BasicUserDetails = {
-  id: number;
-  username: string;
-  iconColor: string;
 }

@@ -7,8 +7,9 @@ import SingleCategory from "./SingleCategory.tsx";
 import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
+import { FC } from "react";
 
-const CategoryVotingPhase: React.FC = () => {
+const CategoryVotingPhase: FC = () => {
   const game = useGame();
   if (!game?.round?.categories) {
     return;

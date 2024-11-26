@@ -51,7 +51,6 @@ const CreateGame: React.FC = () => {
   ];
 
   function onNewGame(gameType: string) {
-    // todo allow not logged users to play the game - modal with username input
     setGameType(gameType);
     if (!user?.loggedIn) {
       setShowModal(true);
@@ -66,9 +65,7 @@ const CreateGame: React.FC = () => {
         toast.error("Jesteś już w kolejce");
         return;
       }
-      console.log("joining queue", user, socket);
       socket.emit("join_queue", (gameId: string) => {
-        console.log("gameId", gameId);
         if (gameId === "NO_GAME") {
           dispatch(setInQueue(true));
           toast.info("Dołączono do kolejki");

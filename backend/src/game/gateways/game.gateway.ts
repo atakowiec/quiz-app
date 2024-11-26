@@ -290,8 +290,22 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       newGame.join(player.socket);
       player.socket.emit("game_joined");
     });
-    game.send;
+    game.send();
 
     return newGame.id;
+  }
+
+  /**
+   * Handles player disconnecting from the game using button in the game
+   * Player is removed from the game and the game is removed if there are no players left
+   * @param playerSocket
+   */
+  @SubscribeMessage("leave_not_ended_game")
+  leaveNotEndedGame(@ConnectedSocket() playerSocket: SocketType) {
+    const game = this.gameService.getGameByUsername(playerSocket.data.username);
+    if (!game) {
+      throw new WsException("Nie jesteś w żadnej grze!");
+    }
+    game.removePlayer(game.getPlayer(playerSocket));
   }
 }

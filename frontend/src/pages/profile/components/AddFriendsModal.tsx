@@ -3,7 +3,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 import styles from "../Profile.module.scss";
 import { IoMdPerson } from "react-icons/io";
-import { BasicUserDetails } from "@shared/user";
+import { UserDetails } from "@shared/user";
 import { FriendshipButton, FriendshipButtonProps } from "./FriendshipButton.tsx";
 import getApi from "../../../api/axios.ts";
 import ProfileIcon from "../../../components/ProfileIcon.tsx";
@@ -15,7 +15,7 @@ interface AddFriendsModalProps {
 }
 
 export default function AddFriendsModal(props: AddFriendsModalProps) {
-  const [users, setUsers] = useState<BasicUserDetails[]>([]);
+  const [users, setUsers] = useState<UserDetails[]>([]);
   const [query, setQuery] = useState("");
 
   useEffect(() => {

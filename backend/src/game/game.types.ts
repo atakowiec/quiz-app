@@ -16,7 +16,7 @@ export type SocketServerType = SocketIOServer<
 >;
 
 export interface SocketData {
-  user?: User; // todo propably I need to change this to just id and fetch user from db when needed because the user details can change during the connection
+  user?: User;
   username: string;
   iconColor: string;
   gameId?: string;

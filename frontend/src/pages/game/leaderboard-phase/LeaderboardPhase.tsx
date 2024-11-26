@@ -14,8 +14,9 @@ import { FaRegEye } from "react-icons/fa";
 import { MdOutlineMoreTime } from "react-icons/md";
 import { MdQueryStats } from "react-icons/md";
 import { HelperType } from "@shared/game";
+import { ElementType } from "react";
 
-const allHelpers: { type: HelperType; icon: React.ElementType }[] = [
+const allHelpers: { type: HelperType; icon: ElementType }[] = [
   { type: "cheat_from_others", icon: FaRegEye },
   { type: "extend_time", icon: MdOutlineMoreTime },
   { type: "fifty_fifty", icon: MdQueryStats },

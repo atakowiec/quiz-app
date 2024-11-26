@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Category } from "../entities/category.model";
 import { Repository } from "typeorm";
 import { CreateCategoryDto } from "../dtos/CreateCategory.dto";
+import { UpdateCategoryDto } from "../dtos/UpdateCategory.dto";
 
 @Injectable()
 export class CategoryService {
@@ -53,15 +54,18 @@ export class CategoryService {
     return this.getCategoryOrThrow(id);
   }
 
-  async updateCategory(
-    id: number,
-    categoryDto: CreateCategoryDto
-  ): Promise<Category> {
+  async updateCategory(id: number, categoryDto: UpdateCategoryDto): Promise<Category> {
     const category = await this.getCategoryOrThrow(id);
-    await this.checkCategoryExistsOrThrow(categoryDto);
-    category.name = categoryDto.name;
-    category.description = categoryDto.description;
-    category.img = categoryDto.img;
+    const existingCategory = categoryDto.name ? await this.getCategoryByName(categoryDto.name) : null;
+
+    if(existingCategory && existingCategory.id != category.id) {
+      throw new HttpException("Kategoria z tą nazwą już istnieje!", 400);
+    }
+
+    category.name = categoryDto.name ?? category.name;
+    category.description = categoryDto.description ?? category.description;
+    category.img = categoryDto.img ?? category.img;
+
     return this.categoryRepository.save(category);
   }
 
@@ -82,12 +86,12 @@ export class CategoryService {
     }
   }
 
-  private async categoryWithThisNameExists(name: string) {
-    return await this.categoryRepository.exists({ where: { name: name } });
+  private async getCategoryByName(name: string) {
+    return await this.categoryRepository.findOne({ where: { name: name } });
   }
 
   private async checkCategoryExistsOrThrow(categoryDto: CreateCategoryDto) {
-    if (await this.categoryWithThisNameExists(categoryDto.name)) {
+    if (await this.getCategoryByName(categoryDto.name)) {
       throw new HttpException("Kategoria z tą nazwą już istnieje!", 400);
     }
   }

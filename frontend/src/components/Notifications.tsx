@@ -28,13 +28,6 @@ function getTimePretty(notification: INotification) {
   const now = new Date();
   const diff = now.getTime() - createdAt.getTime();
 
-  // console.log({
-  //   createdAt: notification.createdAt,
-  //   parsedDate: new Date(notification.createdAt),
-  //   now: new Date(),
-  //   diff: new Date().getTime() - new Date(notification.createdAt).getTime(),
-  // });
-
   if (diff < 1000 * 60) {
     const seconds = Math.floor(diff / 1000);
     return seconds < 5 ? "kilka sekund temu" : `${seconds} sekund temu`;

@@ -1,9 +1,9 @@
-import { Query } from "@nestjs/common";
 import { Param } from "@nestjs/common";
 import { Get } from "@nestjs/common";
 import { Controller } from "@nestjs/common";
 import { RoundService } from "../services/round.service";
 import { Category } from "src/questions/entities/category.model";
+
 // For testing purposes
 @Controller("round")
 export class RoundController {

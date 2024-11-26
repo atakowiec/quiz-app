@@ -65,19 +65,28 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  padding-top: 4rem;
+
+  &:not(.fixed) {
+    align-items: center;
+  }
 }
 
 .mainBox {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
   background-color: white;
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 80vw;
   max-width: 600px;
-  transition:
-    transform 0.5s ease-in-out,
-    opacity 0.5s ease-in-out;
+  height: fit-content;
+  max-height: calc(100vh - 7rem);
+  transition: transform 0.5s ease-in-out,
+  opacity 0.5s ease-in-out;
 }
 
 .mainText {
@@ -89,8 +98,6 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   font-weight: $container-font-weight;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  position: sticky;
-  font-size: 2rem;
 }
 
 * {
@@ -130,11 +137,6 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
     font-size: 12px;
   }
 
-  .mainContainer {
-    align-content: flex-start;
-    padding-top: clamp(5rem, 10vh, 20vh);
-  }
-
   .modal,
   .sidebarContainer {
     padding-left: 0;
@@ -142,6 +144,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 
   .mainBox {
     width: 90vw;
+    padding: 1rem;
   }
 
   .mainText {
@@ -157,13 +160,6 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   }
 }
 
-@media (max-height: 780px) and (min-width: $phone-breakpoint) {
-  .mainBox {
-    max-height: 650px;
-    scale: 0.85;
-  }
-}
-
 @media (min-width: $large-desktop-breakpoint) {
   .mainBox {
     scale: 1.2;
@@ -171,13 +167,6 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 }
 
 @media (max-height: 700px) and (max-width: 1024px) {
-  .mainContainer {
-    scale: 0.6;
-    margin-top: 0rem;
-    padding: 0px;
-    border-bottom-width: 0px;
-    position: relative;
-  }
 
   .mainBox {
     margin-bottom: 9rem;

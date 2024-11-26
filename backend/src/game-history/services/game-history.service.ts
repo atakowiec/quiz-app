@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
   CategoryScore,
@@ -11,17 +11,13 @@ import {
 import { GameHistory } from "src/game/entities/gamehistory.model";
 import { UserGame } from "src/game/entities/usergame.model";
 import { UserGameCategoryScore } from "src/game/entities/usergamecategoryscore.model";
-import { GameService } from "src/game/services/game.service";
 import { Repository } from "typeorm";
 import { ICategoryStatsFilter } from "../classes/filters/ICategoryStatsFilter";
 import { AvgHistory } from "src/game/entities/avghistory.model";
-import { log } from "console";
 
 @Injectable()
 export class GameHistoryService {
   constructor(
-    @Inject(forwardRef(() => GameService))
-    private readonly gameService: GameService,
     @InjectRepository(GameHistory)
     public gameRepository: Repository<GameHistory>,
     @InjectRepository(UserGame)
@@ -31,18 +27,6 @@ export class GameHistoryService {
     @InjectRepository(AvgHistory)
     private avgHistoryRepository: Repository<AvgHistory>
   ) { }
-
-  async getGameHistory(gameId: string): Promise<GameHistory> {
-    return this.gameRepository.findOne({
-      where: { id: gameId },
-      relations: [
-        "userGames",
-        "userGames.user",
-        "userGames.categoryScores",
-        "userGames.categoryScores.category",
-      ],
-    });
-  }
 
   async getUserGameHistory(userId: number): Promise<GameHistoryPlayerItem[]> {
     const userGames = await this.userGameRepository.find({
@@ -65,30 +49,9 @@ export class GameHistoryService {
     }));
   }
 
-  async getGameLeaderboard(gameId: string): Promise<UserGame[]> {
-    return this.userGameRepository.find({
-      where: { gameId },
-      order: { score: "DESC" },
-      relations: ["user"],
-    });
-  }
-
   async addGameToHistory(game: GameDatabase): Promise<GameHistory> {
     const gameEntity = this.gameRepository.create(game);
     return this.gameRepository.save(gameEntity);
-  }
-
-  async addUserGameResult(userGameResult: UserGameDatabase): Promise<UserGame> {
-    const userGame = this.userGameRepository.create(userGameResult);
-    return this.userGameRepository.save(userGame);
-  }
-
-  async addUserGameCategoryScore(
-    categoryScore: UserGameCategoryScoreDatabase
-  ): Promise<UserGameCategoryScore> {
-    const userGameCategoryScore =
-      this.userGameCategoryScoreRepository.create(categoryScore);
-    return this.userGameCategoryScoreRepository.save(userGameCategoryScore);
   }
 
   async addUserGameResults(userGameResults: UserGameDatabase[]) {
@@ -151,8 +114,7 @@ export class GameHistoryService {
       },
     ];
 
-    profileStats.averageScore =
-      Math.round(profileStats.averageScore * 100) / 100;
+    profileStats.averageScore = Math.round(profileStats.averageScore * 100) / 100;
 
     return profileStats;
   }
@@ -174,9 +136,7 @@ export class GameHistoryService {
     return "gier";
   }
 
-  async getCategoryStatistics(
-    filter: ICategoryStatsFilter
-  ): Promise<CategoryScore[]> {
+  async getCategoryStatistics(filter: ICategoryStatsFilter): Promise<CategoryScore[]> {
     return filter.filter(this.userGameCategoryScoreRepository);
   }
 
@@ -204,7 +164,6 @@ export class GameHistoryService {
     if (!avgHistory || avgHistory.avgScore !== newAvgScore) {
       this.addNewAverageScoreToHistory(userId, newAvgScore);
     }
-
   }
 
   async addNewAverageScoreToHistory(userId: number, avgScore: number) {
@@ -220,6 +179,5 @@ export class GameHistoryService {
       where: { userId },
       order: { createdAt: "ASC" },
     });
-  }  
-
+  }
 }

@@ -16,7 +16,8 @@ export class QuestionsService {
     private distractorRepository: Repository<Distractor>,
     @Inject(CategoryService)
     private categoryService: CategoryService
-  ) {}
+  ) {
+  }
 
   async getQuestions(): Promise<Question[]> {
     const questionsQuery = this.questionRepository
@@ -54,12 +55,11 @@ export class QuestionsService {
       });
     }
 
-    const categories = await Promise.all(
+    questionDetails.category = await Promise.all(
       questionDetails.category.map((category) =>
         this.categoryService.getCategoryOrCreateByName(category.name)
       )
     );
-    questionDetails.category = categories;
 
     questionDetails.distractors = await this.distractorRepository.save(
       questionDetails.distractors.map((distractor) =>
@@ -67,15 +67,13 @@ export class QuestionsService {
       )
     );
 
-    const newQuestion = this.questionRepository.save(
+    return this.questionRepository.save(
       this.questionRepository.create({
         ...questionDetails,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
     );
-
-    return newQuestion;
   }
 
   async deleteQuestion(questionId: number) {
@@ -129,7 +127,7 @@ export class QuestionsService {
           message: "Question must have at least one category",
         });
       }
-      const categories = await Promise.all(
+      question.category = await Promise.all(
         questionDetails.category.map((category) =>
           this.categoryService.getCategoryOrCreateByName(
             category.name,
@@ -138,7 +136,6 @@ export class QuestionsService {
           )
         )
       );
-      question.category = categories;
     }
     delete questionDetails.category;
 

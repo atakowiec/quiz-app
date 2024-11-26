@@ -1,12 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { QuestionsModule } from "./questions/questions.module";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Distractor } from "./questions/entities/distractor.model";
 import { Question } from "./questions/entities/question.model";
-import { QuestionsController } from "./questions/controllers/questions.controller";
 import databaseConfig from "./config/database.config";
 import { Category } from "./questions/entities/category.model";
 import { ConfigService } from "@nestjs/config/dist/config.service";
@@ -51,7 +49,6 @@ import { MetricsModule } from "./metrics/metrics.module";
     ColorsModule,
     MetricsModule,
   ],
-  controllers: [AppController, QuestionsController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {

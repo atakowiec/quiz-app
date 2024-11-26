@@ -38,7 +38,6 @@ const Header = () => {
     setNotificationsShow((prev) => !prev);
   }
 
-  //TODO: make edit profile work
   const handleLogout = () => {
     navigate("/logout");
   };

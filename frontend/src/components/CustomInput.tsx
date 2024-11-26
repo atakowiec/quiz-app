@@ -1,3 +1,4 @@
+import { ChangeEventHandler, FC, FocusEventHandler } from "react";
 import styles from "../pages/login/Login.module.scss";
 
 interface CustomInputProps {
@@ -6,12 +7,12 @@ interface CustomInputProps {
   placeholder?: string;
   className?: string;
   value?: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
   autoComplete?: string;
 }
 
-const CustomInput: React.FC<CustomInputProps> = (props) => {
+const CustomInput: FC<CustomInputProps> = (props) => {
   const {
     type,
     name,

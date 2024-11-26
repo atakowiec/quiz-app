@@ -1,9 +1,5 @@
 @import "../../styles/Global.scss";
 
-.settMoodal {
-  padding-left: 0;
-}
-
 .statsModalBox {
   background-color: $gray;
   border-radius: $container-border-radius;
@@ -79,10 +75,6 @@
 @media (max-height: 800px) {
   .statsModalBox {
     max-height: 40vh;
-  }
-
-  .settMoodal {
-    padding-left: $sidebar-width;
   }
 }
 

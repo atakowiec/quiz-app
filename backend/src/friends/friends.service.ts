@@ -65,7 +65,6 @@ export class FriendsService {
   @OnEvent("game_leave")
   async onGameLeave(socket: SocketType) {
     if (!socket.data.user?.id) {
-      console.log("User is not logged in");
       return;
     }
 

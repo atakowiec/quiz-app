@@ -66,8 +66,4 @@ export class MatchmakingService {
       }
     }
   }
-
-  public isPlayerInQueue(playerSocket: SocketType): boolean {
-    return playerSocket.rooms.has(MatchmakingService.ROOM_NAME);
-  }
 }
