@@ -307,8 +307,5 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
     game.removePlayer(game.getPlayer(playerSocket));
-    if (game.players.length === 0) {
-      this.gameService.removeGame(game);
-    }
   }
 }
