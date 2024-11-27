@@ -50,7 +50,7 @@ const QuestionPhase = () => {
     <>
       <Meta title={"Pytanie"} />
       <Breadcrumb title="Pytanie" />
-      <MainContainer>
+      <MainContainer className={styles.mainContainer}>
         <div className={styles.lifebouys}>
           {availableHelpers.map((helper: HelperType) => {
             const IconComponent = helperIcons[helper];

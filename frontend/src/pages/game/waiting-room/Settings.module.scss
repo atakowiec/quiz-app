@@ -55,6 +55,7 @@
   width: auto;
   max-width: 4.2ch;
 }
+
 .choiceValue::-webkit-inner-spin-button,
 .choiceValue::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -100,33 +101,35 @@
 
 .categoryModalBox {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
   background-color: $gray;
   border-radius: $container-border-radius;
   overflow-y: auto;
   padding: 1rem;
-  justify-content: center;
   gap: 1rem;
   margin-top: 1rem;
   max-height: 400px;
 }
 
 .categoriesChoice {
-  display: inline-flex;
-  flex-direction: row;
+  display: flex;
+  flex: 1;
+  white-space: nowrap;
+
   background-color: white;
   border-radius: 10px;
   box-shadow: $button-shadow-black;
-  padding: 0.5rem;
+  padding: 0.3rem;
   font-weight: 400;
-  gap: 1rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   align-items: center;
   cursor: pointer;
   transition: border-color 0.1s ease;
   border: 2px solid transparent;
+  user-select: none;
 }
+
 .active {
   border: 2px solid $green-black;
 }
@@ -134,6 +137,13 @@
 .categoryImage {
   max-width: 30px;
   max-height: 30px;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+}
+
+.categoryName {
+  flex: 1;
+  text-align: center;
 }
 
 .settButtons {
@@ -202,6 +212,7 @@
   font-size: 1.2rem;
   font-weight: 600;
 }
+
 .helperDesc {
   font-size: 0.9rem;
 }

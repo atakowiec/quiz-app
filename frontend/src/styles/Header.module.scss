@@ -27,6 +27,7 @@
 
 .fancyLogo {
   display: flex;
+  user-select: none;
 
   div {
     transition:
