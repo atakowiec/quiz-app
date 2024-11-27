@@ -18,13 +18,24 @@ import StatsModal from "./StatsModal.tsx";
 import { ProfileStats } from "@shared/game.js";
 import getApi from "../../api/axios.ts";
 import AverageScoreChartModal from "./AvgScoreModal.tsx";
+import { useGame } from "../../store/gameSlice.ts";
 
 const Stats: React.FC = () => {
   const user = useUser();
+  const game = useGame();
 
   const sidebarItems: SidebarItem[] = [
-    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+    ...(game?.status != "waiting_for_players"
+      ? [
+          {
+            icon: IoIosAddCircleOutline,
+            label: "Stwórz Grę",
+            href: "/create-game",
+          },
+          { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+        ]
+      : [{ icon: IoIosPlay, label: "Wróć do gry", href: "/waiting-room" }]),
+
     ...(user.loggedIn
       ? [
           {
@@ -34,7 +45,7 @@ const Stats: React.FC = () => {
           },
           { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
         ]
-      : []),
+      : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
   ];
 
   const [showModal, setShowModal] = useState(false);
@@ -76,8 +87,8 @@ const Stats: React.FC = () => {
 
   return (
     <>
-      <Meta title={"Dołącz do gry"} />
-      <Breadcrumb title="Dołącz do gry" />
+      <Meta title={"Statystyki"} />
+      <Breadcrumb title="Statystyki" />
       <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
         <MainBox className={styles.sBox}>

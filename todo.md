@@ -27,7 +27,7 @@
 - [x] rozmiar kół ratunkowych na innych urzadzeniach
 - [x] Poprawić modal z hasłem, nickname tworząc nowe konto
 - [x] Przywrócic nicki znajomych na profilu
-- [chyba] Naprawić pozycje nickow podczas wyszukiwania userow
+- [x] Naprawić pozycje nickow podczas wyszukiwania userow
 - [x] 1,2 i 3 miejsce w statach
 - [ ] Front, edycja, dodawanie i usuwanie pytań, backend jednak był do dodawania i modyfikacji pytań więc tylko frontend
       pod to
@@ -38,11 +38,11 @@
 - [ ] Tryb jednoosobowy
 - [x] Ankieta
 - [x] zmiana ustawien w grze - mocno zwalone
-- [ ] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp
+- [x] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp
 - [ ] Naprawić timebar
 - [ ] Przycisk do wyjscia z gry (event "leave_not_ended_game" powinien działać) (ewentualnie czyścić token na froncie
       gdy jest niezalogowany a wyszedł)
-- [ ] sprawdzic title na kazdej stronie
+- [x] sprawdzic title na kazdej stronie
 
 ## Co jeszcze trzeba zrobic
 

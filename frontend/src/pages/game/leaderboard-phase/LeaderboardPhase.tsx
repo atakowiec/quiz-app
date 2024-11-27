@@ -43,8 +43,8 @@ const LeaderboardPhase = () => {
 
   return (
     <div>
-      <Meta title={"Leaderboard"} />
-      <Breadcrumb title="Leaderboard" />
+      <Meta title={"Ranking"} />
+      <Breadcrumb title="Ranking" />
       <MainContainer>
         <div className={styles.boxWithTimebar}>
           <MainBox before={<TimeBar />} className={styles.time}>

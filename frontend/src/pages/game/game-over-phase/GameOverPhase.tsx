@@ -47,8 +47,8 @@ export default function GameOverPhase() {
 
   return (
     <div>
-      <Meta title={"Leaderboard"} />
-      <Breadcrumb title="Leaderboard" />
+      <Meta title={"Ranking"} />
+      <Breadcrumb title="Ranking" />
       <MainContainer>
         <MainBox>
           <MainTitle>Tablica Wyników</MainTitle>

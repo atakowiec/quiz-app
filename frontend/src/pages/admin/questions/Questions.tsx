@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Pagination } from "react-bootstrap";
+import { Breadcrumb, Pagination } from "react-bootstrap";
 import useApi from "../../../api/useApi";
 import { useParams } from "react-router-dom";
 import { ICategory } from "@shared/game";
 import QuestionElement from "./components/QuestionElement";
 import styles from "./questions.module.scss";
+import Meta from "../../../components/Meta";
 
 export interface Pagination {
   questions: Question[];
@@ -122,31 +123,35 @@ export default function Questions() {
   };
 
   return (
-    <div className={styles.questionsContainer}>
-      <h1 className={styles.questionsTitle}>Pytania z {categoryName}</h1>
-      <input
-        type="text"
-        placeholder="Wyszukaj pytanie lub odpowiedź"
-        className={styles.searchBar}
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
-      {error && <p>Wystąpił błąd: {error.message}</p>}
-      <ul className={`list-unstyled flex ${styles.questions}`}>
-        {questions.map((question: Question) => (
-          <QuestionElement
-            key={question.id}
-            question={question.question}
-            correctAnswer={question.correctAnswer}
-            distractors={question.distractors}
-          />
-        ))}
-      </ul>
-      {!searchTerm && (
-        <Pagination className={styles.pagination}>
-          {renderPagination()}
-        </Pagination>
-      )}
-    </div>
+    <>
+      <Meta title={"Admin"} />
+      <Breadcrumb title="Admin" />
+      <div className={styles.questionsContainer}>
+        <h1 className={styles.questionsTitle}>Pytania z {categoryName}</h1>
+        <input
+          type="text"
+          placeholder="Wyszukaj pytanie lub odpowiedź"
+          className={styles.searchBar}
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+        {error && <p>Wystąpił błąd: {error.message}</p>}
+        <ul className={`list-unstyled flex ${styles.questions}`}>
+          {questions.map((question: Question) => (
+            <QuestionElement
+              key={question.id}
+              question={question.question}
+              correctAnswer={question.correctAnswer}
+              distractors={question.distractors}
+            />
+          ))}
+        </ul>
+        {!searchTerm && (
+          <Pagination className={styles.pagination}>
+            {renderPagination()}
+          </Pagination>
+        )}
+      </div>
+    </>
   );
 }

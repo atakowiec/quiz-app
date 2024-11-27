@@ -3,6 +3,8 @@ import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
 import styles from "./Category.module.scss";
+import Meta from "../../../components/Meta.tsx";
+import { Breadcrumb } from "react-bootstrap";
 
 const SelectedCategoryPhase = () => {
   const game = useGame();
@@ -12,6 +14,8 @@ const SelectedCategoryPhase = () => {
 
   return (
     <div>
+      <Meta title={"Kategoria"} />
+      <Breadcrumb title="Kategoria" />
       <MainContainer>
         <MainBox>
           <MainTitle>Wybrana Kategoria</MainTitle>

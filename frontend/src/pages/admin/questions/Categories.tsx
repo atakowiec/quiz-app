@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import getApi from "../../../api/axios.ts";
 import { AxiosResponse } from "axios";
 import { globalDataActions } from "../../../store/globalDataSlice.ts";
+import Meta from "../../../components/Meta.tsx";
+import { Breadcrumb } from "react-bootstrap";
 
 export default function Categories() {
   const categories = useSelector((state: State) => state.globalData.categories);
@@ -60,6 +62,8 @@ export default function Categories() {
 
   return (
     <>
+      <Meta title={"Admin"} />
+      <Breadcrumb title="Admin" />
       <div className={styles.fixedButton}>
         <button
           className={styles.createCategoryBtn}

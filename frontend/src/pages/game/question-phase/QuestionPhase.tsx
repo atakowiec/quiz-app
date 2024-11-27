@@ -48,8 +48,8 @@ const QuestionPhase = () => {
 
   return (
     <>
-      <Meta title={"Question"}/>
-      <Breadcrumb title="Question"/>
+      <Meta title={"Pytanie"} />
+      <Breadcrumb title="Pytanie" />
       <MainContainer>
         <div className={styles.lifebouys}>
           {availableHelpers.map((helper: HelperType) => {
@@ -70,11 +70,11 @@ const QuestionPhase = () => {
           })}
         </div>
         <div className={styles.boxWithTimebar}>
-          <MainBox before={<TimeBar/>}>
+          <MainBox before={<TimeBar />}>
             <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
             <div className={styles.question}>
               {game.round.question.text}
-              <QuestionImage question={game.round.question}/>
+              <QuestionImage question={game.round.question} />
             </div>
             <div className={styles.answersBox}>
               {game.round.question.answers.map((answer) => {
@@ -116,10 +116,12 @@ const QuestionPhase = () => {
                         {playersChosen
                           .slice(0, maxDisplayedPlayers)
                           .map((player) => (
-                            <ProfileIcon key={player.username}
-                                         className={styles.voteCircle}
-                                         username={player.username}
-                                         iconColor={player.iconColor}/>
+                            <ProfileIcon
+                              key={player.username}
+                              className={styles.voteCircle}
+                              username={player.username}
+                              iconColor={player.iconColor}
+                            />
                           ))}
                         {extraPlayers > 0 && (
                           <span className={styles.extraVotes}>
@@ -139,8 +141,8 @@ const QuestionPhase = () => {
   );
 };
 
-function QuestionImage({question}: {question: IQuestion}) {
-  if(!question.photo) return null;
+function QuestionImage({ question }: { question: IQuestion }) {
+  if (!question.photo) return null;
 
   return (
     <button className={styles.imageWrapper}>
@@ -150,7 +152,7 @@ function QuestionImage({question}: {question: IQuestion}) {
         className={`${styles.questionImage}`}
       />
     </button>
-  )
+  );
 }
 
 export default QuestionPhase;
