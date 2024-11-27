@@ -123,12 +123,6 @@
   border: 2px solid #9999; // Domyślny kolor obramowania
 }
 
-@media (max-height: 780px) and (min-width: $phone-breakpoint) {
-  .boxWithTimebar {
-    margin-top: 2rem;
-  }
-}
-
 @media (max-width: $phone-breakpoint) {
   .voteCircle {
     width: 15px;

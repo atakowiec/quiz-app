@@ -33,8 +33,8 @@ $button-shadow-green: 0 4px 8px rgba(63, 155, 55, 0.26);
 $button-border-radius: 10px;
 
 // phone buttons - width max 768px
-$button-phone-padding: 0.5rem 0.75rem;
-$button-phone-font-size: 0.9rem;
+$button-phone-padding: 0.5rem 0.9rem;
+$button-phone-font-size: 1rem;
 
 //container
 $container-border-radius: 10px;
@@ -46,7 +46,7 @@ $code-phone-font-size-500: 1rem;
 $code-phone-font-size-300: 0.5rem;
 
 //phone input
-$input-phone-font-size: 0.8rem;
+$input-phone-font-size: 1rem;
 $input-phone-padding: 0.5rem;
 
 // breakpoints
@@ -75,10 +75,9 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 }
 
 .mainBox {
-  // todo fix question screen
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow-y: auto;
 
   background-color: white;
   padding: 1.5rem;
@@ -87,9 +86,10 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   width: 80vw;
   max-width: 600px;
   height: fit-content;
-  max-height: calc(100vh - 7rem);
   transition: transform 0.5s ease-in-out,
   opacity 0.5s ease-in-out;
+
+  max-height: calc(100vh - 7rem);
 }
 
 .mainText {
@@ -147,14 +147,14 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 
   .mainContainer {
     align-content: flex-start;
-    margin-top: 2rem;
+    margin-top: 1rem;
     margin-bottom: 0;
   }
 
   .mainBox {
     width: 90vw;
     padding: 1rem;
-    max-height: calc(100vh - 10rem);
+    max-height: calc(100dvh - 10rem);
   }
 
   .mainText {
