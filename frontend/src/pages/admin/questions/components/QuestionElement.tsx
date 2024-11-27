@@ -1,4 +1,4 @@
-import classes from "./styles/questionElement.module.scss";
+import classes from "../styles/QuestionElement.module.scss";
 import { Distractor } from "../Questions";
 
 export interface QuestionElementProps {

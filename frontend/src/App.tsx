@@ -10,7 +10,6 @@ import WaitingRoom from "./pages/game/waiting-room/WaitingRoom.tsx";
 import { useEffect } from "react";
 import JoinGame from "./pages/join-game/JoinGame.tsx";
 import Home from "./pages/Home.tsx";
-import Categories from "./pages/admin/questions/Categories.tsx";
 import Game from "./pages/game/Game.tsx";
 import { useGame } from "./store/gameSlice.ts";
 import IsInWaitingRoomLayout from "./components/layouts/IsInWaitingRoomLayout.tsx";
@@ -23,6 +22,7 @@ import ProtectedRoutes, {
   PermissionEnum,
 } from "./components/ProtectedRoute.tsx";
 import { AudioProvider } from "./components/Audio/AudioContext.tsx";
+import Categories from "./pages/admin/categories/Categories.tsx";
 
 function App() {
   const game = useGame();
@@ -59,7 +59,6 @@ function App() {
           <Route path="waiting-room" element={<WaitingRoom />} />
           <Route path="game" element={<Game />} />
           <Route path="/admin/categories" element={<Categories />} />
-
 
           <Route
             element={<ProtectedRoutes permissions={PermissionEnum.USER} />}

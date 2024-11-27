@@ -1,4 +1,4 @@
-import styles from "./styles/CreateCategoryModal.module.scss";
+import styles from "../styles/CreateCategoryModal.module.scss";
 import { Modal } from "react-bootstrap";
 import { ChangeEvent, useState } from "react";
 import { CategoryService } from "../../../../api/categoryService.tsx";

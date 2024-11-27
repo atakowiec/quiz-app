@@ -2,11 +2,11 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { CategoryService } from "../../../../api/categoryService";
 import MainTitle from "../../../../components/MainTitle";
-import styles from "./styles/CreateCategoryModal.module.scss";
 import CustomInput from "../../../../components/CustomInput";
 import { useDispatch } from "react-redux";
 import { globalDataActions } from "../../../../store/globalDataSlice";
 import { toast } from "react-toastify";
+import styles from "../styles/CreateCategoryModal.module.scss";
 
 interface EditCategoryModalProps {
   show: boolean;

@@ -2,7 +2,7 @@ import CategoryElement from "./components/CategoryElement";
 import { ICategory } from "@shared/game.js";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../../store";
-import styles from "./categories.module.scss";
+import styles from "./styles/Categories.module.scss";
 import { useState } from "react";
 import CreateCategoryModal, {
   CategoryFormData,

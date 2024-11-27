@@ -1,4 +1,4 @@
-@import "../../../styles/Global.scss";
+@import "../../../../styles/Global.scss";
 
 .container {
   display: flex;
@@ -29,7 +29,6 @@
   box-shadow: $button-shadow-black;
   transition: 0.15s background-color ease-in-out;
   background: white;
-
 
   &:hover {
     transition: 0.15s background-color ease-in-out;
@@ -72,7 +71,6 @@
   font-size: 32px;
   transition: background-color 0.3s ease;
 
-
   &:hover {
     background-color: rgba(0, 0, 0, 0.8);
   }
@@ -97,7 +95,6 @@
   max-height: 20%;
   min-width: 10vw;
 }
-
 
 .categoryName {
   font-size: 1.4rem;

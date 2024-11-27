@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import styles from "../categories.module.scss";
+import styles from "../styles/Categories.module.scss";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "../../../../components/ConfirmationModal.tsx";
 import { useState } from "react";
