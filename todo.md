@@ -36,7 +36,7 @@
 - [x] Przyciski do modali profili graczy w poczekalni
 - [x] usunac hover z przycisku play
 - [x] poprawić kolor paginacji
-- [ ] Tryb jednoosobowy
+- [x] Tryb jednoosobowy
 - [x] Ankieta
 - [x] zmiana ustawien w grze - mocno zwalone
 - [x] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp

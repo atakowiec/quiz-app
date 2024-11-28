@@ -10,7 +10,7 @@ import { State } from "../../../store";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../../../socket/useSocket.ts";
 import { IoMdArrowUp } from "react-icons/io";
-import { GameState } from "../../../store/gameSlice.ts";
+import { GameState, useGame } from "../../../store/gameSlice.ts";
 import { UserState } from "../../../store/userSlice.ts";
 import { FaCheck, FaLink, FaUser } from "react-icons/fa6";
 import MainContainer from "../../../components/MainContainer.tsx";
@@ -24,9 +24,6 @@ import { useGameSidebarItems } from "../../../hooks/useSidebarItems.ts";
 
 const WaitingRoom: React.FC = () => {
   const sidebarItems = useGameSidebarItems(openInviteModal)
-  const [copyAnimationStage, setCopyAnimationStage] = useState(
-    "none" as "none" | "copying" | "copied" | "ending"
-  );
 
   const game: GameState = useSelector((state: State) => state.game);
   const user: UserState = useSelector((state: State) => state.user);
@@ -82,43 +79,6 @@ const WaitingRoom: React.FC = () => {
     setShowConfirmModal(false);
   }
 
-  async function copyId() {
-    const id = game?.id;
-    if (!id || copyAnimationStage !== "none") {
-      return;
-    }
-    const protocol = window.location.protocol;
-    const fromURL = window.location.host;
-
-    await navigator.clipboard.writeText(
-      `${protocol}//${fromURL}/join-game?code=${id}`
-    );
-
-    setCopyAnimationStage("copying");
-
-    setTimeout(() => {
-      setCopyAnimationStage("copied");
-    }, 300);
-
-    setTimeout(() => {
-      setCopyAnimationStage("ending");
-    }, 2000);
-
-    setTimeout(() => {
-      setCopyAnimationStage("none");
-    }, 2300);
-  }
-
-  function renderTooltip(props: object) {
-    return (
-      game?.gameType !== "matchmaking" && (
-        <Tooltip id="button-tooltip" {...props}>
-          Kliknij, aby skopiować link do pokoju
-        </Tooltip>
-      )
-    );
-  }
-
   return (
     <>
       <Meta title={"Poczekalnia"}/>
@@ -127,24 +87,7 @@ const WaitingRoom: React.FC = () => {
       <MainContainer className={styles.sidebarContainer}>
         <MainBox before={game?.owner == null && <TimeBar/>}>
           <MainTitle>Poczekalnia</MainTitle>
-          <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
-            {["ending", "copied"].includes(copyAnimationStage) ? (
-              <>
-                <FaCheck/> Skopiowano!
-              </>
-            ) : (
-              <OverlayTrigger
-                placement="right"
-                delay={{ show: 250, hide: 400 }}
-                overlay={renderTooltip}
-              >
-                <span onClick={copyId}>
-                  Kod: {game?.id} <FaLink/>
-                </span>
-              </OverlayTrigger>
-            )}
-          </div>
-          <hr className={styles.line}/>
+          <GameCode/>
           <div className={styles.playersBox}>
             {game?.owner && game?.owner?.username && (
               <div className={styles.singlePlayer}>
@@ -247,5 +190,73 @@ const WaitingRoom: React.FC = () => {
     </>
   );
 };
+
+function GameCode() {
+  const game = useGame();
+  const [copyAnimationStage, setCopyAnimationStage] = useState(
+    "none" as "none" | "copying" | "copied" | "ending"
+  );
+
+  if (game?.gameType != "multiplayer")
+    return null;
+
+  async function copyId() {
+    const id = game?.id;
+    if (!id || copyAnimationStage !== "none") {
+      return;
+    }
+    const protocol = window.location.protocol;
+    const fromURL = window.location.host;
+
+    await navigator.clipboard?.writeText(
+      `${protocol}//${fromURL}/join-game?code=${id}`
+    );
+
+    setCopyAnimationStage("copying");
+
+    setTimeout(() => {
+      setCopyAnimationStage("copied");
+    }, 300);
+
+    setTimeout(() => {
+      setCopyAnimationStage("ending");
+    }, 2000);
+
+    setTimeout(() => {
+      setCopyAnimationStage("none");
+    }, 2300);
+  }
+
+  function renderTooltip(props: object) {
+    return (
+      <Tooltip id="button-tooltip" {...props}>
+        Kliknij, aby skopiować link do pokoju
+      </Tooltip>
+    );
+  }
+
+  return (
+    <>
+      <div className={`${styles.code} ${styles[copyAnimationStage]}`}>
+        {["ending", "copied"].includes(copyAnimationStage) ? (
+          <>
+            <FaCheck/> Skopiowano!
+          </>
+        ) : (
+          <OverlayTrigger
+            placement="right"
+            delay={{ show: 250, hide: 400 }}
+            overlay={renderTooltip}
+          >
+                <span onClick={copyId}>
+                  Kod: {game?.id} <FaLink/>
+                </span>
+          </OverlayTrigger>
+        )}
+      </div>
+      <hr className={styles.line}/>
+    </>
+  )
+}
 
 export default WaitingRoom;

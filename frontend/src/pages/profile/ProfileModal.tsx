@@ -39,18 +39,14 @@ interface ProfileStats {
   rankingPlaces: RankingPlace[];
 }
 
-const ProfileModal: FC<ProfileModalProps> = ({
-                                                     show,
-                                                     handleClose,
-                                                     userId,
-                                                   }) => {
+const ProfileModal: FC<ProfileModalProps> = ({ show, handleClose, userId, }) => {
   const socket = useSocket();
   const { friends, id: loggedUserId } = useUser();
   const game = useGame();
   const friend = friends?.find((f) => f.id === userId);
 
   const { data: user } = useApi<UserDetails>(`/users/get-by-id/${userId}`, "get")
-  const {loaded: statsLoaded, data: statsData} = useApi<ProfileStats>(`/history/stats/${userId}`, "get");
+  const { loaded: statsLoaded, data: statsData } = useApi<ProfileStats>(`/history/stats/${userId}`, "get");
 
   const rankingData = statsData?.rankingPlaces || [];
   const gamesPlayed = Number(statsData?.gamesPlayed) || 0;
@@ -59,12 +55,13 @@ const ProfileModal: FC<ProfileModalProps> = ({
   const canInviteToGame =
     friend &&
     friend.status === "online" &&
+    game?.gameType == "multiplayer" &&
     game?.status === "waiting_for_players";
 
   const inviteToGame = () => {
     if (!friend) return;
 
-    if (game?.status !== "waiting_for_players") {
+    if (!canInviteToGame) {
       toast.warning("Nie możesz tego teraz zrobić!");
       return;
     }

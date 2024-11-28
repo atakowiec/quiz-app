@@ -211,20 +211,22 @@ export class GameService {
     });
   }
 
-  getDefaultGameSettings(): GameSettings {
+  getDefaultGameSettings(gameType: GameType): GameSettings {
     return {
+      blackListedHelpers: gameType == "singleplayer" ? ["cheat_from_others"] : [],
       number_of_rounds:
-        parseInt(this.configService.get("DEFAULT_NUMBER_OF_ROUNDS")) ?? 5,
+        parseInt(this.configService.get("DEFAULT_NUMBER_OF_ROUNDS")) || 5,
       number_of_questions_per_round:
-        parseInt(this.configService.get("DEFAULT_QUESTIONS_PER_ROUND")) ?? 5,
+        parseInt(this.configService.get("DEFAULT_QUESTIONS_PER_ROUND")) || 5,
       number_of_categories_per_voting:
-        parseInt(this.configService.get("DEFAULT_CATEGORIES_PER_VOTING")) ?? 10,
+        parseInt(this.configService.get("DEFAULT_CATEGORIES_PER_VOTING")) || 10,
       time_for_answer:
-        parseInt(this.configService.get("DEFAULT_TIME_FOR_ANSWER")) ?? 20,
-      max_number_of_players:
-        parseInt(this.configService.get("MAX_PLAYERS")) ?? 49,
+        parseInt(this.configService.get("DEFAULT_TIME_FOR_ANSWER")) || 20,
+      max_number_of_players: gameType == "singleplayer" ? 0 :
+        parseInt(this.configService.get("MAX_PLAYERS")) || 49,
     };
   }
 
-  leaveGame() {}
+  leaveGame() {
+  }
 }

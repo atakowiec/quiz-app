@@ -319,23 +319,14 @@ export default class Round {
     this.categories = [];
 
     // if there are fewer categories than the number of categories per voting, use all of them
-    if (
-      availableCategories.length <=
-      this.game.settings.number_of_categories_per_voting
-    ) {
+    if (availableCategories.length <= this.game.settings.number_of_categories_per_voting) {
       this.categories = availableCategories;
       return;
     }
 
     // if there are more categories than the number of categories per voting, randomly select the categories
-    for (
-      let i = 0;
-      i < this.game.settings.number_of_categories_per_voting;
-      i++
-    ) {
-      const randomIndex = Math.floor(
-        Math.random() * availableCategories.length
-      );
+    for (let i = 0; i < this.game.settings.number_of_categories_per_voting; i++) {
+      const randomIndex = Math.floor(Math.random() * availableCategories.length);
       const category = availableCategories[randomIndex];
       this.categories.push(category);
       availableCategories.splice(randomIndex, 1);
@@ -411,8 +402,8 @@ export default class Round {
     return {
       start: this.timeStart,
       end: this.game.gameStatus == "question_phase"
-          ? member.answerEndTime
-          : this.timeEnd,
+        ? member.answerEndTime
+        : this.timeEnd,
       referenceTime: Date.now(),
     };
   }

@@ -51,7 +51,7 @@ export default class Game {
   ) {
     this.gameService = gameService;
 
-    this.settings = gameService.getDefaultGameSettings();
+    this.settings = gameService.getDefaultGameSettings(gameType);
 
     this.id = createGameID();
     this.gameType = gameType;

@@ -8,7 +8,7 @@ export type GameStatus =
   | "game_over";
 export type HelperType = "fifty_fifty" | "extend_time" | "cheat_from_others";
 
-export type GameType = "jednoosobowy" | "wieloosobowy" | "matchmaking";
+export type GameType = "singleplayer" | "multiplayer" | "matchmaking";
 
 export type GameId = string;
 

@@ -70,12 +70,12 @@ const CreateGame: React.FC = () => {
           <div className={styles.selectionBoxes}>
             <div
               className={styles.modeSelectionText}
-              onClick={() => onNewGame("jednoosobowy")}>
+              onClick={() => onNewGame("singleplayer")}>
               Jednoosobowy <IoPersonSharp className={styles.singlePlayer}/>
             </div>
             <div
               className={styles.modeSelectionText}
-              onClick={() => onNewGame("wieloosobowy")}
+              onClick={() => onNewGame("multiplayer")}
             >
               Wieloosobowy <IoPeopleSharp className={styles.multiPlayer}/>
             </div>

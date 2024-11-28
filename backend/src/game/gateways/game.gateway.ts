@@ -52,14 +52,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("create_game")
   async createNewGame(
     @ConnectedSocket() ownerSocket: SocketType,
-    @MessageBody() createGameData: GameType
+    @MessageBody() gameType: GameType
   ) {
     if (ownerSocket.data.gameId) {
       throw new WsException("Jesteś już w grze!");
     }
     this.matchMakingService.tryRemovePlayerFromQueue(ownerSocket);
 
-    const game = this.gameService.createGame(ownerSocket, createGameData);
+    const game = this.gameService.createGame(ownerSocket, gameType);
     game.send(ownerSocket);
 
     game.owner.sendNotification("Utworzono grę");
@@ -146,7 +146,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // TODO: Odkomentować to, narazie nie chce mi sie dwóch klientów odpalać
 
-    // if (game.gameType !== "single" && game.players.length == 0) {
+    // if (game.gameType !== "singleplayer" && game.players.length == 0) {
     //   throw new WsException("Nie można rozpocząć gry bez graczy!");
     // }
 

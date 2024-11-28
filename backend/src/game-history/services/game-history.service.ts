@@ -80,7 +80,7 @@ export class GameHistoryService {
     FROM user_game userGame
     INNER JOIN game_history ON userGame.gameId = game_history.id
     WHERE userGame.userId = ?
-    AND game_history.gameType != "jednoosobowy"
+    AND game_history.gameType != "singleplayer"
   `;
 
     // Execute the query and cast the result to ProfileStats

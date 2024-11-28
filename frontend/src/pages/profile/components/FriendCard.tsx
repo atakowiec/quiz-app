@@ -14,11 +14,14 @@ export default function FriendCard({ friend }: { friend: Friend }) {
   const socket = useSocket();
   const game = useGame();
 
-  const canInvite =
-    friend.status === "online" && game?.status == "waiting_for_players";
+  const canInviteToGame =
+    friend &&
+    friend.status === "online" &&
+    game?.gameType == "multiplayer" &&
+    game?.status === "waiting_for_players";
 
   function sendGameInvite() {
-    if (!canInvite) return;
+    if (!canInviteToGame) return;
 
     socket.emit("send_game_invite", friend.id);
   }
@@ -40,7 +43,7 @@ export default function FriendCard({ friend }: { friend: Friend }) {
         </div>
       </div>
       <div className={styles.rightSide}>
-        {canInvite && (
+        {canInviteToGame && (
           <button className={styles.invite} onClick={sendGameInvite}>
             <GiGamepad className={styles.gamePad} /> Zaproś do gry
           </button>

@@ -39,7 +39,7 @@ const Profile: React.FC = () => {
           <MainTitle>Twój Profil</MainTitle>
           <div className={styles.profileBox}>
             <div className={styles.iconAndName}>
-              <ProfileIcon className={styles.profileIcon}
+              <ProfileIcon className={`${styles.profileIcon} ${styles.ownProfile}`}
                            username={user.username}
                            onClick={() => setIconPickerVisible(true)}
                            iconColor={user.iconColor}/>

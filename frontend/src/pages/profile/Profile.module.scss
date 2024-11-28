@@ -33,13 +33,16 @@
   height: 3.5rem;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
   font-weight: 600;
-  cursor: pointer;
   line-height: 0;
-  transition: filter 0.1s, scale 0.1s;
 
-  &:hover {
-    filter: brightness(.9);
-    scale: 1.05;
+  &.ownProfile {
+    cursor: pointer;
+    transition: filter 0.1s, scale 0.1s;
+
+    &:hover {
+      filter: brightness(.9);
+      scale: 1.05;
+    }
   }
 }
 

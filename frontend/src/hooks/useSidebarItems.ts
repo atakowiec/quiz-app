@@ -6,11 +6,20 @@ import { IoIosAddCircleOutline, IoIosPlay, IoIosSend, IoLogoGameControllerB } fr
 
 
 export function useGameSidebarItems(openInviteModal: () => void): SidebarItem[] {
-  return [
+  const game = useGame();
+
+  const result: SidebarItem[] = [
     { icon: IoHomeSharp, label: "Powrót", href: "/" },
     { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
-    { icon: IoIosSend, label: "Zaproś", href: "", onClick: openInviteModal },
   ];
+
+  if (game?.gameType == "multiplayer") {
+    result.push(
+      { icon: IoIosSend, label: "Zaproś", href: "", onClick: openInviteModal }
+    )
+  }
+
+  return result;
 }
 
 export function useSidebarItems(): SidebarItem[] {
