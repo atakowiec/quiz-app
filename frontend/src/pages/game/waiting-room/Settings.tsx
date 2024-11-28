@@ -1,10 +1,10 @@
 import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../../components/Meta";
-import Sidebar, { SidebarItem } from "../../../components/SideBar";
+import Sidebar from "../../../components/SideBar";
 import MainContainer from "../../../components/MainContainer";
 import MainBox from "../../../components/MainBox";
 import MainTitle from "../../../components/MainTitle";
-import { IoArrowBack, IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 import styles from "./Settings.module.scss";
 import { FC, useEffect, useRef, useState } from "react";
 import { GameSettings, HelperType } from "@shared/game";
@@ -14,6 +14,8 @@ import CategoriesModal from "./CategoriesModal";
 import HelpersModal from "./HelpersModal";
 import { useGame } from "../../../store/gameSlice.ts";
 import { useNavigate } from "react-router-dom";
+import InviteModal from "./InviteModal.tsx";
+import { useGameSidebarItems } from "../../../hooks/useSidebarItems.ts";
 
 const DEBOUNCE_DELAY = 500;
 
@@ -24,10 +26,7 @@ const HELPER_NAMES: HelperType[] = [
 ];
 
 const Settings: FC = () => {
-  const sidebarItems: SidebarItem[] = [
-    { icon: IoHomeSharp, label: "Powrót", href: "/waiting-room" },
-    { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
-  ];
+  const sidebarItems = useGameSidebarItems(() => setShowInviteModal(true));
 
   const socket = useSocket();
   const game = useGame();
@@ -36,6 +35,7 @@ const Settings: FC = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [showLifelineModal, setShowLifelineModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const [numberOfRounds, setNumberOfRounds] = useState(game?.settings.number_of_rounds ?? 5);
   const [questionsPerRound, setQuestionsPerRound] = useState(game?.settings.number_of_questions_per_round ?? 5);
@@ -43,13 +43,6 @@ const Settings: FC = () => {
   const [timeForAnswer, setTimeForAnswer] = useState(game?.settings.time_for_answer ?? 30);
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  console.log({
-    numberOfRounds,
-    questionsPerRound,
-    categoriesPerVoting,
-    timeForAnswer,
-  })
 
   const categories = useGlobalData().categories.map((category) => ({
     ...category,
@@ -347,6 +340,7 @@ const Settings: FC = () => {
         gameSettings={game?.settings}
         helpersNames={HELPER_NAMES}
       />
+      <InviteModal show={showInviteModal} onClose={() => setShowInviteModal(false)}/>
     </>
   );
 };

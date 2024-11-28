@@ -2,49 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../components/Meta.tsx";
 import MainContainer from "../../components/MainContainer.tsx";
-import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
-import {
-  IoIosAddCircleOutline,
-  IoIosPlay,
-  IoLogoGameControllerB,
-} from "react-icons/io";
-import { IoStatsChartSharp } from "react-icons/io5";
+import Sidebar from "../../components/SideBar.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import styles from "./History.module.scss";
 import MainTitle from "../../components/MainTitle.tsx";
 import { useUser } from "../../store/userSlice.ts";
 import getApi from "../../api/axios.ts";
 import { GameHistoryPlayerItem } from "@shared/game.js";
-import { useGame } from "../../store/gameSlice.ts";
+import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const History: React.FC = () => {
   const userId = useUser()?.id;
-  const game = useGame();
-  const user = useUser();
 
-  const sidebarItems: SidebarItem[] = [
-    ...(game?.status != "waiting_for_players"
-      ? [
-          {
-            icon: IoIosAddCircleOutline,
-            label: "Stwórz Grę",
-            href: "/create-game",
-          },
-          { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
-        ]
-      : [{ icon: IoIosPlay, label: "Wróć do gry", href: "/waiting-room" }]),
-
-    ...(user.loggedIn
-      ? [
-          {
-            icon: IoLogoGameControllerB,
-            label: "Historia Gier",
-            href: "/history",
-          },
-          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-        ]
-      : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
-  ];
+  const sidebarItems = useSidebarItems();
 
   const [gameHistory, setGameHistory] = useState<GameHistoryPlayerItem[]>([]);
   const [loading, setLoading] = useState(true);

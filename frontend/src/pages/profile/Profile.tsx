@@ -1,16 +1,10 @@
 import React, { useState } from "react";
 import { Breadcrumb } from "react-bootstrap";
-import { IoStatsChartSharp } from "react-icons/io5";
 import Meta from "../../components/Meta.tsx";
-import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
+import Sidebar from "../../components/SideBar.tsx";
 import styles from "./Profile.module.scss";
 import { useSelector } from "react-redux";
 import { State } from "../../store";
-import {
-  IoIosAddCircleOutline,
-  IoIosPlay,
-  IoLogoGameControllerB,
-} from "react-icons/io";
 import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
@@ -22,14 +16,10 @@ import UpdateEmailModal from "./Edit/UpdateEmailModal.tsx";
 import ChangePasswordModal from "./Edit/ChangePasswordModal.tsx";
 import ProfileIcon from "../../components/ProfileIcon.tsx";
 import ProfileIconPicker from "../../components/profile-icon-picker/ProfileIconPicker.tsx";
+import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const Profile: React.FC = () => {
-  const sidebarItems: SidebarItem[] = [
-    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
-    { icon: IoLogoGameControllerB, label: "Historia Gier", href: "/history" },
-    { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-  ];
+  const sidebarItems = useSidebarItems();
 
   const [addFriendsVisible, setAddFriendsVisible] = useState(false);
   const [updateEmailVisible, setUpdateEmailVisible] = useState(false);

@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
-import {
-  IoIosAddCircleOutline,
-  IoIosPlay,
-  IoLogoGameControllerB,
-} from "react-icons/io";
-import { IoStatsChartSharp } from "react-icons/io5";
+import Sidebar from "../../components/SideBar.tsx";
 import { useUser } from "../../store/userSlice.ts";
 import Meta from "../../components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
@@ -18,35 +12,12 @@ import StatsModal from "./StatsModal.tsx";
 import { ProfileStats } from "@shared/game.js";
 import getApi from "../../api/axios.ts";
 import AverageScoreChartModal from "./AvgScoreModal.tsx";
-import { useGame } from "../../store/gameSlice.ts";
+import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const Stats: React.FC = () => {
   const user = useUser();
-  const game = useGame();
 
-  const sidebarItems: SidebarItem[] = [
-    ...(game?.status != "waiting_for_players"
-      ? [
-          {
-            icon: IoIosAddCircleOutline,
-            label: "Stwórz Grę",
-            href: "/create-game",
-          },
-          { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
-        ]
-      : [{ icon: IoIosPlay, label: "Wróć do gry", href: "/waiting-room" }]),
-
-    ...(user.loggedIn
-      ? [
-          {
-            icon: IoLogoGameControllerB,
-            label: "Historia Gier",
-            href: "/history",
-          },
-          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-        ]
-      : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
-  ];
+  const sidebarItems = useSidebarItems();
 
   const [showModal, setShowModal] = useState(false);
   const openModal = () => setShowModal(true);

@@ -1,44 +1,13 @@
 import Meta from "../components/Meta";
 import { Breadcrumb } from "react-bootstrap";
-import Sidebar, { SidebarItem } from "../components/SideBar";
-import { IoStatsChartSharp } from "react-icons/io5";
+import Sidebar from "../components/SideBar";
 import styles from "../styles/Home.module.scss";
-import {
-  IoIosAddCircleOutline,
-  IoIosPlay,
-  IoLogoGameControllerB,
-} from "react-icons/io";
-import { useUser } from "../store/userSlice";
-import { useGame } from "../store/gameSlice";
 import { FC } from "react";
+import { useSidebarItems } from "../hooks/useSidebarItems.ts";
 
 const Home: FC = () => {
-  const user = useUser();
-  const game = useGame();
+  const sidebarItems = useSidebarItems();
 
-  const sidebarItems: SidebarItem[] = [
-    ...(game?.status != "waiting_for_players"
-      ? [
-          {
-            icon: IoIosAddCircleOutline,
-            label: "Stwórz Grę",
-            href: "/create-game",
-          },
-          { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
-        ]
-      : [{ icon: IoIosPlay, label: "Wróć do gry", href: "/waiting-room" }]),
-
-    ...(user.loggedIn
-      ? [
-          {
-            icon: IoLogoGameControllerB,
-            label: "Historia Gier",
-            href: "/history",
-          },
-          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-        ]
-      : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
-  ];
   return (
     <>
       <Meta title={"Quiz Base"} />

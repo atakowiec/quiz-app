@@ -10,10 +10,15 @@ const gameSlice = createSlice({
   name: "game",
   initialState: null as GameState,
   reducers: {
-    setGame: (state, action) => ({
-      ...action.payload,
-      timer: synchonizeTimerInfo(state?.timer, action.payload?.timer)
-    }),
+    setGame: (state, action) => {
+      if (!action.payload)
+        return null;
+
+      return {
+        ...action.payload,
+        timer: synchonizeTimerInfo(state?.timer, action.payload?.timer)
+      };
+    },
 
     updateGame: (state: GameState, action: { payload: GameUpdatePacket }) => {
       if (!state) return null;

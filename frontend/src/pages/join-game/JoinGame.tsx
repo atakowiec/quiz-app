@@ -1,22 +1,17 @@
 import { Breadcrumb } from "react-bootstrap";
 import Meta from "../../components/Meta.tsx";
 import styles from "./JoinGame.module.scss";
-import { IoStatsChartSharp } from "react-icons/io5";
-import Sidebar, { SidebarItem } from "../../components/SideBar.tsx";
+import Sidebar from "../../components/SideBar.tsx";
 import { useSocket } from "../../socket/useSocket.ts";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  IoIosAddCircleOutline,
-  IoIosPlay,
-  IoLogoGameControllerB,
-} from "react-icons/io";
 import { useUser } from "../../store/userSlice.ts";
 import useQueryParam from "../../hooks/useQueryParam.ts";
 import SetUserNameModal from "../../components/set-username-modal/SetUserNameModal.tsx";
 import MainContainer from "../../components/MainContainer.tsx";
 import MainBox from "../../components/MainBox.tsx";
 import MainTitle from "../../components/MainTitle.tsx";
+import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const JoinGame: React.FC = () => {
   const gameIdRef = useRef<HTMLInputElement>(null);
@@ -24,23 +19,9 @@ const JoinGame: React.FC = () => {
   const navigate = useNavigate();
   const user = useUser();
   const codeQueryParam = useQueryParam("code");
+  const sidebarItems = useSidebarItems()
 
   const [showModal, setShowModal] = useState(false);
-
-  const sidebarItems: SidebarItem[] = [
-    { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game" },
-    { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
-    ...(user.loggedIn
-      ? [
-          {
-            icon: IoLogoGameControllerB,
-            label: "Historia Gier",
-            href: "/history",
-          },
-          { icon: IoStatsChartSharp, label: "Statystyki", href: "/stats" },
-        ]
-      : []), // Jeśli użytkownik nie jest zalogowany, te elementy zostaną pominięte
-  ];
 
   function onJoinGame() {
     if (!user?.loggedIn) {

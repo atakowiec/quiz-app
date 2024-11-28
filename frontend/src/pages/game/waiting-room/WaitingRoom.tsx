@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Sidebar, { SidebarItem } from "../../../components/SideBar.tsx";
-import { IoHomeSharp, IoSettingsSharp } from "react-icons/io5";
+import Sidebar from "../../../components/SideBar.tsx";
 import Meta from "../../../components/Meta.tsx";
 import { Breadcrumb, OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "./WaitingRoom.module.scss";
@@ -20,15 +19,11 @@ import MainTitle from "../../../components/MainTitle.tsx";
 import TimeBar from "../components/time-bar/TimeBar.tsx";
 import useProfileModal from "../../../hooks/profile-modal/useProfileModal.ts";
 import ConfirmationModal from "../../../components/ConfirmationModal.tsx";
-import { IoIosSend } from "react-icons/io";
 import InviteModal from "./InviteModal.tsx";
+import { useGameSidebarItems } from "../../../hooks/useSidebarItems.ts";
 
 const WaitingRoom: React.FC = () => {
-  const sidebarItems: SidebarItem[] = [
-    { icon: IoHomeSharp, label: "Powrót", href: "/" },
-    { icon: IoSettingsSharp, label: "Ustawienia", href: "/settings" },
-    { icon: IoIosSend, label: "Zaproś", href: "", onClick: openInviteModal },
-  ];
+  const sidebarItems = useGameSidebarItems(openInviteModal)
   const [copyAnimationStage, setCopyAnimationStage] = useState(
     "none" as "none" | "copying" | "copied" | "ending"
   );
