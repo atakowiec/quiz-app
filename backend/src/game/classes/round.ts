@@ -1,5 +1,5 @@
 import Game from "./game";
-import { GameRoundPacket, IQuestion } from "@shared/game";
+import { GameRoundPacket, IQuestion, TimerInfo } from "@shared/game";
 import { Question } from "../../questions/entities/question.model";
 import { Category } from "../../questions/entities/category.model";
 import { ConfigService } from "@nestjs/config";
@@ -198,7 +198,7 @@ export default class Round {
     let scoreToAdd =
       100 +
       ((player.answerEndTime - Date.now()) / (player.timeToAnswer * 1000)) *
-        100;
+      100;
     scoreToAdd = Math.round(scoreToAdd);
     return scoreToAdd;
   }
@@ -295,7 +295,7 @@ export default class Round {
     if (!chosenCategory) {
       return this.categories[
         Math.floor(Math.random() * this.categories.length)
-      ];
+        ];
     }
 
     return chosenCategory;
@@ -405,5 +405,15 @@ export default class Round {
   extendTime(player: GameMember) {
     player.answerEndTime += 10 * 1000;
     player.timeToAnswer += 10;
+  }
+
+  getTimerInfo(member: GameMember): TimerInfo | null {
+    return {
+      start: this.timeStart,
+      end: this.game.gameStatus == "question_phase"
+          ? member.answerEndTime
+          : this.timeEnd,
+      referenceTime: Date.now(),
+    };
   }
 }

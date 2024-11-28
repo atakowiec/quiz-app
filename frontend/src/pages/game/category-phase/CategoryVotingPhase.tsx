@@ -19,7 +19,7 @@ const CategoryVotingPhase: FC = () => {
     <div>
       <Meta title={"Kategoria"} />
       <Breadcrumb title="Kategoria" />
-      <MainContainer className={styles.categoryVotingBox}>
+      <MainContainer>
         <div className={styles.boxWithTimebar}>
           <MainBox className={styles.mainBox} before={<TimeBar />}>
             <MainTitle>Wybór kategorii</MainTitle>
