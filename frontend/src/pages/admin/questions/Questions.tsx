@@ -9,13 +9,7 @@ import Meta from "../../../components/Meta";
 import AddQuestionModal, {
   QuestionFormData,
 } from "./components/AddQuestionModal";
-import getApi from "../../../api/axios";
 import { toast } from "react-toastify";
-
-export interface Pagination {
-  questions: Question[];
-  totalQuestions: number;
-}
 
 export interface Question {
   id: number;
@@ -23,6 +17,7 @@ export interface Question {
   category: ICategory[];
   correctAnswer: string;
   distractors: Distractor[];
+  photo?: string | null;
 }
 
 export interface Distractor {
@@ -30,8 +25,12 @@ export interface Distractor {
   content: string;
 }
 
+export interface Pagination {
+  questions: Question[];
+  totalQuestions: number;
+}
+
 export default function Questions() {
-  const api = getApi();
   const { categoryName = "" } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,26 +67,23 @@ export default function Questions() {
     return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
-  function handleGiveOwnerClick() {
-    setShowAddQuestionModal(true);
-  }
-
   const handleAddQuestionConfirm = async (questionData: QuestionFormData) => {
     try {
-      const response = await api.post("/questions", {
-        ...questionData,
-        category: [{ name: categoryName }],
-      });
-
       const newQuestion: Question = {
-        id: response.data.id,
+        id: Date.now(),
         question: questionData.question,
         correctAnswer: questionData.correctAnswer,
         distractors: questionData.distractors.map((d) => ({
           id: Math.random(),
           content: d.content,
         })),
-        category: [{ id: response.data.categoryId, name: categoryName }],
+        category: [
+          {
+            name: categoryName,
+            id: 0, //trzeba mieć tu id kategorii
+          },
+        ],
+        photo: questionData.imgPreview || null,
       };
 
       const updatedQuestions = [
@@ -98,11 +94,8 @@ export default function Questions() {
       setQuestions(updatedQuestions);
       setTotalQuestions((prev) => prev + 1);
       setShowAddQuestionModal(false);
-
-      toast.success("Pytanie zostało dodane");
     } catch (error) {
-      console.error("Error adding question:", error);
-      toast.error("Nie udało się dodać pytania");
+      toast.error("Wystąpił błąd podczas dodawania pytania");
     }
   };
 
@@ -178,7 +171,7 @@ export default function Questions() {
       <div className={styles.fixedButton}>
         <button
           className={styles.createQuestionBtn}
-          onClick={() => handleGiveOwnerClick()}
+          onClick={() => setShowAddQuestionModal(true)}
         >
           Dodaj pytanie
         </button>

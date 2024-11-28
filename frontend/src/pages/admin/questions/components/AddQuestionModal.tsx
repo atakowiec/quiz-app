@@ -3,10 +3,16 @@ import { Modal } from "react-bootstrap";
 import styles from "../../categories/styles/CreateCategoryModal.module.scss";
 import CustomInput from "../../../../components/CustomInput";
 import MainTitle from "../../../../components/MainTitle";
+import { toast } from "react-toastify";
+import {
+  CreateQuestionRequest,
+  QuestionService,
+} from "../../../../api/QuestionService";
 
 export interface QuestionFormData {
   question: string;
-  photo?: string;
+  photo?: File | null;
+  imgPreview: string;
   correctAnswer: string;
   distractors: { content: string }[];
   category: { id?: number; name: string }[];
@@ -28,14 +34,17 @@ export default function AddQuestionModal({
   const [formData, setFormData] = useState<QuestionFormData>({
     question: "",
     correctAnswer: "",
-    photo: undefined,
+    photo: null,
+    imgPreview: "",
     distractors: [{ content: "" }, { content: "" }, { content: "" }],
     category: [],
   });
 
+  const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState<{
     question: string;
     photo?: string;
+    imgPreview?: string;
     correctAnswer: string;
     distractors: string[];
   }>({
@@ -44,24 +53,24 @@ export default function AddQuestionModal({
     distractors: ["", "", ""],
   });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const validTypes = ["image/jpeg", "image/png", "image/gif"];
-      const maxSize = 5 * 1024 * 1024;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
-      if (!validTypes.includes(file.type)) {
+    if (file) {
+      // Image type validation
+      if (!file.type.match(/^image\/(jpeg|png|avif)$/)) {
         setErrors((prev) => ({
           ...prev,
-          photo: "Nieprawidłowy typ pliku. Dozwolone są JPG, PNG i GIF.",
+          photo: "Zdjęcie musi być w formacie JPEG, PNG lub AVIF",
         }));
         return;
       }
 
-      if (file.size > maxSize) {
+      // File size validation (5MB)
+      if (file.size > 5 * 1024 * 1024) {
         setErrors((prev) => ({
           ...prev,
-          photo: "Plik jest za duży. Maksymalny rozmiar to 5MB.",
+          photo: "Zdjęcie nie może przekraczać 5MB",
         }));
         return;
       }
@@ -70,14 +79,16 @@ export default function AddQuestionModal({
       reader.onloadend = () => {
         setFormData((prev) => ({
           ...prev,
-          photo: reader.result as string,
-        }));
-        setErrors((prev) => ({
-          ...prev,
-          photo: undefined,
+          photo: file,
+          imgPreview: reader.result as string,
         }));
       };
       reader.readAsDataURL(file);
+
+      setErrors((prev) => ({
+        ...prev,
+        photo: "",
+      }));
     }
   };
 
@@ -115,12 +126,12 @@ export default function AddQuestionModal({
 
   const validateFields = (): boolean => {
     const newErrors = {
-      question: formData.question.trim() ? "" : "Proszę wpisać treść pytania.",
+      question: formData.question.trim() ? "" : "Proszę podać treść pytania",
       correctAnswer: formData.correctAnswer.trim()
         ? ""
-        : "Proszę wpisać poprawną odpowiedź.",
+        : "Proszę podać poprawną odpowiedź",
       distractors: formData.distractors.map((distractor) =>
-        distractor.content.trim() ? "" : "Proszę wpisać dystraktor."
+        distractor.content.trim() ? "" : "Proszę podać błędną odpowiedź"
       ),
     };
 
@@ -133,25 +144,62 @@ export default function AddQuestionModal({
     );
   };
 
-  const handleConfirm = () => {
-    // Populate category with current category name
-    const questionData = {
-      ...formData,
-      category: [{ name: categoryName }],
-    };
+  const handleConfirm = async () => {
+    const validDistractors = formData.distractors.filter(
+      (distractor) => distractor.content.trim() !== ""
+    );
+
+    if (validDistractors.length !== 3) {
+      setErrors((prev) => ({
+        ...prev,
+        distractors: Array(3).fill("Prosze podać 3 błędne odpowiedzi"),
+      }));
+      return;
+    }
 
     if (!validateFields()) {
       return;
     }
-    onConfirm(questionData);
-    handleClose();
+
+    try {
+      setIsUploading(true);
+      let photoUrl: string | undefined;
+
+      // Upload photo if present
+      if (formData.photo) {
+        photoUrl = await QuestionService.uploadImage(formData.photo);
+      }
+
+      const questionData: CreateQuestionRequest = {
+        question: formData.question,
+        correctAnswer: formData.correctAnswer,
+        distractors: formData.distractors,
+        category: [{ name: categoryName }],
+        photo: photoUrl,
+      };
+
+      await QuestionService.createQuestion(questionData);
+
+      onConfirm({
+        ...formData,
+        imgPreview: photoUrl || formData.imgPreview,
+      });
+
+      toast.success("Pytanie zostało dodane");
+      handleClose();
+    } catch (error) {
+      toast.error("Nie udało się dodać pytania");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleClose = () => {
     setFormData({
       question: "",
       correctAnswer: "",
-      photo: undefined,
+      photo: null,
+      imgPreview: "",
       distractors: [{ content: "" }, { content: "" }, { content: "" }],
       category: [],
     });
@@ -166,14 +214,14 @@ export default function AddQuestionModal({
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Body>
-        <MainTitle>Dodaj pytanie </MainTitle>
+        <MainTitle>Dodaj pytanie</MainTitle>
         <div className={styles.formElement}>
           <textarea
             name="question"
             value={formData.question}
             onChange={handleInputChange}
             className={styles.textarea}
-            placeholder="Treść pytania"
+            placeholder="Pytanie"
             rows={3}
           />
           {errors.question && <p className={styles.error}>{errors.question}</p>}
@@ -195,7 +243,7 @@ export default function AddQuestionModal({
           )}
         </div>
         <div>
-          <h4 className={styles.distractors}>Dystraktory</h4>
+          <h4 className={styles.distractors}>Błędne odpowiedzi</h4>
           {formData.distractors.map((distractor, index) => (
             <div
               key={index}
@@ -203,13 +251,12 @@ export default function AddQuestionModal({
                 errors.distractors[index] ? styles.error : ""
               }`}
             >
-              {" "}
               <CustomInput
                 type="text"
                 name="distractor"
                 value={distractor.content}
                 onChange={(e) => handleInputChange(e, index)}
-                placeholder={`Dystraktor ${index + 1}`}
+                placeholder={`Błędna odpowiedź ${index + 1}`}
               />
               {errors.distractors[index] && (
                 <p className={styles.errorMessage}>
@@ -220,27 +267,36 @@ export default function AddQuestionModal({
           ))}
         </div>
         <div className={styles.formElement}>
+          <label className={styles.label}>Zdjęcie</label>
+          <label htmlFor="file-upload" className={styles.customFileUpload}>
+            Wybierz zdjęcie
+          </label>
           <input
+            id="file-upload"
             type="file"
-            accept="image/jpeg,image/png,image/gif"
+            accept="image/jpeg,image/png,image/avif"
             onChange={handleFileChange}
             className={styles.fileInput}
           />
           {errors.photo && <p className={styles.error}>{errors.photo}</p>}
-          {formData.photo && (
-            <div className={styles.imagePreview}>
+          {formData.imgPreview && (
+            <div className="relative">
               <img
-                src={formData.photo}
-                alt="Podgląd"
-                style={{ maxWidth: "200px", maxHeight: "200px" }}
+                src={formData.imgPreview}
+                alt="Preview"
+                className={styles.previewImage}
               />
             </div>
           )}
         </div>
       </Modal.Body>
       <Modal.Footer className={styles.modalButtons}>
-        <button onClick={handleConfirm} className={styles.modalConfirmBut}>
-          Dodaj
+        <button
+          onClick={handleConfirm}
+          className={styles.modalConfirmBut}
+          disabled={isUploading}
+        >
+          {isUploading ? "Dodawanie..." : "Dodaj"}
         </button>
         <button onClick={handleClose} className={styles.modalCancelBut}>
           Anuluj
