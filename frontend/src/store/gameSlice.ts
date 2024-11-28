@@ -10,9 +10,9 @@ const gameSlice = createSlice({
   name: "game",
   initialState: null as GameState,
   reducers: {
-    setGame: (_, action) => ({
+    setGame: (state, action) => ({
       ...action.payload,
-      timer: synchonizeTimerInfo(action.payload?.timer)
+      timer: synchonizeTimerInfo(state?.timer, action.payload?.timer)
     }),
 
     updateGame: (state: GameState, action: { payload: GameUpdatePacket }) => {
@@ -28,7 +28,7 @@ const gameSlice = createSlice({
       const newState = lodash.merge(state, updatePacket);
 
       // merge time with correct handling of reference time
-      newState.timer = synchonizeTimerInfo(updatePacket.timer);
+      newState.timer = synchonizeTimerInfo(state?.timer, updatePacket.timer);
 
       if (updatePacket.settings) {
         newState.settings = {
@@ -77,13 +77,14 @@ export default gameSlice;
 
 export const useGame = () => useSelector((state: State) => state.game);
 
-function synchonizeTimerInfo(timerInfo?: TimerInfo): TimerInfo | undefined {
-  if (!timerInfo) return;
+function synchonizeTimerInfo(currentTimerInfo?: TimerInfo, newTimerInfo?: TimerInfo): TimerInfo | undefined {
+  if (!newTimerInfo)
+    return currentTimerInfo;
 
-  const timeOffset = Date.now() - timerInfo.referenceTime;
+  const timeOffset = Date.now() - newTimerInfo.referenceTime;
   return {
-    start: timerInfo.start + timeOffset,
-    end: timerInfo.end + timeOffset - 200, // I subtract 200ms to make sure that the timer animation will end before the time is up
-    referenceTime: timerInfo.referenceTime,
+    start: newTimerInfo.start + timeOffset,
+    end: newTimerInfo.end + timeOffset - 200, // I subtract 200ms to make sure that the timer animation will end before the time is up
+    referenceTime: newTimerInfo.referenceTime,
   }
 }

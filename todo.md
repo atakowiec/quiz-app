@@ -32,7 +32,7 @@
 - [ ] Front, edycja i usuwanie pytań, backend jednak był do dodawania i modyfikacji pytań więc tylko frontend
       pod to
 - [ ] Zabezpieczyc endpointy admina
-- [ ] Poprawić responsywnosc glownego kontenera i ogolnie apki
+- [x] Poprawić responsywnosc glownego kontenera i ogolnie apki - prawdopodobnie wszedzie git
 - [x] Przyciski do modali profili graczy w poczekalni
 - [x] usunac hover z przycisku play
 - [x] poprawić kolor paginacji
@@ -40,7 +40,7 @@
 - [x] Ankieta
 - [x] zmiana ustawien w grze - mocno zwalone
 - [x] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp
-- [ ] Naprawić timebar
+- [x] Naprawić timebar
 - [ ] Przycisk do wyjscia z gry (event "leave_not_ended_game" powinien działać) (ewentualnie czyścić token na froncie
       gdy jest niezalogowany a wyszedł)
 - [x] sprawdzic title na kazdej stronie

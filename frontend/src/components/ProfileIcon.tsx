@@ -17,7 +17,7 @@ export default function ProfileIcon(props: Props) {
   }, [props.iconColor])
 
   return (
-    <div className={props.className} style={{ backgroundColor: props.iconColor, color: fontColor }} onClick={props.onClick}>
+    <div className={props.className} style={{ backgroundColor: props.iconColor, color: fontColor, userSelect: "none" }} onClick={props.onClick}>
       {props.username?.[0]?.toUpperCase() ?? "-"}
     </div>
   )
