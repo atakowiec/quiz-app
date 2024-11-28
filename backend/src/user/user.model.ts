@@ -15,7 +15,9 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
+  @Column({
+    default: "#5596ca"
+  })
   iconColor: string;
 
   @Column()

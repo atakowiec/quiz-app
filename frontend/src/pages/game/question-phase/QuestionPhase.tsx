@@ -13,6 +13,7 @@ import MainContainer from "../../../components/MainContainer.tsx";
 import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
 import ProfileIcon from "../../../components/ProfileIcon.tsx";
+import LeaveGameButton from "../components/leave-game-button/LeaveGameButton.tsx";
 
 const helperIcons = {
   cheat_from_others: FaRegEye,
@@ -137,6 +138,7 @@ const QuestionPhase = () => {
           </MainBox>
         </div>
       </MainContainer>
+      {/* <LeaveGameButton /> */}
     </>
   );
 };

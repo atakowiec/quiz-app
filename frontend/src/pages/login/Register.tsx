@@ -178,7 +178,13 @@ const Register = () => {
                   </div>
                 )}
             </div>
-            {error && <div className="error p-0 text-center">{error}</div>}
+            {error && (
+              <div
+                className={`${styles.error} ${styles.errorMargin} ${styles.errorMessage}`}
+              >
+                {error}
+              </div>
+            )}
             <button type="submit" className={styles.submitButton}>
               Zarejestruj się
             </button>

@@ -37,6 +37,13 @@
   margin-bottom: 0;
 }
 
+.errorMessage {
+  color: red;
+  font-size: 1rem;
+  margin-top: 0.7rem;
+  text-align: center;
+}
+
 .submitButton {
   align-self: center;
   background-color: $green-black;
