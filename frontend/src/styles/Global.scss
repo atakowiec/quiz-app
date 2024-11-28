@@ -129,7 +129,7 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   padding-left: $sidebar-width;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1399px) {
   html {
     font-size: 14px !important;
   }
@@ -160,12 +160,6 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   .mainText {
     font-size: 1.5rem;
     margin-bottom: 0.7rem;
-  }
-}
-
-@media (min-width: $large-desktop-breakpoint) {
-  .mainBox {
-    scale: 1.2;
   }
 }
 

@@ -3,7 +3,7 @@
 @media (min-width: $desktop-breakpoint) {
   .mainBox {
     width: 60vw !important;
-    max-width: unset;
+    max-width: 1000px;
   }
 }
 
@@ -30,6 +30,7 @@
   margin-bottom: 1rem;
   text-align: center;
   min-height: 220px;
+  user-select: none;
 
   img {
     width: 100%;
@@ -38,6 +39,7 @@
     aspect-ratio: 1;
     object-position: center;
     object-fit: cover;
+    pointer-events: none;
   }
 
   &:hover {
@@ -55,6 +57,7 @@
   gap: 5px;
   justify-content: flex-end;
   margin-left: auto;
+  padding: .5rem;
 }
 
 .voteCircle {

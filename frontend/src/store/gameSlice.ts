@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { GameUpdatePacket, IGamePacket } from "@shared/game";
+import { GameUpdatePacket, IGamePacket, TimerInfo } from "@shared/game";
 import lodash from "lodash";
 import { State } from "./index.ts";
 import { useSelector } from "react-redux";
@@ -10,7 +10,11 @@ const gameSlice = createSlice({
   name: "game",
   initialState: null as GameState,
   reducers: {
-    setGame: (_, action) => action.payload,
+    setGame: (_, action) => ({
+      ...action.payload,
+      timer: synchonizeTimerInfo(action.payload?.timer)
+    }),
+
     updateGame: (state: GameState, action: { payload: GameUpdatePacket }) => {
       if (!state) return null;
 
@@ -22,6 +26,9 @@ const gameSlice = createSlice({
       delete updatePacket.players;
 
       const newState = lodash.merge(state, updatePacket);
+
+      // merge time with correct handling of reference time
+      newState.timer = synchonizeTimerInfo(updatePacket.timer);
 
       if (updatePacket.settings) {
         newState.settings = {
@@ -69,3 +76,14 @@ export const gameActions = gameSlice.actions;
 export default gameSlice;
 
 export const useGame = () => useSelector((state: State) => state.game);
+
+function synchonizeTimerInfo(timerInfo?: TimerInfo): TimerInfo | undefined {
+  if (!timerInfo) return;
+
+  const timeOffset = Date.now() - timerInfo.referenceTime;
+  return {
+    start: timerInfo.start + timeOffset,
+    end: timerInfo.end + timeOffset - 200, // I subtract 200ms to make sure that the timer animation will end before the time is up
+    referenceTime: timerInfo.referenceTime,
+  }
+}

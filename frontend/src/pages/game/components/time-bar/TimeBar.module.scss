@@ -25,9 +25,3 @@
   max-width: 100%;
   border-radius: $container-border-radius;
 }
-
-@media (min-width: $large-desktop-breakpoint) {
-  .timeBarWrapper {
-    padding-bottom: 5rem;
-  }
-}

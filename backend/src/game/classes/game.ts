@@ -9,7 +9,7 @@ import {
   GameType,
   GameUpdatePacket,
   HelperType,
-  IGamePacket,
+  IGamePacket, TimerInfo,
 } from "@shared/game";
 import { Logger } from "@nestjs/common";
 import Round from "./round";
@@ -30,7 +30,7 @@ export default class Game {
   public settings: GameSettings;
   public gameType: GameType;
 
-  public round: Round;
+  public round?: Round;
   public roundNumber = 0;
 
   // For Matchmaking
@@ -86,10 +86,25 @@ export default class Game {
       player: member.getPacket(),
       round: this.round?.getPacket(member),
       players: this.getAllPlayers().map((player) => player.getPacket()),
-      timerEnd: this.timeEnd,
-      timerStart: this.timeStart,
       winners: this.winners,
+      timer: this.getTimerInfo(member),
     };
+  }
+
+  public getTimerInfo(member: GameMember): TimerInfo | null {
+    const roundTimer = this.round?.getTimerInfo(member);
+
+    if(roundTimer)
+      return roundTimer;
+
+    if(this.timeEnd === -1 || this.timeStart === -1)
+      return null;
+
+    return {
+      start: this.timeStart,
+      end: this.timeEnd,
+      referenceTime: Date.now(),
+    }
   }
 
   public getPlayer(socket: SocketType): GameMember {
@@ -546,9 +561,7 @@ export default class Game {
     this.round.extendTime(player);
 
     player.sendGameUpdate({
-      round: {
-        timerEnd: player.answerEndTime,
-      },
+      timer: this.getTimerInfo(player),
     });
     player.sendNotification("Przedłużono czas na odpowiedź");
   }

@@ -80,8 +80,7 @@ export interface IGamePacket {
   player: IGameMember;
   players?: Partial<IGameMember>[];
   winners?: string[];
-  timerStart?: number;
-  timerEnd?: number;
+  timer?: TimerInfo;
 }
 
 /**
@@ -96,6 +95,7 @@ export interface GameUpdatePacket {
   players?: Partial<IGameMember>[];
   winners?: string[];
   settings?: Partial<GameSettings>;
+  timer?: TimerInfo;
 }
 
 /**
@@ -106,8 +106,6 @@ export interface GameRoundPacket {
   category?: ICategory;
   question?: IQuestion;
   correctAnswer?: IAnswer;
-  timerStart?: number;
-  timerEnd?: number;
   questionNumber?: number;
 }
 
@@ -160,4 +158,10 @@ export interface CategoryScore {
   category_name: string;
   number: number;
   img?: string;
+}
+
+export interface TimerInfo {
+  start: number;
+  end: number;
+  referenceTime: number;
 }
