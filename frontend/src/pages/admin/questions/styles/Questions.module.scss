@@ -79,6 +79,15 @@
   }
 }
 
+.pagination {
+  --bs-pagination-color: #0c1a25;
+  --bs-pagination-hover-color: #0c1a25;
+  --bs-pagination-active-color: #fff;
+  --bs-pagination-active-border-color: #06a53b;
+  --bs-pagination-active-bg: #17b42c;
+  --bs-pagination-hover-bg: #17b42c;
+}
+
 @media (max-width: 768px) {
   .distractors {
     flex-direction: column;

@@ -18,7 +18,7 @@
 - [x] niedostepne kola usunac z gry
 - [x] zmienic rozmiar mainTitle czcionka bo wyglada dziwnie jak jest taki mały (jak pol ekranu na lapku np. profil)
 - [x] poprawki history i stats by wyswietlalo odpowiednie komunikaty jak nie jest nic zagrane
-- [ ] backend, chodzi o czas createdat w notofication, jest on jakis zły. pokazuje mocno do tyłu. nie jest on
+- [x] backend, chodzi o czas createdat w notofication, jest on jakis zły. pokazuje mocno do tyłu. nie jest on
       rzeczywisty
 - [x] ten ranking by sie wyswietlal u znajomych plus zagrane gry
 - [x] responsywność historia gier
@@ -29,12 +29,13 @@
 - [x] Przywrócic nicki znajomych na profilu
 - [x] Naprawić pozycje nickow podczas wyszukiwania userow
 - [x] 1,2 i 3 miejsce w statach
-- [ ] Front, edycja, dodawanie i usuwanie pytań, backend jednak był do dodawania i modyfikacji pytań więc tylko frontend
+- [ ] Front, edycja i usuwanie pytań, backend jednak był do dodawania i modyfikacji pytań więc tylko frontend
       pod to
 - [ ] Zabezpieczyc endpointy admina
 - [ ] Poprawić responsywnosc glownego kontenera i ogolnie apki
 - [x] Przyciski do modali profili graczy w poczekalni
 - [x] usunac hover z przycisku play
+- [x] poprawić kolor paginacji
 - [ ] Tryb jednoosobowy
 - [x] Ankieta
 - [x] zmiana ustawien w grze - mocno zwalone

@@ -205,7 +205,7 @@ export default function CreateCategoryModal(props: CreateCategoryModalProps) {
               />
               {errors.img && <p className={styles.error}>{errors.img}</p>}
               {formData.imgPreview && (
-                <div className="relative">
+                <div className={styles.imgCenter}>
                   <img
                     src={formData.imgPreview}
                     alt="Preview"

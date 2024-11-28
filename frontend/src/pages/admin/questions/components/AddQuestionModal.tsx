@@ -280,7 +280,7 @@ export default function AddQuestionModal({
           />
           {errors.photo && <p className={styles.error}>{errors.photo}</p>}
           {formData.imgPreview && (
-            <div className="relative">
+            <div className={styles.imgCenter}>
               <img
                 src={formData.imgPreview}
                 alt="Preview"
