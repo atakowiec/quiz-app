@@ -20,6 +20,7 @@ export interface ICategory {
   name: string;
   description?: string;
   img?: string;
+  isActive?: boolean;
 }
 
 export type CategoryId = number;

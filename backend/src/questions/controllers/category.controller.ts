@@ -4,7 +4,8 @@ import {
   Controller,
   Delete,
   Get,
-  Param, Patch,
+  Param,
+  Patch,
   Post,
 } from "@nestjs/common";
 import { CreateCategoryDto } from "../dtos/CreateCategory.dto";
@@ -30,8 +31,8 @@ export class CategoryController {
   }
 
   @Delete(":id")
-  deleteCategory(@Param("id") id: number) {
-    return this.categoryService.deleteCategory(id);
+  changeStatus(@Param("id") id: number) {
+    return this.categoryService.changeStatus(id);
   }
 
   @Patch(":id")

@@ -59,8 +59,8 @@ export class QuestionsController {
   }
 
   @Delete(":questionId")
-  deleteQuestion(@Param("questionId", ParseIntPipe) questionId: number) {
-    return this.questionsService.deleteQuestion(questionId);
+  changeStatus(@Param("questionId", ParseIntPipe) questionId: number) {
+    return this.questionsService.changeStatus(questionId);
   }
 
   @Patch(":questionId")

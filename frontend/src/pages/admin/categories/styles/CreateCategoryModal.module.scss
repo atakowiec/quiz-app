@@ -14,6 +14,22 @@
   gap: 0.5rem;
 }
 
+.modalChangeStatusBut {
+  background-color: $green-black;
+  border: none;
+  padding: $button-padding;
+  box-shadow: $button-shadow-green;
+  color: black;
+  border-radius: $container-border-radius;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+
+  &:hover {
+    background-color: $button-green-hover;
+    color: white;
+  }
+}
+
 .modalConfirmBut {
   background-color: $green-black;
   border: none;
@@ -125,9 +141,8 @@
   font-weight: $button-font-weight;
   cursor: pointer;
   text-align: center;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  transition: background-color 0.3s ease,
+  transform 0.2s ease;
 }
 
 .customFileUpload:hover {
@@ -151,6 +166,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .distractors {
   font-size: 1.5rem;
   display: flex;

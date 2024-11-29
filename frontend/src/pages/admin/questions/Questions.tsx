@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Breadcrumb, Pagination } from "react-bootstrap";
 import useApi from "../../../api/useApi";
 import { useParams } from "react-router-dom";
@@ -10,6 +10,8 @@ import AddQuestionModal, {
   QuestionFormData,
 } from "./components/AddQuestionModal";
 import { toast } from "react-toastify";
+import getApi from "../../../api/axios.ts";
+import EditQuestionModal from "./components/EditQuestionModal.tsx";
 
 export interface Question {
   id: number;
@@ -18,6 +20,7 @@ export interface Question {
   correctAnswer: string;
   distractors: Distractor[];
   photo?: string | null;
+  isActive?: boolean;
 }
 
 export interface Distractor {
@@ -31,18 +34,24 @@ export interface Pagination {
 }
 
 export default function Questions() {
+  const api = getApi();
   const { categoryName = "" } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddQuestionModal, setShowAddQuestionModal] = useState(false);
+  const [showEditQuestionModal, setShowEditQuestionModal] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
+    null,
+  );
   const [questions, setQuestions] = useState<Question[]>([]);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const questionsPerPage = 10;
   const maxVisiblePages = 5;
 
+  const encodedCategoryName = encodeURIComponent(categoryName);
   const apiPath = searchTerm
-    ? `/questions/paginate/${categoryName}/1?limit=${questionsPerPage}&content=${searchTerm}`
-    : `/questions/paginate/${categoryName}/${currentPage}?limit=${questionsPerPage}`;
+    ? `/questions/paginate/${encodedCategoryName}/1?limit=${questionsPerPage}&content=${searchTerm}`
+    : `/questions/paginate/${encodedCategoryName}/${currentPage}?limit=${questionsPerPage}`;
 
   const { data, error } = useApi<Pagination>(apiPath, "get");
 
@@ -96,7 +105,40 @@ export default function Questions() {
       setShowAddQuestionModal(false);
     } catch (error) {
       toast.error("Wystąpił błąd podczas dodawania pytania");
+      console.error(error);
     }
+  };
+
+  const handleEditQuestionConfirm = async (questionData: QuestionFormData) => {
+    try {
+      const updatedQuestions = questions.map((question) =>
+        question.id === selectedQuestion?.id
+          ? {
+              ...question,
+              question: questionData.question,
+              correctAnswer: questionData.correctAnswer,
+              distractors: questionData.distractors.map((d) => ({
+                id: Math.random(),
+                content: d.content,
+              })),
+              photo: questionData.imgPreview || null,
+            }
+          : question,
+      );
+
+      setQuestions(updatedQuestions);
+      setShowEditQuestionModal(false);
+      setSelectedQuestion(null);
+      toast.success("Pytanie zostało zaktualizowane");
+    } catch (error) {
+      toast.error("Wystąpił błąd podczas aktualizacji pytania");
+      console.error(error);
+    }
+  };
+
+  const handleEditQuestion = (question: Question) => {
+    setSelectedQuestion(question);
+    setShowEditQuestionModal(true);
   };
 
   const handlePageChange = (pageNumber: number) => {
@@ -118,7 +160,7 @@ export default function Questions() {
 
     if (startPage > 1) {
       items.push(
-        <Pagination.First key="first" onClick={() => handlePageChange(1)} />
+        <Pagination.First key="first" onClick={() => handlePageChange(1)} />,
       );
     }
 
@@ -127,7 +169,7 @@ export default function Questions() {
         <Pagination.Prev
           key="prev"
           onClick={() => handlePageChange(currentPage - 1)}
-        />
+        />,
       );
     }
 
@@ -139,7 +181,7 @@ export default function Questions() {
           onClick={() => handlePageChange(number)}
         >
           {number}
-        </Pagination.Item>
+        </Pagination.Item>,
       );
     }
 
@@ -148,7 +190,7 @@ export default function Questions() {
         <Pagination.Next
           key="next"
           onClick={() => handlePageChange(currentPage + 1)}
-        />
+        />,
       );
     }
 
@@ -157,12 +199,30 @@ export default function Questions() {
         <Pagination.Last
           key="last"
           onClick={() => handlePageChange(totalPages)}
-        />
+        />,
       );
     }
 
     return items;
   };
+
+  async function onStatusChangeClick(id: number) {
+    try {
+      await api.delete(`/questions/${id}`);
+      setQuestions((prev) =>
+        prev.map((question) =>
+          question.id === id
+            ? { ...question, isActive: !question.isActive }
+            : question,
+        ),
+      );
+
+      toast.success("Pomyślnie zmieniono status kategori");
+    } catch (error) {
+      toast.error("Wystąpił błąd podczas usuwania kategorii");
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -193,6 +253,12 @@ export default function Questions() {
               question={question.question}
               correctAnswer={question.correctAnswer}
               distractors={question.distractors}
+              onEditClick={() => handleEditQuestion(question)}
+              onDeleteClick={(id: number) => {
+                onStatusChangeClick(id);
+              }}
+              isActive={question.isActive}
+              id={question.id}
             />
           ))}
         </ul>
@@ -208,6 +274,25 @@ export default function Questions() {
         onConfirm={handleAddQuestionConfirm}
         categoryName={categoryName}
       />
+
+      {selectedQuestion && (
+        <EditQuestionModal
+          show={showEditQuestionModal}
+          setShow={setShowEditQuestionModal}
+          onConfirm={handleEditQuestionConfirm}
+          question={{
+            question: selectedQuestion.question,
+            correctAnswer: selectedQuestion.correctAnswer,
+            imgPreview: selectedQuestion.photo || "",
+            distractors: selectedQuestion.distractors.map((d) => ({
+              content: d.content,
+            })),
+            category: selectedQuestion.category,
+            id: selectedQuestion.id,
+            isActive: selectedQuestion.isActive,
+          }}
+        />
+      )}
     </>
   );
 }

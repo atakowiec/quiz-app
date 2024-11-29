@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Category } from "../entities/category.model";
 import { Distractor } from "../entities/distractor.model";
@@ -9,6 +14,8 @@ import { CategoryService } from "./category.service";
 
 @Injectable()
 export class QuestionsService {
+  private readonly logger = new Logger(QuestionsService.name);
+
   constructor(
     @InjectRepository(Question)
     private questionRepository: Repository<Question>,
@@ -16,8 +23,7 @@ export class QuestionsService {
     private distractorRepository: Repository<Distractor>,
     @Inject(CategoryService)
     private categoryService: CategoryService
-  ) {
-  }
+  ) {}
 
   async getQuestions(): Promise<Question[]> {
     const questionsQuery = this.questionRepository
@@ -76,22 +82,14 @@ export class QuestionsService {
     );
   }
 
-  async deleteQuestion(questionId: number) {
+  async changeStatus(questionId: number) {
     const question = await this.questionRepository.findOne({
       where: { id: questionId },
-      relations: ["distractors"],
     });
+    question.isActive = !question.isActive;
+    question.updatedAt = new Date();
 
-    if (!question) {
-      throw new BadRequestException({
-        message: "Question not found",
-      });
-    }
-    if (question.distractors.length > 0) {
-      await this.distractorRepository.remove(question.distractors);
-    }
-
-    return this.questionRepository.delete(questionId);
+    await this.questionRepository.save(question);
   }
 
   async getQuestionsByCategory(category: Category): Promise<Question[]> {
@@ -153,19 +151,25 @@ export class QuestionsService {
         });
       }
 
-      question.distractors = question.distractors.filter((distractor) =>
+      // Remove existing distractors that are not in the new distractors
+      const clearedDistractors = question.distractors.filter((distractor) =>
         questionDetails.distractors
           .map((distractor) => distractor.content)
           .includes(distractor.content)
       );
 
+      const distractorsToRemove = question.distractors.filter(
+        (distractor) => !clearedDistractors.includes(distractor)
+      );
+
       const nonExistingDistractors = questionDetails.distractors.filter(
         (distractor) =>
-          !question.distractors
+          !clearedDistractors
             .map((distractor) => distractor.content)
             .includes(distractor.content)
       );
 
+      // Check if new distractors are unique
       if (
         nonExistingDistractors.length !=
         nonExistingDistractors.filter(
@@ -178,16 +182,11 @@ export class QuestionsService {
         });
       }
 
-      const nonExistingDistractorsObjects =
-        await this.distractorRepository.save(
-          nonExistingDistractors.map((distractor) =>
-            this.distractorRepository.create(distractor)
-          )
-        );
-
-      question.distractors = question.distractors.concat(
-        nonExistingDistractorsObjects
-      );
+      for (let i = 0; i < nonExistingDistractors.length; i++) {
+        question.distractors.find(
+          (distractor) => distractor.content === distractorsToRemove[i].content
+        ).content = nonExistingDistractors[i].content;
+      }
     }
     delete questionDetails.distractors;
 
@@ -207,8 +206,7 @@ export class QuestionsService {
       .createQueryBuilder("question")
       .leftJoinAndSelect("question.category", "category")
       .leftJoinAndSelect("question.distractors", "distractors")
-      .where("category.name = :category", { category })
-      .andWhere("question.isActive = :isActive", { isActive: true });
+      .where("category.name = :category", { category });
 
     if (content) {
       queryBuilder.andWhere(
@@ -239,6 +237,7 @@ export class QuestionsService {
     limit: number,
     content?: string
   ): Promise<{ questions: Question[]; totalQuestions: number }> {
+    this.logger.log(`Getting questions for category ${category}`);
     const { questions, total } = await this.findQuestions(
       category,
       page,

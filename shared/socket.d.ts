@@ -16,6 +16,8 @@ export interface ServerToClientEvents {
   set_game: (game: IGamePacket) => void;
   update_game: (game: GameUpdatePacket) => void;
 
+  category_updated: () => void;
+
   queue_left: () => void;
 
   new_notification: (notification: INotification) => void;

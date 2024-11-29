@@ -14,7 +14,7 @@ import { forwardRef, Inject, Logger, UseFilters } from "@nestjs/common";
 import { WsCatchAllFilter } from "src/exceptions/ws-catch-all-filter";
 import { CategoryId, GameSettings, GameType, HelperType } from "@shared/game";
 import { MatchmakingService } from "src/matchmaking/services/matchmaking.service";
-import { EventEmitter2 } from "@nestjs/event-emitter";
+import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
 
 @UseFilters(WsCatchAllFilter)
 @WebSocketGateway()
@@ -307,5 +307,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Nie jesteś w żadnej grze!");
     }
     game.removePlayer(game.getPlayer(playerSocket));
+  }
+
+  @OnEvent("category_updated")
+  async handleCategoryUpdatedEvent() {
+    this.server.emit("category_updated");
   }
 }

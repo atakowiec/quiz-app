@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Question } from "./question.model";
 
 @Entity()
@@ -17,4 +17,7 @@ export class Category {
 
   @ManyToMany(() => Question, (question) => question.category)
   questions: Question[];
+
+  @Column({ default: true })
+  isActive: boolean;
 }

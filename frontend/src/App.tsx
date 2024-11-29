@@ -13,7 +13,6 @@ import Home from "./pages/Home.tsx";
 import Game from "./pages/game/Game.tsx";
 import { useGame } from "./store/gameSlice.ts";
 import IsInWaitingRoomLayout from "./components/layouts/IsInWaitingRoomLayout.tsx";
-import Questions from "./pages/admin/questions/Questions.tsx";
 import Settings from "./pages/game/waiting-room/Settings.tsx";
 import History from "./pages/game-history/History.tsx";
 import Stats from "./pages/game-stats/Stats.tsx";
@@ -23,6 +22,7 @@ import ProtectedRoutes, {
 } from "./components/ProtectedRoute.tsx";
 import { AudioProvider } from "./components/Audio/AudioContext.tsx";
 import Categories from "./pages/admin/categories/Categories.tsx";
+import Questions from "./pages/admin/questions/Questions.tsx";
 
 function App() {
   const game = useGame();
@@ -59,7 +59,10 @@ function App() {
           <Route path="waiting-room" element={<WaitingRoom />} />
           <Route path="game" element={<Game />} />
           <Route path="/admin/categories" element={<Categories />} />
-
+          <Route
+            path="/admin/categories/:categoryName/"
+            element={<Questions />}
+          />
           <Route
             element={<ProtectedRoutes permissions={PermissionEnum.USER} />}
           >
@@ -68,10 +71,7 @@ function App() {
           <Route
             element={<ProtectedRoutes permissions={PermissionEnum.ADMIN} />}
           >
-            <Route
-              path="/admin/categories/:categoryName/"
-              element={<Questions />}
-            />
+            {/* Here all protected routes like admin /> */}
           </Route>
 
           <Route

@@ -8,6 +8,8 @@ import { notificationsActions } from "../store/notificationsSlice.ts";
 import { toast } from "react-toastify";
 import { userActions } from "../store/userSlice.ts";
 import { clearQueue } from "../store/queueSlice.ts";
+import { globalDataActions } from "../store/globalDataSlice.ts";
+import { getCategories } from "../utils/utils.ts";
 
 export type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -28,6 +30,15 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       dispatch(gameActions.updateGame(game)),
     );
 
+    newSocket.on("category_updated", async () => {
+      console.log("Category updated");
+      try {
+        const categories = await getCategories();
+        dispatch(globalDataActions.setData({ categories }));
+      } catch (error) {
+        console.error("Failed to update categories", error);
+      }
+    });
     newSocket.on("queue_left", () => dispatch(clearQueue()));
 
     newSocket.on("exception", (message) =>

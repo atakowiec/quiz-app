@@ -54,7 +54,7 @@ export default function Categories() {
         .catch(() => {
           toast.error("Podczas pobierania kategorii wystąpił błąd");
         });
-      toast.success("Pomyślnie usunięto kategorię");
+      toast.success("Pomyślnie zmieniono status kategori");
     } catch (error) {
       toast.error("Wystąpił błąd podczas usuwania kategorii");
     }
@@ -80,6 +80,7 @@ export default function Categories() {
             name={category.name}
             description={category?.description}
             img={category?.img}
+            isActive={category?.isActive}
             onDelete={onDeleteClick}
           />
         ))}

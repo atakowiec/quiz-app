@@ -1,15 +1,18 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Category } from "../entities/category.model";
 import { Repository } from "typeorm";
 import { CreateCategoryDto } from "../dtos/CreateCategory.dto";
 import { UpdateCategoryDto } from "../dtos/UpdateCategory.dto";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
-    private categoryRepository: Repository<Category>
+    private categoryRepository: Repository<Category>,
+    @Inject()
+    public readonly eventEmitter: EventEmitter2
   ) {}
 
   async getCategoryOrCreateByName(
@@ -45,20 +48,27 @@ export class CategoryService {
     return this.categoryRepository.save(category);
   }
 
-  async deleteCategory(id: number): Promise<void> {
-    await this.checkCategoryExists(id);
-    await this.categoryRepository.delete(id);
+  async changeStatus(id: number): Promise<void> {
+    const category = await this.getCategoryOrThrow(id);
+    category.isActive = !category.isActive;
+    await this.categoryRepository.save(category);
+    this.eventEmitter.emit("category_updated");
   }
 
   async getCategoryById(id: number): Promise<Category> {
     return this.getCategoryOrThrow(id);
   }
 
-  async updateCategory(id: number, categoryDto: UpdateCategoryDto): Promise<Category> {
+  async updateCategory(
+    id: number,
+    categoryDto: UpdateCategoryDto
+  ): Promise<Category> {
     const category = await this.getCategoryOrThrow(id);
-    const existingCategory = categoryDto.name ? await this.getCategoryByName(categoryDto.name) : null;
+    const existingCategory = categoryDto.name
+      ? await this.getCategoryByName(categoryDto.name)
+      : null;
 
-    if(existingCategory && existingCategory.id != category.id) {
+    if (existingCategory && existingCategory.id != category.id) {
       throw new HttpException("Kategoria z tą nazwą już istnieje!", 400);
     }
 

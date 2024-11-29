@@ -1,10 +1,10 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
+  Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
-  JoinTable,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { Category } from "./category.model";
 import { Distractor } from "./distractor.model";

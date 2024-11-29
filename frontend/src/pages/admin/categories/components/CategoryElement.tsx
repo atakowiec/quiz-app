@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
 import styles from "../styles/Categories.module.scss";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import ConfirmationModal from "../../../../components/ConfirmationModal.tsx";
 import { useState } from "react";
 import EditCategoryModal from "./EditCategoryModal.tsx";
+import { SlPower } from "react-icons/sl";
 
 interface CategoryElementProps {
   id: number;
   name: string;
   description?: string;
   img?: string;
+  isActive?: boolean;
   onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
 }
@@ -21,14 +23,16 @@ export default function CategoryElement(props: CategoryElementProps) {
     }
   };
 
-  const handleDelete = () => {
+  const handleStatusChange = () => {
     if (props.onDelete) {
       props.onDelete(props.id);
     }
   };
-  function handleDeleteClick() {
+
+  function changeStatus() {
     setShowDeleteConfirmModal(true);
   }
+
   function handleEditClick() {
     setShowEditCategoryModal(true);
   }
@@ -44,13 +48,17 @@ export default function CategoryElement(props: CategoryElementProps) {
           title="Edit"
           onClick={() => handleEditClick()}
         />
-        <FaTrash
+
+        <SlPower
           className={styles.icon}
-          onClick={() => handleDeleteClick()}
-          title="Delete"
+          title="Change status"
+          style={{
+            color: props.isActive ? "lightgreen" : "red",
+          }}
+          onClick={() => changeStatus()}
         />
       </div>
-      <Link to={`/admin/categories/${props.name}`}>
+      <Link to={`/admin/categories/${encodeURIComponent(props.name)}`}>
         <img
           src={`${props.img}`}
           alt={props.name}
@@ -64,11 +72,12 @@ export default function CategoryElement(props: CategoryElementProps) {
       <ConfirmationModal
         show={showDeleteConfirmModal}
         setShow={setShowDeleteConfirmModal}
-        onConfirm={handleDelete}
-        confirmText={"Tak, usuń kategorie"}
-        title={`Usuwanie kategorii ${props.name}`}
+        onConfirm={handleStatusChange}
+        confirmText={"Tak, zmień status"}
+        title={`Zmiana statusu kategorii ${props.name}`}
       >
-        Czy na pewno chcesz usunąć kategorię {props.name}?
+        Czy na pewno chcesz zmienić status kategori {props.name} na{" "}
+        {props.isActive ? "nieaktywną" : "aktywną"}?
       </ConfirmationModal>
       <EditCategoryModal
         show={showEditCategoryModal}

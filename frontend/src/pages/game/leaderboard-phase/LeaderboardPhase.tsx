@@ -11,8 +11,7 @@ import { State } from "../../../store";
 import { UserState } from "../../../store/userSlice.ts";
 import { PiMedalFill } from "react-icons/pi";
 import { FaRegEye } from "react-icons/fa";
-import { MdOutlineMoreTime } from "react-icons/md";
-import { MdQueryStats } from "react-icons/md";
+import { MdOutlineMoreTime, MdQueryStats } from "react-icons/md";
 import { HelperType } from "@shared/game";
 import { ElementType } from "react";
 
@@ -36,7 +35,7 @@ const LeaderboardPhase = () => {
     : null;
 
   const topPlayers = game?.players?.filter(
-    (player) => (player.score ?? 0) === topPlayer?.score
+    (player) => (player.score ?? 0) === topPlayer?.score,
   );
 
   const topPlayersUsernames = topPlayers?.map((player) => player.username);
@@ -53,6 +52,7 @@ const LeaderboardPhase = () => {
               {game?.players && game.players.length > 0 ? (
                 game.players.map((player, index) => (
                   <div
+                    key={`${player.username}-${index}`}
                     className={`${styles.singlePlayer} ${player.username === user.username ? styles.currentPlayer : ""}`}
                   >
                     <div>
@@ -70,7 +70,7 @@ const LeaderboardPhase = () => {
                         {allHelpers
                           .filter(
                             (helper) =>
-                              !player.availableHelpers?.includes(helper.type)
+                              !player.availableHelpers?.includes(helper.type),
                           )
                           .map((helper) => {
                             const HelperIcon = helper.icon;

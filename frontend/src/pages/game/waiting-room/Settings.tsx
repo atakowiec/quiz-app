@@ -37,17 +37,27 @@ const Settings: FC = () => {
   const [showLifelineModal, setShowLifelineModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const [numberOfRounds, setNumberOfRounds] = useState(game?.settings.number_of_rounds ?? 5);
-  const [questionsPerRound, setQuestionsPerRound] = useState(game?.settings.number_of_questions_per_round ?? 5);
-  const [categoriesPerVoting, setCategoriesPerVoting] = useState(game?.settings.number_of_categories_per_voting ?? 5);
-  const [timeForAnswer, setTimeForAnswer] = useState(game?.settings.time_for_answer ?? 30);
+  const [numberOfRounds, setNumberOfRounds] = useState(
+    game?.settings.number_of_rounds ?? 5,
+  );
+  const [questionsPerRound, setQuestionsPerRound] = useState(
+    game?.settings.number_of_questions_per_round ?? 5,
+  );
+  const [categoriesPerVoting, setCategoriesPerVoting] = useState(
+    game?.settings.number_of_categories_per_voting ?? 5,
+  );
+  const [timeForAnswer, setTimeForAnswer] = useState(
+    game?.settings.time_for_answer ?? 30,
+  );
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const categories = useGlobalData().categories.map((category) => ({
-    ...category,
-    img: category.img || "",
-  }));
+  const categories = useGlobalData()
+    .categories.filter((category) => category.isActive)
+    .map((category) => ({
+      ...category,
+      img: category.img || "",
+    }));
 
   function onNumberOfRoundsChange(value: number) {
     value = Math.min(Math.max(value, 1), 25);
@@ -80,7 +90,9 @@ const Settings: FC = () => {
       updatedSettings.number_of_questions_per_round = questionsPerRound;
     }
 
-    if (categoriesPerVoting !== game?.settings.number_of_categories_per_voting) {
+    if (
+      categoriesPerVoting !== game?.settings.number_of_categories_per_voting
+    ) {
       updatedSettings.number_of_categories_per_voting = categoriesPerVoting;
     }
 
@@ -99,7 +111,9 @@ const Settings: FC = () => {
     }
   }, [timeForAnswer, categoriesPerVoting, questionsPerRound, numberOfRounds]);
 
-  const [selectedCategories, setSelectedCategories] = useState<number[]>(game?.settings?.category_whitelist || []);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>(
+    game?.settings?.category_whitelist || [],
+  );
   const initialSelectedCategories = useRef(selectedCategories);
 
   const handleCategoryClick = (index: number) => {
@@ -146,8 +160,10 @@ const Settings: FC = () => {
 
   const [helperStates, setHelperStates] = useState<boolean[]>(
     game?.settings?.blackListedHelpers
-      ? HELPER_NAMES.map((helper) => !game?.settings?.blackListedHelpers?.includes(helper))
-      : [true, true, true]
+      ? HELPER_NAMES.map(
+          (helper) => !game?.settings?.blackListedHelpers?.includes(helper),
+        )
+      : [true, true, true],
   );
 
   const handleToggle = (index: number) => {
@@ -155,7 +171,7 @@ const Settings: FC = () => {
     updatedStates[index] = !updatedStates[index]; // Zmiana stanu
 
     const blackListedHelpers = HELPER_NAMES.filter(
-      (_, i) => !updatedStates[i]
+      (_, i) => !updatedStates[i],
     ) as HelperType[];
 
     socket.emit("change_settings_helpers", blackListedHelpers);
@@ -168,9 +184,9 @@ const Settings: FC = () => {
 
   return (
     <>
-      <Meta title={"Ustawienia"}/>
-      <Breadcrumb title="Ustawienia"/>
-      <Sidebar items={sidebarItems}/>
+      <Meta title={"Ustawienia"} />
+      <Breadcrumb title="Ustawienia" />
+      <Sidebar items={sidebarItems} />
       <MainContainer className={styles.sidebarContainer}>
         <MainBox>
           <MainTitle className={styles.Title}>Ustawienia gry</MainTitle>
@@ -182,18 +198,22 @@ const Settings: FC = () => {
                   <>
                     <button
                       className={styles.changeButton}
-                      onClick={() => onNumberOfRoundsChange(numberOfRounds - 1)}>
+                      onClick={() => onNumberOfRoundsChange(numberOfRounds - 1)}
+                    >
                       -
                     </button>
                     <input
                       type="number"
                       value={numberOfRounds}
                       className={styles.choiceValue}
-                      onChange={(e) => onNumberOfRoundsChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        onNumberOfRoundsChange(Number(e.target.value))
+                      }
                     />
                     <button
                       className={styles.changeButton}
-                      onClick={() => onNumberOfRoundsChange(numberOfRounds + 1)}>
+                      onClick={() => onNumberOfRoundsChange(numberOfRounds + 1)}
+                    >
                       +
                     </button>
                   </>
@@ -211,18 +231,26 @@ const Settings: FC = () => {
                   <>
                     <button
                       className={styles.changeButton}
-                      onClick={() => onQuestionsPerRoundChange(questionsPerRound - 1)}>
+                      onClick={() =>
+                        onQuestionsPerRoundChange(questionsPerRound - 1)
+                      }
+                    >
                       -
                     </button>
                     <input
                       type="number"
                       value={questionsPerRound}
                       className={styles.choiceValue}
-                      onChange={(e) => onQuestionsPerRoundChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        onQuestionsPerRoundChange(Number(e.target.value))
+                      }
                     />
                     <button
                       className={styles.changeButton}
-                      onClick={() => onQuestionsPerRoundChange(questionsPerRound + 1)}>
+                      onClick={() =>
+                        onQuestionsPerRoundChange(questionsPerRound + 1)
+                      }
+                    >
                       +
                     </button>
                   </>
@@ -242,18 +270,26 @@ const Settings: FC = () => {
                   <>
                     <button
                       className={styles.changeButton}
-                      onClick={() => onCategoriesPerVotingChange(categoriesPerVoting - 1)}>
+                      onClick={() =>
+                        onCategoriesPerVotingChange(categoriesPerVoting - 1)
+                      }
+                    >
                       -
                     </button>
                     <input
                       type="number"
                       value={categoriesPerVoting}
                       className={styles.choiceValue}
-                      onChange={(e) => onCategoriesPerVotingChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        onCategoriesPerVotingChange(Number(e.target.value))
+                      }
                     />
                     <button
                       className={styles.changeButton}
-                      onClick={() => onCategoriesPerVotingChange(categoriesPerVoting + 1)}>
+                      onClick={() =>
+                        onCategoriesPerVotingChange(categoriesPerVoting + 1)
+                      }
+                    >
                       +
                     </button>
                   </>
@@ -273,18 +309,22 @@ const Settings: FC = () => {
                   <>
                     <button
                       className={styles.changeButton}
-                      onClick={() => onTimeForAnswerChange(timeForAnswer - 1)}>
+                      onClick={() => onTimeForAnswerChange(timeForAnswer - 1)}
+                    >
                       -
                     </button>
                     <input
                       type="number"
                       value={timeForAnswer}
                       className={styles.choiceValue}
-                      onChange={(e) => onTimeForAnswerChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        onTimeForAnswerChange(Number(e.target.value))
+                      }
                     />
                     <button
                       className={styles.changeButton}
-                      onClick={() => onTimeForAnswerChange(timeForAnswer + 1)}>
+                      onClick={() => onTimeForAnswerChange(timeForAnswer + 1)}
+                    >
                       +
                     </button>
                   </>
@@ -301,9 +341,12 @@ const Settings: FC = () => {
                   className={styles.settings}
                   onClick={handleGoToWaitingRoom}
                 >
-                  <IoArrowBack/> Powrót
+                  <IoArrowBack /> Powrót
                 </button>
-                <button className={styles.settings} onClick={() => setShowModal(true)}>
+                <button
+                  className={styles.settings}
+                  onClick={() => setShowModal(true)}
+                >
                   Wybór kategorii
                 </button>
                 <button
@@ -340,7 +383,10 @@ const Settings: FC = () => {
         gameSettings={game?.settings}
         helpersNames={HELPER_NAMES}
       />
-      <InviteModal show={showInviteModal} onClose={() => setShowInviteModal(false)}/>
+      <InviteModal
+        show={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+      />
     </>
   );
 };
