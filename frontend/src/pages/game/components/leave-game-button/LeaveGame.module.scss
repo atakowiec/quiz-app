@@ -1,0 +1,23 @@
+@import "../../../../styles/Global.scss";
+
+.leaveGameButton {
+  display: flex;
+  position: fixed;
+  background-color: white;
+  border-radius: $button-border-radius;
+  padding: $button-padding;
+  border: none;
+  box-shadow: $button-shadow-black !important;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+  justify-content: center;
+  align-items: center;
+  left: 1%;
+  bottom: 5%;
+  z-index: 99999;
+}
+
+.exitIcon {
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+}

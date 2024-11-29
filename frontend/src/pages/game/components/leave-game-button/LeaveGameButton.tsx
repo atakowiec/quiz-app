@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { RxExit } from "react-icons/rx";
 import { gameActions } from "../../../../store/gameSlice";
 import { useSocket } from "../../../../socket/useSocket";
+import styles from "./LeaveGame.module.scss";
 
 const LeaveGameButton = () => {
   const socket = useSocket();
@@ -18,9 +19,10 @@ const LeaveGameButton = () => {
   return (
     <button
       onClick={leaveGame}
-      className="fixed bottom-4 left-4 bg-gray-500 text-white p-3 flex items-center justify-center" //do zmiany
+      className={styles.leaveGameButton} //do zmiany
     >
-      <RxExit className="w-6 h-6" />
+      Opuść grę
+      <RxExit className={styles.exitIcon} />
     </button>
   );
 };

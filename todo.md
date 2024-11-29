@@ -41,7 +41,7 @@
 - [x] zmiana ustawien w grze - mocno zwalone
 - [x] statystyki i historia gier, bedac w poczekalni na sidebarze jest "stworz gre" itp
 - [x] Naprawić timebar
-- [ ] Przycisk do wyjscia z gry (event "leave_not_ended_game" powinien działać) (ewentualnie czyścić token na froncie
+- [x] Przycisk do wyjscia z gry (event "leave_not_ended_game" powinien działać) (ewentualnie czyścić token na froncie
       gdy jest niezalogowany a wyszedł)
 - [x] sprawdzic title na kazdej stronie
 

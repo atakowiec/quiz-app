@@ -41,10 +41,12 @@ export default function SingleCategory({ categoryId }: { categoryId: number }) {
         {playersVoted.length > 0 && (
           <div className={styles.voteIcons}>
             {playersVoted.slice(0, maxDisplayedPlayers).map((player) => (
-              <ProfileIcon className={styles.voteIcon}
-                           username={player.username}
-                           iconColor={player.iconColor}
-                           key={player.username} />
+              <ProfileIcon
+                className={styles.voteIcon}
+                username={player.username}
+                iconColor={player.iconColor}
+                key={player.username}
+              />
             ))}
             {extraPlayers > 0 && (
               <span className={styles.extraVotes}>+{extraPlayers}</span>

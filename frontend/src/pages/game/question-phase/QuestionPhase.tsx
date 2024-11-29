@@ -46,8 +46,8 @@ const QuestionPhase = () => {
 
   return (
     <>
-      <Meta title={"Pytanie"}/>
-      <Breadcrumb title="Pytanie"/>
+      <Meta title={"Pytanie"} />
+      <Breadcrumb title="Pytanie" />
       <MainContainer className={styles.mainContainer}>
         <div className={styles.lifebouys}>
           {availableHelpers.map((helper: HelperType) => (
@@ -60,25 +60,25 @@ const QuestionPhase = () => {
           ))}
         </div>
         <div className={styles.boxWithTimebar}>
-          <MainBox before={<TimeBar/>}>
+          <MainBox before={<TimeBar />}>
             <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
             <div className={styles.question}>
               {game.round.question.text}
-              <QuestionImage question={game.round.question}/>
+              <QuestionImage question={game.round.question} />
             </div>
             <div className={styles.answersBox}>
-              {game.round.question.answers.map((answer, i) =>
-                <Answer answer={answer} index={i} key={`${i}${answer}`}/>)}
+              {game.round.question.answers.map((answer, i) => (
+                <Answer answer={answer} index={i} key={`${i}${answer}`} />
+              ))}
             </div>
           </MainBox>
         </div>
       </MainContainer>
-      {/* <LeaveGameButton /> */}
     </>
   );
 };
 
-function Answer({ answer, index }: { answer: IAnswer, index: number }) {
+function Answer({ answer, index }: { answer: IAnswer; index: number }) {
   const game = useGame()!;
   const socket = useSocket();
   const [fadeIn, setFadeIn] = useState(false);
@@ -98,9 +98,12 @@ function Answer({ answer, index }: { answer: IAnswer, index: number }) {
       : 0;
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setFadeIn(true);
-    }, 300 + 100 * index);
+    const timeout = setTimeout(
+      () => {
+        setFadeIn(true);
+      },
+      300 + 100 * index
+    );
 
     return () => clearTimeout(timeout);
   }, []);
@@ -129,26 +132,24 @@ function Answer({ answer, index }: { answer: IAnswer, index: number }) {
   }
 
   return (
-    <div className={`${styles.answerBox} ${className}`} onClick={selectAnswer} style={{ opacity: fadeIn ? 1 : 0 }}>
-      <span>
-        {answer}
-      </span>
+    <div
+      className={`${styles.answerBox} ${className}`}
+      onClick={selectAnswer}
+      style={{ opacity: fadeIn ? 1 : 0 }}
+    >
+      <span>{answer}</span>
       {playersChosen.length > 0 && (
         <div className={styles.voteIcons}>
-          {playersChosen
-            .slice(0, maxDisplayedPlayers)
-            .map((player) => (
-              <ProfileIcon
-                key={player.username}
-                className={styles.voteCircle}
-                username={player.username}
-                iconColor={player.iconColor}
-              />
-            ))}
+          {playersChosen.slice(0, maxDisplayedPlayers).map((player) => (
+            <ProfileIcon
+              key={player.username}
+              className={styles.voteCircle}
+              username={player.username}
+              iconColor={player.iconColor}
+            />
+          ))}
           {extraPlayers > 0 && (
-            <span className={styles.extraVotes}>
-              +{extraPlayers}
-            </span>
+            <span className={styles.extraVotes}>+{extraPlayers}</span>
           )}
         </div>
       )}
