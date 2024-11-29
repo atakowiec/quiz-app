@@ -11,7 +11,7 @@ const LeaveGameButton = () => {
   const navigate = useNavigate();
 
   const leaveGame = () => {
-    socket.emit("leave_game");
+    socket.emit("leave_not_ended_game");
     dispatch(gameActions.setGame(null));
     navigate("/");
   };

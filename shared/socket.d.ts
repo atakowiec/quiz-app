@@ -55,6 +55,7 @@ export interface ClientToServerEvents {
   decline_notification: (notification: INotification) => void;
   send_game_invite: (userId: number) => void;
   play_again: (cb: () => void) => void;
+  leave_not_ended_game: () => void;
 }
 
 export type ClientToServerEventsKeys = keyof ClientToServerEvents;
