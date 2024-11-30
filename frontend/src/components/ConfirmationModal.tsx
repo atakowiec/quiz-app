@@ -1,6 +1,7 @@
 import styles from "../pages/game/waiting-room/WaitingRoom.module.scss";
 import { Modal } from "react-bootstrap";
 import { ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 type ConfirmationModalProps = {
   show: boolean;
@@ -25,28 +26,30 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
   }
 
   return (
-    <Modal
-      show={props.show}
-      onHide={() => props.setShow(false)}
-      centered
-      className={styles.modalCenter}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title className={styles.modalOwnerTitle}>
-          {props.title}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className={styles.modalBody}>{props.children}</div>
-      </Modal.Body>
-      <Modal.Footer className={styles.modalButtons}>
-        <button onClick={confirm} className={styles.modalConfirmBut}>
-          {props.confirmText ?? "Potwierdź"}
-        </button>
-        <button onClick={cancel} className={styles.modalCancelBut}>
-          {props.cancelText ?? "Anuluj"}
-        </button>
-      </Modal.Footer>
-    </Modal>
+    createPortal(
+      <Modal
+        show={props.show}
+        onHide={() => props.setShow(false)}
+        centered
+        className={styles.modalCenter}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className={styles.modalOwnerTitle}>
+            {props.title}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className={styles.modalBody}>{props.children}</div>
+        </Modal.Body>
+        <Modal.Footer className={styles.modalButtons}>
+          <button onClick={confirm} className={styles.modalConfirmBut}>
+            {props.confirmText ?? "Potwierdź"}
+          </button>
+          <button onClick={cancel} className={styles.modalCancelBut}>
+            {props.cancelText ?? "Anuluj"}
+          </button>
+        </Modal.Footer>
+      </Modal>,
+      document.body)
   );
 }

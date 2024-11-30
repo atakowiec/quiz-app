@@ -10,8 +10,8 @@ const Home: FC = () => {
 
   return (
     <>
-      <Meta title={"Quiz Base"} />
-      <Breadcrumb title="Quiz Base" />
+      <Meta title={"Strona główna"} />
+      <Breadcrumb title="Strona główna" />
       <Sidebar items={sidebarItems} />
       <div className={`col-12 ${styles.picturesContainer}`}>
         <div className={`${styles.pictureWrapper}`}>

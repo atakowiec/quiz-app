@@ -6,6 +6,7 @@ import { Request } from "../app";
 import { LoginDto } from "./dto/login.dto";
 import { UserPacket } from "@shared/user";
 import { SetUsernameDto } from "./dto/set-username.dto";
+import { SetUsernameAndGameDto } from "./dto/set-username-and-game.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -47,5 +48,14 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response
   ) {
     return this.authService.setUsername(username, response);
+  }
+
+  @Post("username-and-game")
+  @HttpCode(200)
+  async setUsernameAndGame(
+    @Body() { username, gameId }: SetUsernameAndGameDto,
+    @Res({ passthrough: true }) response: Response
+  ) {
+    return this.authService.setUsernameWithGame(username, response, gameId);
   }
 }

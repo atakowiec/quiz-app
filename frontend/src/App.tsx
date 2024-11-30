@@ -23,6 +23,7 @@ import ProtectedRoutes, {
 import { AudioProvider } from "./components/Audio/AudioContext.tsx";
 import Categories from "./pages/admin/categories/Categories.tsx";
 import Questions from "./pages/admin/questions/Questions.tsx";
+import RejoinGame from "./pages/join-game/RejoinGame.tsx";
 
 function App() {
   const game = useGame();
@@ -84,6 +85,7 @@ function App() {
           >
             <Route path="create-game" element={<CreateGame />} />
             <Route path="join-game" element={<JoinGame />} />
+            <Route path="rejoin-game" element={<RejoinGame />} />
           </Route>
 
           <Route

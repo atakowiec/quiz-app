@@ -30,10 +30,9 @@
   user-select: none;
 
   div {
-    transition:
-      color 0.1s ease,
-      padding 0.2s ease-in-out,
-      margin 0.2s ease-in-out;
+    transition: color 0.1s ease,
+    padding 0.2s ease-in-out,
+    margin 0.2s ease-in-out;
 
     &.space {
       width: 0.5rem;
@@ -290,5 +289,17 @@
 
   .iconSize {
     font-size: 2.5rem;
+  }
+}
+
+.gameNavButtons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #bbb;
   }
 }

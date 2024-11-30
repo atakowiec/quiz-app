@@ -12,6 +12,17 @@ import Notifications from "./Notifications.tsx";
 import { useState } from "react";
 import { useNotifications } from "../store/notificationsSlice.ts";
 import QueueBox from "./QueueBox.tsx";
+import LeaveGameButton from "../pages/game/components/leave-game-button/LeaveGameButton.tsx";
+import { GameStatus } from "@shared/game";
+
+const HIDE_ICON_STATUSES: GameStatus[] = [
+  "voting_phase",
+  "selected_category_phase",
+  "question_phase",
+  "question_result_phase",
+  "leaderboard",
+  "game_over"
+];
 
 const Header = () => {
   const navigate = useNavigate();
@@ -21,18 +32,9 @@ const Header = () => {
 
   const gameState = useGame();
 
-  // Lista statusów, w których ikony mają zniknąć
-  const hideIconsStatuses = [
-    "voting_phase",
-    "selected_category_phase",
-    "question_phase",
-    "question_result_phase",
-    "leaderboard",
-  ];
-
   // Sprawdzanie statusu gry, aby ukryć ikony
   const shouldHideIcons =
-    gameState && hideIconsStatuses.includes(gameState.status);
+    gameState && HIDE_ICON_STATUSES.includes(gameState.status);
 
   function toggleNotifications() {
     setNotificationsShow((prev) => !prev);
@@ -46,8 +48,8 @@ const Header = () => {
     <>
       <header className={`${styles.headerTopStrip}`}>
         <div className={styles.headerContent}>
-          <FancyLogo />
-          <QueueBox />
+          <FancyLogo/>
+          <QueueBox/>
           {!shouldHideIcons && (
             <div className={styles.iconContainer}>
               {user.loggedIn ? (
@@ -105,7 +107,6 @@ const Header = () => {
                   </Dropdown.Menu>
                 </Dropdown>
               ) : (
-                // Przycisk logowania dla niezalogowanego użytkownika
                 <button
                   className={`${styles.loginButton} ${styles.gap15}`}
                   onClick={() => navigate("/login")}
@@ -115,6 +116,15 @@ const Header = () => {
               )}
             </div>
           )}
+          {
+            gameState && gameState.status !== "waiting_for_players" &&
+              <div className={styles.gameNavButtons}>
+                  <span>
+                    Kod: #{gameState.id}
+                  </span>
+                  <LeaveGameButton/>
+              </div>
+          }
         </div>
         <Notifications
           show={notificationsShow}

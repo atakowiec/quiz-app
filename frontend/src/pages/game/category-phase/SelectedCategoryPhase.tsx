@@ -5,7 +5,6 @@ import MainTitle from "../../../components/MainTitle.tsx";
 import styles from "./Category.module.scss";
 import Meta from "../../../components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
-import LeaveGameButton from "../components/leave-game-button/LeaveGameButton.tsx";
 
 const SelectedCategoryPhase = () => {
   const game = useGame();
@@ -57,7 +56,6 @@ const SelectedCategoryPhase = () => {
           </div>
         </MainBox>
       </MainContainer>
-      <LeaveGameButton />
     </div>
   );
 };
