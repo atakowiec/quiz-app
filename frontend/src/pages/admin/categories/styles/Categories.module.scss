@@ -62,17 +62,18 @@
 .catBox:hover .iconWrapper {
   opacity: 1;
 }
+
 .icon {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: white;
   color: white;
   border-radius: 50%;
-  padding: 6px;
+  padding: 0.3rem;
   cursor: pointer;
-  font-size: 32px;
+  font-size: 2rem;
+  box-shadow: $button-shadow-black;
   transition: background-color 0.3s ease;
-
   &:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: $button-gray-hover;
   }
 }
 .categoryImage {

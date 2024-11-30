@@ -17,10 +17,7 @@ const LeaveGameButton = () => {
   };
 
   return (
-    <button
-      onClick={leaveGame}
-      className={styles.leaveGameButton} //do zmiany
-    >
+    <button onClick={leaveGame} className={styles.leaveGameButton}>
       Opuść grę
       <RxExit className={styles.exitIcon} />
     </button>

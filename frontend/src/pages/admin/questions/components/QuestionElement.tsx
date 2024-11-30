@@ -1,7 +1,7 @@
 import classes from "../styles/QuestionElement.module.scss";
 import { Distractor } from "../Questions";
 import styles from "../../categories/styles/Categories.module.scss";
-import { SlPower } from "react-icons/sl";
+import { IoIosPower } from "react-icons/io";
 
 export interface QuestionElementProps {
   question: string;
@@ -26,13 +26,13 @@ export default function QuestionElement(props: QuestionElementProps) {
         ))}
       </div>
       {props.onDeleteClick && (
-        <SlPower
+        <IoIosPower
           className={styles.icon}
-          title="Change status"
+          title="Zmień status"
           style={{
             color: props.isActive ? "lightgreen" : "red",
-            minWidth: "30px",
-            minHeight: "30px",
+            minWidth: "2.2rem",
+            minHeight: "2.2rem",
           }}
           onClick={(e) => {
             e.stopPropagation();

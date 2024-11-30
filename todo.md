@@ -29,7 +29,7 @@
 - [x] Przywrócic nicki znajomych na profilu
 - [x] Naprawić pozycje nickow podczas wyszukiwania userow
 - [x] 1,2 i 3 miejsce w statach
-- [ ] Front, edycja i usuwanie pytań, backend jednak był do dodawania i modyfikacji pytań więc tylko frontend
+- [x] Front, edycja i usuwanie pytań, backend jednak był do dodawania i modyfikacji pytań więc tylko frontend
       pod to
 - [ ] Zabezpieczyc endpointy admina
 - [x] Poprawić responsywnosc glownego kontenera i ogolnie apki - prawdopodobnie wszedzie git
