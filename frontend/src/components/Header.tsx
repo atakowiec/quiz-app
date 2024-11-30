@@ -13,13 +13,15 @@ import { useState } from "react";
 import { useNotifications } from "../store/notificationsSlice.ts";
 import QueueBox from "./QueueBox.tsx";
 import LeaveGameButton from "../pages/game/components/leave-game-button/LeaveGameButton.tsx";
+import { GameStatus } from "@shared/game";
 
-const HIDE_ICON_STATUSES = [
+const HIDE_ICON_STATUSES: GameStatus[] = [
   "voting_phase",
   "selected_category_phase",
   "question_phase",
   "question_result_phase",
   "leaderboard",
+  "game_over"
 ];
 
 const Header = () => {
