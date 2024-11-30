@@ -1,10 +1,10 @@
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useGame } from "../store/gameSlice.ts";
 
 type MainContainerProps = {
   children: ReactNode;
   className?: string;
-  before?: ReactElement;
+  before?: ReactNode;
   after?: ReactNode;
 }
 
