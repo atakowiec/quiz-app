@@ -2,7 +2,13 @@ import { useUser } from "../store/userSlice.ts";
 import { useGame } from "../store/gameSlice.ts";
 import { SidebarItem } from "../components/SideBar.tsx";
 import { IoHomeSharp, IoSettingsSharp, IoStatsChartSharp } from "react-icons/io5";
-import { IoIosAddCircleOutline, IoIosPlay, IoIosSend, IoLogoGameControllerB } from "react-icons/io";
+import {
+  IoIosAddCircleOutline,
+  IoIosPlay,
+  IoIosReturnLeft,
+  IoIosSend,
+  IoLogoGameControllerB
+} from "react-icons/io";
 
 
 export function useGameSidebarItems(openInviteModal: () => void): SidebarItem[] {
@@ -31,8 +37,11 @@ export function useSidebarItems(): SidebarItem[] {
   if (game?.status !== "waiting_for_players") {
     result.push(
       { icon: IoIosAddCircleOutline, label: "Stwórz Grę", href: "/create-game", },
-      { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" },
+      { icon: IoIosPlay, label: "Dołącz do gry", href: "/join-game" }
     );
+
+    if (!loggedIn)
+      result.push({ icon: IoIosReturnLeft, label: "Wróć do gry", href: "/rejoin-game" })
   } else {
     result.push({ icon: IoIosPlay, label: "Wróć do gry", href: "/waiting-room" });
   }

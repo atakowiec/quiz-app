@@ -75,15 +75,13 @@ export class GameService {
       this.games.splice(index, 1);
       this.metricsService.setActiveGamesCount(this.games.length);
     }
+
     game.destroy();
   }
 
   public getGameByUsername(username: string): Game {
-    return this.games.find(
-      (game) =>
-        game.owner?.username === username ||
-        game.players.some((player) => player.username === username)
-    );
+    return this.games.find((game) =>
+      game.getAllPlayers().some((player) => player.username === username));
   }
 
   public getMemberByName(username: string): GameMember {
@@ -91,9 +89,8 @@ export class GameService {
       if (game.owner?.username === username) {
         return game.owner;
       }
-      const player = game.players.find(
-        (player) => player.username === username
-      );
+      const player = game.players.find((player) => player.username === username);
+
       if (player) {
         return player;
       }
@@ -106,6 +103,14 @@ export class GameService {
       if (socket.data.username === username) {
         return true;
       }
+    }
+    return false;
+  }
+
+  public isUsernameInGame(username: string): boolean {
+    for (const game of this.games) {
+      if (game.getAllPlayers().some(p => p.username == username))
+        return true;
     }
     return false;
   }

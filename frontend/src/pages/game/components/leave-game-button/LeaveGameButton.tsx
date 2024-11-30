@@ -4,11 +4,14 @@ import { RxExit } from "react-icons/rx";
 import { gameActions } from "../../../../store/gameSlice";
 import { useSocket } from "../../../../socket/useSocket";
 import styles from "./LeaveGame.module.scss";
+import { useState } from "react";
+import ConfirmationModal from "../../../../components/ConfirmationModal.tsx";
 
 const LeaveGameButton = () => {
   const socket = useSocket();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   const leaveGame = () => {
     socket.emit("leave_not_ended_game");
@@ -17,13 +20,18 @@ const LeaveGameButton = () => {
   };
 
   return (
-    <button
-      onClick={leaveGame}
-      className={styles.leaveGameButton} //do zmiany
-    >
-      Opuść grę
-      <RxExit className={styles.exitIcon} />
-    </button>
+    <>
+      <button
+        onClick={() => setShowModal(true)}
+        className={styles.leaveGameButton}
+      >
+        Opuść grę
+        <RxExit className={styles.exitIcon}/>
+      </button>
+      <ConfirmationModal show={showModal} setShow={setShowModal} onConfirm={leaveGame} title={"Opuść grę"}>
+        Czy na pewno chcesz opuścić grę?
+      </ConfirmationModal>
+    </>
   );
 };
 

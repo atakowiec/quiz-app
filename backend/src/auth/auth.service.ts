@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { RegisterDto } from "./dto/register.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -39,7 +39,7 @@ export class AuthService {
 
     const conflictErrors = [];
     // first check if the user is already connected to the game
-    if (this.gameService.isUsernameConnected(createUserDto.username)) {
+    if (this.gameService.isUsernameInGame(createUserDto.username)) {
       conflictErrors.push({
         field: "username",
         error: "Gracz z tą nazwą jest już połączony",
@@ -161,6 +161,46 @@ export class AuthService {
   }
 
   async setUsername(username: string, response: Response) {
+    await this.checkUserDoesNotExistOrThrow(username);
+
+    if (this.gameService.isUsernameInGame(username)) {
+      throw new ConflictException("Gracz z tą nazwą jest już połączony");
+    }
+
+    const token = await this.jwtService.signAsync({ username });
+    this.appendTokenToResponse(response, token);
+
+    return {
+      username: username,
+    };
+  }
+
+  async setUsernameWithGame(username: string, response: Response, gameId: string) {
+    await this.checkUserDoesNotExistOrThrow(username);
+
+    if(!this.gameService.getGameById(gameId)) {
+      throw new NotFoundException("Gra nie istnieje");
+    }
+
+    const game = this.gameService.getGameByUsername(username);
+
+    if(!game || game.id !== gameId) {
+      throw new NotFoundException("Niepoprawny kod gry");
+    }
+
+    const gameMember = game.getAllPlayers().find(player => player.username === username);
+
+    if (gameMember.socket.connected) {
+      throw new ConflictException("Gracz z tą nazwą jest już połączony");
+    }
+
+    const token = await this.jwtService.signAsync({ username });
+    this.appendTokenToResponse(response, token);
+
+    return { username }
+  }
+
+  async checkUserDoesNotExistOrThrow(username: string) {
     const user = await this.userRepository.findOne({
       where: { username: username },
     });
@@ -168,18 +208,6 @@ export class AuthService {
     if (user) {
       throw new ConflictException("Nazwa użytkownika jest już zajęta");
     }
-
-    if (this.gameService.isUsernameConnected(username)) {
-      throw new ConflictException("Gracz z tą nazwą jest już połączony");
-    }
-
-    const tokenPayload: TokenPayload = { username };
-    const token = await this.jwtService.signAsync(tokenPayload);
-    this.appendTokenToResponse(response, token);
-
-    return {
-      username: username,
-    };
   }
 
   async hashPassword(password: string): Promise<string> {

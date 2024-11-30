@@ -3,7 +3,7 @@ import Meta from "../../components/Meta.tsx";
 import styles from "./JoinGame.module.scss";
 import Sidebar from "../../components/SideBar.tsx";
 import { useSocket } from "../../socket/useSocket.ts";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../store/userSlice.ts";
 import useQueryParam from "../../hooks/useQueryParam.ts";
@@ -14,11 +14,11 @@ import MainTitle from "../../components/MainTitle.tsx";
 import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const JoinGame: React.FC = () => {
-  const gameIdRef = useRef<HTMLInputElement>(null);
+  const codeQueryParam = useQueryParam("code");
+  const [gameId, setGameId] = useState(codeQueryParam ?? "");
   const socket = useSocket();
   const navigate = useNavigate();
   const user = useUser();
-  const codeQueryParam = useQueryParam("code");
   const sidebarItems = useSidebarItems()
 
   const [showModal, setShowModal] = useState(false);
@@ -29,7 +29,7 @@ const JoinGame: React.FC = () => {
       return;
     }
 
-    socket.emit("join_game", gameIdRef.current!.value, () =>
+    socket.emit("join_game", gameId, () =>
       navigate("/waiting-room")
     );
   }
@@ -47,8 +47,8 @@ const JoinGame: React.FC = () => {
               className={styles.inputBox}
               type={"text"}
               placeholder={"Podaj ID gry"}
-              defaultValue={codeQueryParam ?? ""}
-              ref={gameIdRef}
+              value={gameId}
+              onChange={(e) => setGameId(e.target.value.toUpperCase())}
             />
           </div>
           <div className={styles.createButton}>
@@ -61,7 +61,7 @@ const JoinGame: React.FC = () => {
         confirmBtnText="Dołącz do gry"
         onClose={() => setShowModal(false)}
         onConfirm={() => {
-          socket.emit("join_game", gameIdRef.current!.value, () =>
+          socket.emit("join_game", gameId, () =>
             navigate("/waiting-room")
           );
         }}

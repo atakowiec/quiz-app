@@ -9,7 +9,6 @@ import QuestionPhase from "./question-phase/QuestionPhase.tsx";
 import LeaderboardPhase from "./leaderboard-phase/LeaderboardPhase.tsx";
 import GameOverPhase from "./game-over-phase/GameOverPhase.tsx";
 import GameAnimatedWrapper from "./components/animated-wrapper/GameAnimatedWrapper.tsx";
-import LeaveGameButton from "./components/leave-game-button/LeaveGameButton.tsx";
 
 export default function Game() {
   const game = useSelector<State, GameState>((state) => state.game);
@@ -52,7 +51,6 @@ export default function Game() {
       <GameAnimatedWrapper keyProp={simplifiedStatus}>
         {renderView()}
       </GameAnimatedWrapper>
-      <LeaveGameButton />
     </>
   );
 }
