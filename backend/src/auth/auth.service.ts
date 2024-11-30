@@ -185,7 +185,7 @@ export class AuthService {
     const game = this.gameService.getGameByUsername(username);
 
     if(!game || game.id !== gameId) {
-      throw new NotFoundException("Niepoprawny kod gry");
+      throw new NotFoundException("Tego gracza nie ma w tej grze");
     }
 
     const gameMember = game.getAllPlayers().find(player => player.username === username);

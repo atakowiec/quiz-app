@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fancyapps/ui": "^5.0.36",
     "@reduxjs/toolkit": "^2.2.7",
     "@types/react-helmet": "^6.1.11",
     "axios": "^1.7.7",

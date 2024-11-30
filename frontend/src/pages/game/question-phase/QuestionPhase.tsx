@@ -14,6 +14,8 @@ import MainBox from "../../../components/MainBox.tsx";
 import MainTitle from "../../../components/MainTitle.tsx";
 import ProfileIcon from "../../../components/ProfileIcon.tsx";
 import { useEffect, useState } from "react";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import Fancybox from "../../../components/FancyBox.tsx";
 
 const helperIcons = {
   cheat_from_others: FaRegEye,
@@ -29,46 +31,24 @@ const helperDescriptions = {
 
 const QuestionPhase = () => {
   const game = useGame();
-  const socket = useSocket();
 
   if (!game?.round?.question) return null;
 
-  function executeHelper(helper: HelperType) {
-    if (game?.status !== "question_phase") return;
-
-    socket.emit("use_helper", helper);
-  }
-
-  const blackListedHelpers = game.settings.blackListedHelpers || [];
-  const availableHelpers = game.player.availableHelpers.filter(
-    (helper: HelperType) => !blackListedHelpers.includes(helper)
-  );
-
   return (
     <>
-      <Meta title={"Pytanie"} />
-      <Breadcrumb title="Pytanie" />
+      <Meta title={"Pytanie"}/>
+      <Breadcrumb title="Pytanie"/>
       <MainContainer className={styles.mainContainer}>
-        <div className={styles.lifebouys}>
-          {availableHelpers.map((helper: HelperType) => (
-            <Helper
-              key={helper}
-              icon={helperIcons[helper]}
-              executeAction={() => executeHelper(helper)}
-              description={helperDescriptions[helper]}
-            />
-          ))}
-        </div>
         <div className={styles.boxWithTimebar}>
-          <MainBox before={<TimeBar />}>
+          <MainBox before={<><Lifebouys/><TimeBar/></>}>
             <MainTitle>Pytanie #{game.round.questionNumber}</MainTitle>
             <div className={styles.question}>
               {game.round.question.text}
-              <QuestionImage question={game.round.question} />
+              <QuestionImage question={game.round.question}/>
             </div>
             <div className={styles.answersBox}>
               {game.round.question.answers.map((answer, i) => (
-                <Answer answer={answer} index={i} key={`${i}${answer}`} />
+                <Answer answer={answer} index={i} key={`${i}${answer}`}/>
               ))}
             </div>
           </MainBox>
@@ -77,6 +57,35 @@ const QuestionPhase = () => {
     </>
   );
 };
+
+function Lifebouys() {
+  const game = useGame()!;
+  const socket = useSocket();
+
+  const blackListedHelpers = game.settings.blackListedHelpers || [];
+  const availableHelpers = game.player.availableHelpers.filter(
+    (helper: HelperType) => !blackListedHelpers.includes(helper)
+  );
+
+  function executeHelper(helper: HelperType) {
+    if (game?.status !== "question_phase") return;
+
+    socket.emit("use_helper", helper);
+  }
+
+  return (
+    <div className={styles.lifebouys}>
+      {availableHelpers.map((helper: HelperType) => (
+        <Helper
+          key={helper}
+          icon={helperIcons[helper]}
+          executeAction={() => executeHelper(helper)}
+          description={helperDescriptions[helper]}
+        />
+      ))}
+    </div>
+  )
+}
 
 function Answer({ answer, index }: { answer: IAnswer; index: number }) {
   const game = useGame()!;
@@ -161,13 +170,17 @@ function QuestionImage({ question }: { question: IQuestion }) {
   if (!question.photo) return null;
 
   return (
-    <button className={styles.imageWrapper}>
-      <img
-        src={question.photo}
-        alt={question.text}
-        className={`${styles.questionImage}`}
-      />
-    </button>
+    <>
+      <Fancybox>
+        <a data-fancybox="gallery" href={question.photo}>
+          <img
+            src={question.photo}
+            alt={question.text}
+            className={`${styles.questionImage}`}
+          />
+        </a>
+      </Fancybox>
+    </>
   );
 }
 

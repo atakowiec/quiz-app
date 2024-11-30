@@ -86,11 +86,8 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   width: 80vw;
   max-width: 600px;
   height: fit-content;
-  transition:
-    transform 0.5s ease-in-out,
-    opacity 0.5s ease-in-out;
-
-  max-height: calc(100vh - 7rem);
+  transition: transform 0.5s ease-in-out,
+  opacity 0.5s ease-in-out;
 }
 
 .mainText {
@@ -148,14 +145,12 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
 
   .mainContainer {
     align-content: flex-start;
-    margin-top: 1rem;
     margin-bottom: 0;
   }
 
   .mainBox {
-    width: 90vw;
+    width: 95vw;
     padding: 1rem;
-    max-height: calc(100dvh - 10rem);
   }
 
   .mainText {
@@ -174,9 +169,8 @@ $large-desktop-breakpoint: 2000px; // minimum width for a large desktop screen (
   padding: 0.5rem 1rem;
   border-radius: 10px;
   cursor: pointer;
-  transition:
-    background-color 0.2s,
-    box-shadow 0.2s;
+  transition: background-color 0.2s,
+  box-shadow 0.2s;
   border: none;
 
   &.primary {

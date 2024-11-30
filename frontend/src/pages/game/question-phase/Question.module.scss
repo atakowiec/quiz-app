@@ -74,15 +74,8 @@
   left: 25px;
   z-index: 999;
   cursor: pointer;
-  height: 30px;
   top: 25%;
   gap: 1rem;
-}
-
-.imageWrapper {
-  margin-top: 10px;
-  border: none;
-  background: none;
 }
 
 .questionImage {
@@ -90,14 +83,8 @@
   max-height: 15rem;
   height: auto;
   border-radius: 10px;
+  margin-top: 10px;
   cursor: pointer;
-  transition: scale 0.2s, box-shadow 0.2s;
-  z-index: 10000000;
-}
-
-.imageWrapper:focus .questionImage {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  scale: 2.6;
 }
 
 .hiddenAnswer {
@@ -158,27 +145,22 @@
     max-width: 12rem;
     max-height: 10rem;
   }
-  .boxWithTimebar {
-    max-height: 600px;
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 @media (max-width: $phone-breakpoint) {
   .lifebouys {
     flex-direction: row;
-    position: relative;
+    position: static;
     justify-content: center;
-    margin-top: 3rem;
-    top: -50px;
-    left: 0;
+    height: unset;
+  }
+
+  .mainBox {
+    max-height: calc(100vh - 15rem);
   }
 
   .questionImage {
-    max-width: 10rem;
-    max-height: 10rem;
-    height: auto;
-    vertical-align: middle;
+    width: 10rem;
+    height: 10rem;
   }
 }
