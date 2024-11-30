@@ -44,7 +44,7 @@ export default function Questions() {
     null,
   );
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [, setTotalQuestions] = useState(0);
   const questionsPerPage = 10;
   const maxVisiblePages = 5;
 

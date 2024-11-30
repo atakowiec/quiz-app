@@ -65,6 +65,7 @@ export class GameMember {
       hiddenAnswers: this.hiddenAnswers,
       showOtherPlayersAnswers: this.showOtherPlayersAnswers,
       iconColor: this.socket.data.iconColor,
+      timeToAnswer: this.timeToAnswer,
     };
   }
 

@@ -562,6 +562,9 @@ export default class Game {
 
     player.sendGameUpdate({
       timer: this.getTimerInfo(player),
+      player: {
+        timeToAnswer: player.timeToAnswer,
+      }
     });
     player.sendNotification("Przedłużono czas na odpowiedź");
   }

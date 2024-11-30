@@ -54,6 +54,7 @@ export interface IGameMember {
   showOtherPlayersAnswers: boolean;
   cheatedAnswers?: IAnswer[];
   iconColor: string;
+  timeToAnswer: number;
 }
 
 export interface GameSettings {

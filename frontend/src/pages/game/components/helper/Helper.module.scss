@@ -12,6 +12,15 @@
   height: 80px;
   z-index: 999;
   position: relative;
+
+  &.inUse {
+    background-color: $green;
+  }
+
+  &.notAvailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .lifeBouyIcon {
@@ -32,9 +41,8 @@
   white-space: nowrap;
   opacity: 0; /* Initially hidden */
   visibility: hidden;
-  transition:
-    opacity 0.2s ease,
-    visibility 0.2s ease;
+  transition: opacity 0.2s ease,
+  visibility 0.2s ease;
 }
 
 .lifeBouyContainer:hover .tooltip {
@@ -54,7 +62,7 @@
   }
 
   .tooltip {
-    bottom: -25px;
+    bottom: -30px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 0.75rem;

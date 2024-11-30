@@ -23,7 +23,7 @@ const helperIcons = {
   fifty_fifty: MdQueryStats,
 };
 
-const helperDescriptions = {
+const helperDescriptions: {[key in HelperType]: string} = {
   cheat_from_others: "Podejrzyj odpowiedzi innych graczy",
   extend_time: "Przedłuż czas na odpowiedź",
   fifty_fifty: "Eliminuj dwie błędne odpowiedzi",
@@ -59,27 +59,14 @@ const QuestionPhase = () => {
 };
 
 function Lifebouys() {
-  const game = useGame()!;
-  const socket = useSocket();
-
-  const blackListedHelpers = game.settings.blackListedHelpers || [];
-  const availableHelpers = game.player.availableHelpers.filter(
-    (helper: HelperType) => !blackListedHelpers.includes(helper)
-  );
-
-  function executeHelper(helper: HelperType) {
-    if (game?.status !== "question_phase") return;
-
-    socket.emit("use_helper", helper);
-  }
 
   return (
     <div className={styles.lifebouys}>
-      {availableHelpers.map((helper: HelperType) => (
+      {(Object.keys(helperDescriptions) as HelperType[]).map((helper: HelperType) => (
         <Helper
+          helper={helper}
           key={helper}
           icon={helperIcons[helper]}
-          executeAction={() => executeHelper(helper)}
           description={helperDescriptions[helper]}
         />
       ))}
