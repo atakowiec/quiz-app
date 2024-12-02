@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "../../categories/styles/CreateCategoryModal.module.scss";
 import CustomInput from "../../../../components/CustomInput";
@@ -10,12 +10,14 @@ import {
 } from "../../../../api/QuestionService";
 
 export interface QuestionFormData {
+  id?: number;
   question: string;
   photo?: File | null;
   imgPreview: string;
   correctAnswer: string;
   distractors: { content: string }[];
   category: { id?: number; name: string }[];
+  isActive?: boolean;
 }
 
 interface AddQuestionModalProps {
@@ -94,7 +96,7 @@ export default function AddQuestionModal({
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index?: number
+    index?: number,
   ) => {
     const { name, value } = e.target;
 
@@ -131,7 +133,7 @@ export default function AddQuestionModal({
         ? ""
         : "Proszę podać poprawną odpowiedź",
       distractors: formData.distractors.map((distractor) =>
-        distractor.content.trim() ? "" : "Proszę podać błędną odpowiedź"
+        distractor.content.trim() ? "" : "Proszę podać błędną odpowiedź",
       ),
     };
 
@@ -146,7 +148,7 @@ export default function AddQuestionModal({
 
   const handleConfirm = async () => {
     const validDistractors = formData.distractors.filter(
-      (distractor) => distractor.content.trim() !== ""
+      (distractor) => distractor.content.trim() !== "",
     );
 
     if (validDistractors.length !== 3) {
@@ -178,8 +180,11 @@ export default function AddQuestionModal({
         photo: photoUrl,
       };
 
-      await QuestionService.createQuestion(questionData);
+      const responseQuestionObject =
+        await QuestionService.createQuestion(questionData);
 
+      formData.id = responseQuestionObject.id;
+      formData.isActive = responseQuestionObject.isActive;
       onConfirm({
         ...formData,
         imgPreview: photoUrl || formData.imgPreview,

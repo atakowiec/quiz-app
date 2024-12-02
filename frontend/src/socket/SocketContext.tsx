@@ -31,7 +31,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     );
 
     newSocket.on("category_updated", async () => {
-      console.log("Category updated");
       try {
         const categories = await getCategories();
         dispatch(globalDataActions.setData({ categories }));

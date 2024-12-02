@@ -79,7 +79,7 @@ export default function Questions() {
   const handleAddQuestionConfirm = async (questionData: QuestionFormData) => {
     try {
       const newQuestion: Question = {
-        id: Date.now(),
+        id: questionData.id,
         question: questionData.question,
         correctAnswer: questionData.correctAnswer,
         distractors: questionData.distractors.map((d) => ({
@@ -93,6 +93,7 @@ export default function Questions() {
           },
         ],
         photo: questionData.imgPreview || null,
+        isActive: questionData.isActive,
       };
 
       const updatedQuestions = [
@@ -217,9 +218,9 @@ export default function Questions() {
         ),
       );
 
-      toast.success("Pomyślnie zmieniono status kategori");
+      toast.success("Pomyślnie zmieniono status pytania");
     } catch (error) {
-      toast.error("Wystąpił błąd podczas usuwania kategorii");
+      toast.error("Wystąpił błąd podczas usuwania pytania");
       console.error(error);
     }
   }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Question } from "../pages/admin/questions/Questions.tsx";
 
 const IMG_UPLOAD_URL = import.meta.env.VITE_IMG_UPLOAD_URL;
 const API_URL = import.meta.env.VITE_API_URL + "/questions";
@@ -35,7 +36,7 @@ export class QuestionService {
     }
   }
 
-  static async createQuestion(data: CreateQuestionRequest): Promise<unknown> {
+  static async createQuestion(data: CreateQuestionRequest): Promise<Question> {
     try {
       const response = await axios.post(API_URL, {
         question: data.question,
