@@ -144,11 +144,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException("Nie jesteś właścicielem gry!");
     }
 
-    // TODO: Odkomentować to, narazie nie chce mi sie dwóch klientów odpalać
-
-    // if (game.gameType !== "singleplayer" && game.players.length == 0) {
-    //   throw new WsException("Nie można rozpocząć gry bez graczy!");
-    // }
+    if (game.gameType !== "singleplayer" && game.players.length == 0) {
+      throw new WsException("Nie można rozpocząć gry bez graczy!");
+    }
 
     await game.start();
   }
