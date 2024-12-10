@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import styles from "../../categories/styles/CreateCategoryModal.module.scss";
+import styles from "../styles/CreateQuestionModal.module.scss";
 import CustomInput from "../../../../components/CustomInput";
 import MainTitle from "../../../../components/MainTitle";
 import { toast } from "react-toastify";
@@ -9,7 +9,20 @@ import {
   QuestionService,
 } from "../../../../api/QuestionService";
 import getApi from "../../../../api/axios.ts";
+import CreatableSelect from "react-select/creatable";
+import makeAnimated from "react-select/animated";
+import {
+  globalDataActions,
+  useGlobalData,
+} from "../../../../store/globalDataSlice.ts";
 import { AxiosResponse } from "axios";
+import { useDispatch } from "react-redux";
+
+// Add interface for category select
+interface ICategorySelect {
+  value: string;
+  label: string;
+}
 
 export interface QuestionFormData {
   id?: number;
@@ -36,6 +49,12 @@ export default function EditQuestionModal({
   question,
 }: EditQuestionModalProps) {
   const api = getApi();
+  const categories = useGlobalData().categories;
+  const dispatch = useDispatch();
+  const [selectedCategories, setSelectedCategories] = useState<
+    ICategorySelect[] | undefined
+  >(undefined);
+
   const [formData, setFormData] = useState<QuestionFormData>({
     question: "",
     correctAnswer: "",
@@ -52,11 +71,19 @@ export default function EditQuestionModal({
     imgPreview?: string;
     correctAnswer: string;
     distractors: string[];
+    categories?: string;
   }>({
     question: "",
     correctAnswer: "",
     distractors: ["", "", ""],
   });
+
+  // Prepare categories data for select
+  const categoriesData = categories.map((category) => ({
+    value: category.name,
+    label: category.name.toUpperCase(),
+  }));
+  const animatedComponents = makeAnimated();
 
   // Populate form data when question prop changes
   useEffect(() => {
@@ -73,6 +100,13 @@ export default function EditQuestionModal({
             : [{ content: "" }, { content: "" }, { content: "" }],
         category: question.category,
       });
+
+      // Set initial selected categories
+      const initialSelectedCategories = question.category.map((cat) => ({
+        value: cat.name,
+        label: cat.name.toUpperCase(),
+      }));
+      setSelectedCategories(initialSelectedCategories);
     }
   }, [question, show]);
 
@@ -156,6 +190,10 @@ export default function EditQuestionModal({
       distractors: formData.distractors.map((distractor) =>
         distractor.content.trim() ? "" : "Proszę podać błędną odpowiedź",
       ),
+      categories:
+        !selectedCategories || selectedCategories.length === 0
+          ? "Proszę wybrać przynajmniej jedną kategorię"
+          : "",
     };
 
     setErrors(newErrors);
@@ -163,7 +201,8 @@ export default function EditQuestionModal({
     return (
       !newErrors.question &&
       !newErrors.correctAnswer &&
-      !newErrors.distractors.some((error) => error)
+      !newErrors.distractors.some((error) => error) &&
+      !newErrors.categories
     );
   };
 
@@ -180,6 +219,7 @@ export default function EditQuestionModal({
       return;
     }
 
+    // Validate all fields including categories
     if (!validateFields()) {
       return;
     }
@@ -198,22 +238,36 @@ export default function EditQuestionModal({
         question: formData.question,
         correctAnswer: formData.correctAnswer,
         distractors: formData.distractors,
-        category: formData.category,
+        category: selectedCategories
+          ? selectedCategories.map((category) => ({ name: category.value }))
+          : [],
         photo: photoUrl,
       };
 
       // Use update method instead of create
       await QuestionService.updateQuestion(questionData);
 
+      getApi()
+        .get("/categories")
+        .then((response: AxiosResponse) => {
+          dispatch(globalDataActions.setData({ categories: response.data }));
+        })
+        .catch(() => {
+          toast.error("Podczas pobierania kategorii wystąpił błąd");
+        });
+
       onConfirm({
         ...formData,
         imgPreview: photoUrl || formData.imgPreview,
+        category: questionData.category,
       });
 
       toast.success("Pytanie zostało zaktualizowane");
       handleClose();
     } catch (error) {
-      toast.error("Nie udało się zaktualizować pytania");
+      if (error as Error) {
+        toast.error("Nie udało się zaktualizować pytania");
+      }
     } finally {
       setIsUploading(false);
     }
@@ -233,6 +287,7 @@ export default function EditQuestionModal({
       correctAnswer: "",
       distractors: ["", "", ""],
     });
+    setSelectedCategories(undefined);
     setShow(false);
   };
 
@@ -241,13 +296,14 @@ export default function EditQuestionModal({
       await api.delete(`/questions/${question.id}`);
       getApi()
         .get("/categories")
-        .then((response: AxiosResponse) => {})
         .catch(() => {
           toast.error("Podczas zmiany statusu pytania wystąpił błąd");
         });
       toast.success("Pomyślnie zmieniono status pytania");
     } catch (error) {
-      toast.error("Wystąpił błąd podczas zmiany statusu pytania");
+      if (error as Error) {
+        toast.error("Wystąpił błąd podczas zmiany statusu pytania");
+      }
     }
   };
 
@@ -255,6 +311,33 @@ export default function EditQuestionModal({
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Body>
         <MainTitle>Edytuj pytanie</MainTitle>
+
+        <div className={styles.formElement}>
+          <h4 className={styles.formLabel}>Kategorie</h4>
+          <CreatableSelect
+            components={animatedComponents}
+            closeMenuOnSelect={false}
+            isMulti
+            isClearable
+            value={selectedCategories}
+            options={categoriesData}
+            placeholder={"Wybierz kategorie"}
+            className={styles.select}
+            name={"categories"}
+            onChange={(selectedOptions) => {
+              setSelectedCategories(selectedOptions as ICategorySelect[]);
+              // Clear category error when selection changes
+              setErrors((prev) => ({
+                ...prev,
+                categories: "",
+              }));
+            }}
+          />
+          {errors.categories && (
+            <p className={styles.error}>{errors.categories}</p>
+          )}
+        </div>
+
         <div className={styles.formElement}>
           <textarea
             name="question"

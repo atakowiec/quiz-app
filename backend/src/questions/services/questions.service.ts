@@ -35,6 +35,7 @@ export class QuestionsService {
   }
 
   async createQuestion(questionDetails: CreateQuestionParams) {
+    this.logger.log(`Creating question: ${questionDetails.question}`);
     if (questionDetails.category.some((category) => !category.name)) {
       throw new BadRequestException({
         message: "Category name is required",
@@ -60,6 +61,7 @@ export class QuestionsService {
         message: "Question already exists",
       });
     }
+    this.logger.log(`Creating question2: `);
 
     questionDetails.category = await Promise.all(
       questionDetails.category.map((category) =>
@@ -207,7 +209,6 @@ export class QuestionsService {
       .leftJoinAndSelect("question.category", "category")
       .leftJoinAndSelect("question.distractors", "distractors")
       .where("category.name = :category", { category });
-
     if (content) {
       queryBuilder.andWhere(
         new Brackets((qb) => {
@@ -227,8 +228,15 @@ export class QuestionsService {
     queryBuilder.orderBy("question.createdAt", "DESC");
 
     const [questions, total] = await queryBuilder.getManyAndCount();
-
-    return { questions, total };
+    const questionsWithCategories: Question[] = await Promise.all(
+      questions.map(async (question) => {
+        return this.questionRepository.findOne({
+          where: { id: question.id },
+          relations: ["category", "distractors"],
+        });
+      })
+    );
+    return { questions: questionsWithCategories, total };
   }
 
   async getQuestionsPaginate(

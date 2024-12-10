@@ -22,6 +22,7 @@ export interface UpdateCategoryRequest {
 
 const IMG_UPLOAD_URL = import.meta.env.VITE_IMG_UPLOAD_URL;
 const API_URL = import.meta.env.VITE_API_URL + "/categories";
+const api = getApi();
 
 export class CategoryService {
   static async uploadImage(file: File): Promise<string> {
@@ -47,7 +48,7 @@ export class CategoryService {
   }
 
   static async createCategory(
-    data: CreateCategoryRequest
+    data: CreateCategoryRequest,
   ): Promise<CreateCategoryResponse> {
     try {
       let imageUrl = "";
@@ -56,7 +57,7 @@ export class CategoryService {
         imageUrl = await this.uploadImage(data.img);
       }
 
-      const response = await axios.post<CreateCategoryResponse>(API_URL, {
+      const response = await api.post<CreateCategoryResponse>(API_URL, {
         name: data.categoryName,
         description: data.description,
         img: imageUrl,
@@ -76,7 +77,7 @@ export class CategoryService {
 
   static async updateCategory(
     id: number,
-    data: UpdateCategoryRequest
+    data: UpdateCategoryRequest,
   ): Promise<CreateCategoryResponse> {
     try {
       const updateData: Record<string, any> = {};
@@ -92,14 +93,14 @@ export class CategoryService {
         throw new Error("Brak danych do aktualizacji");
       }
 
-      const response = await getApi().patch<CreateCategoryResponse>(
+      const response = await api.patch<CreateCategoryResponse>(
         `/categories/${id}`,
         updateData,
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       return response.data;
@@ -107,7 +108,7 @@ export class CategoryService {
       console.error("Błąd przy aktualizacji kategorii:", error);
       if (error.response) {
         throw new Error(
-          error.response.data.message || "Błąd podczas aktualizacji kategorii"
+          error.response.data.message || "Błąd podczas aktualizacji kategorii",
         );
       } else {
         throw new Error("Błąd podczas aktualizacji kategorii");
@@ -117,13 +118,13 @@ export class CategoryService {
 
   static async getCategories() {
     try {
-      const response = await axios.get<CreateCategoryResponse[]>(API_URL);
+      const response = await api.get<CreateCategoryResponse[]>(API_URL);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(
           "Błąd podczas pobierania kategorii:",
-          error.response?.data
+          error.response?.data,
         );
         const errorMessage = error.response?.data?.message || error.message;
         throw new Error(`Błąd podczas pobierania kategorii: ${errorMessage}`);

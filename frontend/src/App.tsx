@@ -59,11 +59,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="waiting-room" element={<WaitingRoom />} />
           <Route path="game" element={<Game />} />
-          <Route path="/admin/categories" element={<Categories />} />
-          <Route
-            path="/admin/categories/:categoryName/"
-            element={<Questions />}
-          />
+
           <Route
             element={<ProtectedRoutes permissions={PermissionEnum.USER} />}
           >
@@ -72,7 +68,11 @@ function App() {
           <Route
             element={<ProtectedRoutes permissions={PermissionEnum.ADMIN} />}
           >
-            {/* Here all protected routes like admin /> */}
+            <Route path="/admin/categories" element={<Categories />} />
+            <Route
+              path="/admin/categories/:categoryName/"
+              element={<Questions />}
+            />
           </Route>
 
           <Route

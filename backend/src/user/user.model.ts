@@ -1,5 +1,5 @@
 import { UserGame } from "src/game/entities/usergame.model";
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -16,7 +16,7 @@ export class User {
   email: string;
 
   @Column({
-    default: "#5596ca"
+    default: "#5596ca",
   })
   iconColor: string;
 
@@ -24,7 +24,7 @@ export class User {
   permission: number;
 
   @Column({ default: true })
-  acvite: boolean;
+  activate: boolean;
 
   @OneToMany(() => UserGame, (userGame) => userGame.user)
   userGames: UserGame[];

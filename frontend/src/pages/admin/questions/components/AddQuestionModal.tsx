@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { Modal } from "react-bootstrap";
-import styles from "../../categories/styles/CreateCategoryModal.module.scss";
+import styles from "../styles/CreateQuestionModal.module.scss";
 import CustomInput from "../../../../components/CustomInput";
 import MainTitle from "../../../../components/MainTitle";
 import { toast } from "react-toastify";
@@ -8,6 +8,20 @@ import {
   CreateQuestionRequest,
   QuestionService,
 } from "../../../../api/QuestionService";
+import {
+  globalDataActions,
+  useGlobalData,
+} from "../../../../store/globalDataSlice.ts";
+import CreatableSelect from "react-select/creatable";
+import makeAnimated from "react-select/animated";
+import getApi from "../../../../api/axios.ts";
+import { AxiosResponse } from "axios";
+import { useDispatch } from "react-redux";
+
+interface ICategorySelect {
+  value: string;
+  label: string;
+}
 
 export interface QuestionFormData {
   id?: number;
@@ -33,6 +47,8 @@ export default function AddQuestionModal({
   onConfirm,
   categoryName,
 }: AddQuestionModalProps) {
+  const categories = useGlobalData().categories;
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState<QuestionFormData>({
     question: "",
     correctAnswer: "",
@@ -49,10 +65,12 @@ export default function AddQuestionModal({
     imgPreview?: string;
     correctAnswer: string;
     distractors: string[];
+    categories?: string;
   }>({
     question: "",
     correctAnswer: "",
     distractors: ["", "", ""],
+    categories: "",
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,6 +177,14 @@ export default function AddQuestionModal({
       return;
     }
 
+    if (!selectedCategories || selectedCategories.length === 0) {
+      setErrors((prev) => ({
+        ...prev,
+        categories: "Proszę wybrać przynajmniej jedną kategorię",
+      }));
+      return;
+    }
+
     if (!validateFields()) {
       return;
     }
@@ -171,12 +197,15 @@ export default function AddQuestionModal({
       if (formData.photo) {
         photoUrl = await QuestionService.uploadImage(formData.photo);
       }
+      // create category names from selected categories in form as array of {name: string}
 
       const questionData: CreateQuestionRequest = {
         question: formData.question,
         correctAnswer: formData.correctAnswer,
         distractors: formData.distractors,
-        category: [{ name: categoryName }],
+        category: selectedCategories.map((category) => ({
+          name: category.value,
+        })),
         photo: photoUrl,
       };
 
@@ -190,10 +219,21 @@ export default function AddQuestionModal({
         imgPreview: photoUrl || formData.imgPreview,
       });
 
+      getApi()
+        .get("/categories")
+        .then((response: AxiosResponse) => {
+          dispatch(globalDataActions.setData({ categories: response.data }));
+        })
+        .catch(() => {
+          toast.error("Podczas pobierania kategorii wystąpił błąd");
+        });
+
       toast.success("Pytanie zostało dodane");
       handleClose();
     } catch (error) {
-      toast.error("Nie udało się dodać pytania");
+      if (error instanceof Error) {
+        toast.error("Nie udało się dodać pytania");
+      }
     } finally {
       setIsUploading(false);
     }
@@ -212,15 +252,53 @@ export default function AddQuestionModal({
       question: "",
       correctAnswer: "",
       distractors: ["", "", ""],
+      categories: "",
     });
     setShow(false);
   };
 
+  const categoriesData = categories.map((category) => ({
+    value: category.name,
+    label: category.name.toUpperCase(),
+  }));
+
+  const [selectedCategories, setSelectedCategories] = useState<
+    ICategorySelect[]
+  >([
+    {
+      value: categoryName,
+      label: categoryName.toUpperCase(),
+    },
+  ]);
+
+  const animatedComponents = makeAnimated();
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Body>
         <MainTitle>Dodaj pytanie</MainTitle>
         <div className={styles.formElement}>
+          <h4 className={styles.formLabel}>Kategorie</h4>
+          <CreatableSelect
+            components={animatedComponents}
+            closeMenuOnSelect={false}
+            isMulti
+            isClearable
+            options={categoriesData}
+            placeholder={"Wybierz kategorie"}
+            value={selectedCategories}
+            className={styles.select}
+            name={"categories"}
+            onChange={(selectedOptions) => {
+              setSelectedCategories(selectedOptions as ICategorySelect[]);
+            }}
+          />
+          {errors.categories && (
+            <p className={styles.error}>{errors.categories}</p>
+          )}
+        </div>
+
+        <div className={styles.formElement}>
+          <h4 className={styles.formLabel}>Pytanie</h4>
           <textarea
             name="question"
             value={formData.question}
@@ -236,6 +314,7 @@ export default function AddQuestionModal({
             errors.correctAnswer ? styles.error : ""
           }`}
         >
+          <h4 className={styles.formLabel}>Poprawna odpowiedź</h4>
           <CustomInput
             type="text"
             name="correctAnswer"
@@ -248,7 +327,7 @@ export default function AddQuestionModal({
           )}
         </div>
         <div>
-          <h4 className={styles.distractors}>Błędne odpowiedzi</h4>
+          <h4 className={styles.formLabel}>Błędne odpowiedzi</h4>
           {formData.distractors.map((distractor, index) => (
             <div
               key={index}
@@ -272,7 +351,7 @@ export default function AddQuestionModal({
           ))}
         </div>
         <div className={styles.formElement}>
-          <label className={styles.label}>Zdjęcie</label>
+          <label className={styles.formLabel}>Zdjęcie</label>
           <label htmlFor="file-upload" className={styles.customFileUpload}>
             Wybierz zdjęcie
           </label>

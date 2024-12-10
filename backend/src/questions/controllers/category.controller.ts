@@ -7,11 +7,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 import { CreateCategoryDto } from "../dtos/CreateCategory.dto";
 import { UpdateCategoryDto } from "../dtos/UpdateCategory.dto";
+import { RolesGuard } from "../../guards/roles.guard";
+import { Roles, RolesEnum } from "../../guards/roles.decorator";
 
 @Controller("categories")
+@UseGuards(RolesGuard)
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
@@ -26,16 +30,19 @@ export class CategoryController {
   }
 
   @Post()
+  @Roles([RolesEnum.ADMIN])
   createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.createCategory(createCategoryDto);
   }
 
   @Delete(":id")
+  @Roles([RolesEnum.ADMIN])
   changeStatus(@Param("id") id: number) {
     return this.categoryService.changeStatus(id);
   }
 
   @Patch(":id")
+  @Roles([RolesEnum.ADMIN])
   updateCategory(
     @Param("id") id: number,
     @Body() updateCategoryDto: UpdateCategoryDto

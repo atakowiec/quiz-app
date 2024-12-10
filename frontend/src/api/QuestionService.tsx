@@ -1,8 +1,10 @@
 import axios from "axios";
 import { Question } from "../pages/admin/questions/Questions.tsx";
+import getApi from "./axios.ts";
 
 const IMG_UPLOAD_URL = import.meta.env.VITE_IMG_UPLOAD_URL;
 const API_URL = import.meta.env.VITE_API_URL + "/questions";
+const api = getApi();
 
 export interface CreateQuestionRequest {
   id?: number;
@@ -38,7 +40,7 @@ export class QuestionService {
 
   static async createQuestion(data: CreateQuestionRequest): Promise<Question> {
     try {
-      const response = await axios.post(API_URL, {
+      const response = await api.post(API_URL, {
         question: data.question,
         correctAnswer: data.correctAnswer,
         distractors: data.distractors,
@@ -64,7 +66,7 @@ export class QuestionService {
     }
 
     try {
-      const response = await axios.patch(`${API_URL}/${data.id}`, {
+      const response = await api.patch(`${API_URL}/${data.id}`, {
         question: data.question,
         correctAnswer: data.correctAnswer,
         distractors: data.distractors,

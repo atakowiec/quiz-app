@@ -16,21 +16,21 @@ export class RoundService {
   ) {}
 
   /*
-                            This method returns randomly choosen n categories from the database.
-                            Used for category voting on the start of the round.
-                            For a given n, the method should return n categories.
-                       */
+                              This method returns randomly choosen n categories from the db.
+                              Used for category voting on the start of the round.
+                              For a given n, the method should return n categories.
+                         */
   async shuffleCategories(n: number): Promise<Category[]> {
     const categories: Category[] = await this.categoryService.getCategories();
     return categories.sort(() => Math.random() - 0.5).slice(0, n);
   }
 
   /*
-                              This method returns randomly choosen n questions from the database.
-                              Used for question selection in the round.
-                              For a given n and category, the method should return n questions from the given category.
-                              If the category does not exist, the method should throw a NotFoundException.
-                          */
+                                This method returns randomly choosen n questions from the db.
+                                Used for question selection in the round.
+                                For a given n and category, the method should return n questions from the given category.
+                                If the category does not exist, the method should throw a NotFoundException.
+                            */
 
   async shuffleQuestions(
     category: Category | string,

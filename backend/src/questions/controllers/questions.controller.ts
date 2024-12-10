@@ -9,22 +9,28 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { CreateQuestionDto } from "../dtos/CreateQuestion.dto";
 import { UpdateQuestionDto } from "../dtos/UpdateQuestion.dto";
 
 import { QuestionsService } from "../services/questions.service";
+import { Roles, RolesEnum } from "../../guards/roles.decorator";
+import { RolesGuard } from "../../guards/roles.guard";
 
 @Controller("questions")
+@UseGuards(RolesGuard)
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Get()
+  @Roles([RolesEnum.ADMIN])
   getQuestions() {
     return this.questionsService.getQuestions();
   }
 
   @Get("paginate/:category/:page")
+  @Roles([RolesEnum.ADMIN])
   getQuestionsPaginate(
     @Param("category") category: string,
     @Param("page") page: number,
@@ -42,6 +48,7 @@ export class QuestionsController {
   }
 
   @Post()
+  @Roles([RolesEnum.ADMIN])
   createQuestion(@Body() createQuestionDto: CreateQuestionDto) {
     if (createQuestionDto.distractors.length != 3) {
       throw new BadRequestException({
@@ -59,11 +66,13 @@ export class QuestionsController {
   }
 
   @Delete(":questionId")
+  @Roles([RolesEnum.ADMIN])
   changeStatus(@Param("questionId", ParseIntPipe) questionId: number) {
     return this.questionsService.changeStatus(questionId);
   }
 
   @Patch(":questionId")
+  @Roles([RolesEnum.ADMIN])
   updateQuestion(
     @Param("questionId", ParseIntPipe) questionId: number,
     @Body() updateQuestionDto: UpdateQuestionDto

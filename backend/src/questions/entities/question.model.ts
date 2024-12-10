@@ -28,9 +28,7 @@ export class Question {
   })
   distractors: Distractor[];
 
-  @ManyToMany(() => Category, (category) => category.questions, {
-    cascade: true,
-  })
+  @ManyToMany(() => Category, (category) => category.questions, { eager: true })
   @JoinTable()
   category: Category[];
 

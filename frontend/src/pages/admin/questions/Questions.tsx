@@ -79,7 +79,7 @@ export default function Questions() {
   const handleAddQuestionConfirm = async (questionData: QuestionFormData) => {
     try {
       const newQuestion: Question = {
-        id: questionData.id,
+        id: questionData.id ? questionData.id : 0,
         question: questionData.question,
         correctAnswer: questionData.correctAnswer,
         distractors: questionData.distractors.map((d) => ({
