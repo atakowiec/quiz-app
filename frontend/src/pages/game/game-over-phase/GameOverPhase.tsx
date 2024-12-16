@@ -77,11 +77,11 @@ export default function GameOverPhase() {
           </div>
           <div className={styles.buttons}>
             {game?.owner?.username === user.username ||
-              (game?.gameType === "matchmaking" && (
-                <button className={styles.playButton} onClick={playAgain}>
-                  Zagraj ponownie
-                </button>
-              ))}
+            game?.gameType === "matchmaking" ? (
+              <button className={styles.playButton} onClick={playAgain}>
+                Zagraj ponownie
+              </button>
+            ) : null}
             <button className={styles.cancelButton} onClick={leaveGame}>
               Opuść grę
             </button>

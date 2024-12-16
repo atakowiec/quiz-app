@@ -1,8 +1,4 @@
-import {
-  INestApplicationContext,
-  Logger,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { INestApplicationContext, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import { Server, ServerOptions } from "socket.io";
@@ -14,10 +10,9 @@ import { UserService } from "./user/user.service";
 import { ColorsService } from "./colors/colors.service";
 
 export class SocketIOAdapter extends IoAdapter {
-  private readonly logger = new Logger(SocketIOAdapter.name);
-  private authService: AuthService;
-  private userService: UserService;
-  private colorsService: ColorsService;
+  private readonly authService: AuthService;
+  private readonly userService: UserService;
+  private readonly colorsService: ColorsService;
 
   constructor(
     private app: INestApplicationContext,
@@ -31,14 +26,13 @@ export class SocketIOAdapter extends IoAdapter {
   }
 
   createIOServer(port: number, options?: ServerOptions) {
-    const clientPort = parseInt(this.configService.get("CLIENT_PORT"));
+    const clientPort = parseInt(this.configService.get("CLIENT_PORT"), 10);
 
     const cors: CorsOptions = {
       credentials: true,
       origin: [
         this.configService.get("CLIENT_URL"),
         `http://localhost:${clientPort}`,
-        new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$/`),
       ],
     };
 
@@ -53,34 +47,31 @@ export class SocketIOAdapter extends IoAdapter {
     return server;
   }
 
-  createTokenMiddleware() {
+  private createTokenMiddleware() {
     return async (socket: SocketType, next: NextFunction) => {
-      this.logger.log("Middleware for socket.io connection");
-      if (!socket.handshake.headers.cookie) {
-        return next(new UnauthorizedException("No auth cookie provided"));
+      const cookie = socket.handshake.headers.cookie;
+
+      if (!cookie) {
+        return next(new UnauthorizedException("Nie podano ciasteczka"));
       }
+
       try {
         const user = this.authService.extractTokenPayloadFromSocket(socket);
-
-        if (user.id) {
+        if (user && user.id) {
           const dbUser = await this.userService.repository.findOne({
             where: { id: user.id },
           });
 
           if (!dbUser) {
-            this.logger.warn(`User with id ${user.id} not found in the database - removing token.`);
             this.authService.clearTokenFromSocket(socket);
-            return next(new UnauthorizedException("User not found"));
-          } else {
-            this.logger.log(`User [ID:${dbUser.id}] ${dbUser.username} found in the database.`);
-            socket.data = {
-              user: dbUser,
-              username: dbUser.username,
-              iconColor: dbUser.iconColor || this.colorsService.getRandomColor(),
-            };
+            return next(new UnauthorizedException("Użytkownik nie internist"));
           }
+          socket.data = {
+            user: dbUser,
+            username: dbUser.username,
+            iconColor: dbUser.iconColor || this.colorsService.getRandomColor(),
+          };
         } else {
-          this.logger.log(`User ${user.username} has no account.`);
           socket.data = {
             username: user.username,
             iconColor: this.colorsService.getRandomColor(),
@@ -88,8 +79,7 @@ export class SocketIOAdapter extends IoAdapter {
         }
         next();
       } catch (error) {
-        this.logger.error("Error in token middleware:", error);
-        next(new UnauthorizedException("Invalid token"));
+        next(new UnauthorizedException("Niepoprawny token"));
       }
     };
   }
