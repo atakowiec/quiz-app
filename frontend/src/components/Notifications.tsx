@@ -1,4 +1,4 @@
-import styles from "../styles/Header.module.scss";
+import styles from "./main-components/header/Header.module.scss";
 import { FaUser } from "react-icons/fa6";
 import { CgClose } from "react-icons/cg";
 import { useNotifications } from "../store/notificationsSlice.ts";

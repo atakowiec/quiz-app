@@ -1,9 +1,9 @@
 import { useGame } from "../../../store/gameSlice.ts";
-import MainContainer from "../../../components/MainContainer.tsx";
-import MainBox from "../../../components/MainBox.tsx";
-import MainTitle from "../../../components/MainTitle.tsx";
+import MainContainer from "../../../components/main-components/MainContainer.tsx";
+import MainBox from "../../../components/main-components/MainBox.tsx";
+import MainTitle from "../../../components/main-components/MainTitle.tsx";
 import styles from "./Category.module.scss";
-import Meta from "../../../components/Meta.tsx";
+import Meta from "../../../components/main-components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
 
 const SelectedCategoryPhase = () => {

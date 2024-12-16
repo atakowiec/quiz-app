@@ -2,8 +2,8 @@ import styles from "../styles/CreateCategoryModal.module.scss";
 import { Modal } from "react-bootstrap";
 import { ChangeEvent, useState } from "react";
 import { CategoryService } from "../../../../api/categoryService.tsx";
-import MainTitle from "../../../../components/MainTitle.tsx";
-import CustomInput from "../../../../components/CustomInput.tsx";
+import MainTitle from "../../../../components/main-components/MainTitle.tsx";
+import CustomInput from "../../../../components/main-components/CustomInput.tsx";
 
 export interface CategoryFormData {
   categoryName: string;

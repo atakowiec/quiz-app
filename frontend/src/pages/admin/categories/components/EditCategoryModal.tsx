@@ -1,8 +1,8 @@
 import { useState, ChangeEvent, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { CategoryService } from "../../../../api/categoryService";
-import MainTitle from "../../../../components/MainTitle";
-import CustomInput from "../../../../components/CustomInput";
+import MainTitle from "../../../../components/main-components/MainTitle.tsx";
+import CustomInput from "../../../../components/main-components/CustomInput.tsx";
 import { useDispatch } from "react-redux";
 import { globalDataActions } from "../../../../store/globalDataSlice";
 import { toast } from "react-toastify";
@@ -105,7 +105,9 @@ export default function EditCategoryModal(props: EditCategoryModalProps) {
       const categories = await CategoryService.getCategories();
       dispatch(globalDataActions.setData({ categories }));
     } catch (error) {
-      toast.error("Nie udało się odświeżyć listy kategorii");
+      if (error instanceof Error) {
+        toast.error("Nie udało się odświeżyć listy kategorii");
+      }
     }
   };
 

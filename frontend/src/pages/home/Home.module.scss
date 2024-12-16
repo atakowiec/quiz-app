@@ -1,0 +1,85 @@
+@import "../../Global";
+
+.picturesContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100% - 5rem);
+  margin-left: 5rem;
+  margin-top: 2rem;
+}
+
+.pictureWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 2000px;
+  padding: 20px;
+}
+
+.svgWrapper {
+  flex: 1;
+  max-width: 40%;
+  position: relative;
+  z-index: 601;
+}
+
+.imageWrapper {
+  flex: 2;
+  max-width: 60%;
+  position: relative;
+  z-index: 600;
+}
+
+.svgImage {
+  margin-left: 10%;
+  max-width: 70%;
+  height: auto;
+}
+
+.img1 {
+  max-width: 75%;
+  height: auto;
+}
+
+@media (max-width: 1000px) and (min-width: $phone-breakpoint) {
+  .picturesContainer {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 5rem;
+  }
+
+  .pictureWrapper {
+    flex-direction: column;
+    position: relative;
+  }
+
+  .imageWrapper {
+    max-width: 80%;
+    order: 2;
+    display: flex;
+    justify-content: center;
+    left: 36px;
+  }
+}
+
+@media (max-width: $phone-breakpoint) {
+  .picturesContainer {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 5rem;
+  }
+
+  .pictureWrapper {
+    flex-direction: column;
+    position: relative;
+  }
+
+  .imageWrapper {
+    max-width: 100%;
+    order: 2;
+    display: flex;
+    justify-content: center;
+  }
+}

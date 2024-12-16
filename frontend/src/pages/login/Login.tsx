@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
-import Meta from "../../components/Meta.tsx";
+import Meta from "../../components/main-components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
 import * as yup from "yup";
 import styles from "./Login.module.scss";
-import CustomInput from "../../components/CustomInput.tsx";
+import CustomInput from "../../components/main-components/CustomInput.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import getApi from "../../api/axios.ts";
 import { AxiosError, AxiosResponse } from "axios";
@@ -12,9 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../store";
 import { userActions, UserState } from "../../store/userSlice.ts";
 import { useSocket } from "../../socket/useSocket.ts";
-import MainContainer from "../../components/MainContainer.tsx";
-import MainBox from "../../components/MainBox.tsx";
-import MainTitle from "../../components/MainTitle.tsx";
+import MainContainer from "../../components/main-components/MainContainer.tsx";
+import MainBox from "../../components/main-components/MainBox.tsx";
+import MainTitle from "../../components/main-components/MainTitle.tsx";
 import { UserPacket } from "@shared/user";
 import { gameActions } from "../../store/gameSlice.ts";
 

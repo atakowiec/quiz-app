@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from "react";
-import ProfileModal from "../../pages/profile/ProfileModal.tsx";
+import ProfileModal from "../../pages/profile/components/ProfileModal.tsx";
 
 type ProfileModalContextType = {
   closeModal: () => void;

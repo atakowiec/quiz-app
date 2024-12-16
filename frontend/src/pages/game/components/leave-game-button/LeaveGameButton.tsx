@@ -5,7 +5,7 @@ import { gameActions } from "../../../../store/gameSlice";
 import { useSocket } from "../../../../socket/useSocket";
 import styles from "./LeaveGame.module.scss";
 import { useState } from "react";
-import ConfirmationModal from "../../../../components/ConfirmationModal.tsx";
+import ConfirmationModal from "../../../../components/main-components/ConfirmationModal.tsx";
 
 const LeaveGameButton = () => {
   const socket = useSocket();

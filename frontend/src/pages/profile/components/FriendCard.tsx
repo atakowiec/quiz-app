@@ -7,7 +7,7 @@ import useProfileModal from "../../../hooks/profile-modal/useProfileModal.ts";
 import { useSocket } from "../../../socket/useSocket.ts";
 import { useGame } from "../../../store/gameSlice.ts";
 import { translateUserStatus } from "../../../utils/utils.ts";
-import ProfileIcon from "../../../components/ProfileIcon.tsx";
+import ProfileIcon from "./ProfileIcon.tsx";
 
 export default function FriendCard({ friend }: { friend: Friend }) {
   const { showModal } = useProfileModal();

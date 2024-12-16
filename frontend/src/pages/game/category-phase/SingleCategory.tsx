@@ -2,7 +2,7 @@ import styles from "./Category.module.scss";
 import { useGlobalData } from "../../../store/globalDataSlice.ts";
 import { useSocket } from "../../../socket/useSocket.ts";
 import { useGame } from "../../../store/gameSlice.ts";
-import ProfileIcon from "../../../components/ProfileIcon.tsx";
+import ProfileIcon from "../../profile/components/ProfileIcon.tsx";
 
 export default function SingleCategory({ categoryId }: { categoryId: number }) {
   const socket = useSocket();

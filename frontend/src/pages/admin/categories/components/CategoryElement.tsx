@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "../styles/Categories.module.scss";
 import { FaEdit } from "react-icons/fa";
-import ConfirmationModal from "../../../../components/ConfirmationModal.tsx";
+import ConfirmationModal from "../../../../components/main-components/ConfirmationModal.tsx";
 import { useState } from "react";
 import EditCategoryModal from "./EditCategoryModal.tsx";
 import { SlPower } from "react-icons/sl";

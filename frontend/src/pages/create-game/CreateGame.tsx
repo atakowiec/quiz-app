@@ -1,20 +1,20 @@
 import { Breadcrumb } from "react-bootstrap";
-import Meta from "../../components/Meta.tsx";
+import Meta from "../../components/main-components/Meta.tsx";
 import styles from "./CreateGame.module.scss";
 import {
   IoPeopleSharp,
   IoPersonSharp,
   IoPodiumSharp,
 } from "react-icons/io5";
-import Sidebar from "../../components/SideBar.tsx";
+import Sidebar from "../../components/main-components/sidebar/SideBar.tsx";
 import { useSocket } from "../../socket/useSocket.ts";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../store/userSlice.ts";
-import SetUserNameModal from "../../components/set-username-modal/SetUserNameModal.tsx";
-import MainContainer from "../../components/MainContainer.tsx";
-import MainBox from "../../components/MainBox.tsx";
-import MainTitle from "../../components/MainTitle.tsx";
+import SetUserNameModal from "../join-game/set-username-modal/SetUserNameModal.tsx";
+import MainContainer from "../../components/main-components/MainContainer.tsx";
+import MainBox from "../../components/main-components/MainBox.tsx";
+import MainTitle from "../../components/main-components/MainTitle.tsx";
 import { toast } from "react-toastify";
 import { setInQueue, useQueue } from "../../store/queueSlice.ts";
 import { useDispatch } from "react-redux";

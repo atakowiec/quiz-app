@@ -1,4 +1,4 @@
-import Meta from "../../../components/Meta.tsx";
+import Meta from "../../../components/main-components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
 import styles from "./Question.module.scss";
 import Helper from "../components/helper/Helper.tsx";
@@ -9,13 +9,13 @@ import TimeBar from "../components/time-bar/TimeBar.tsx";
 import { useGame } from "../../../store/gameSlice.ts";
 import { useSocket } from "../../../socket/useSocket.ts";
 import { HelperType, IAnswer, IQuestion } from "@shared/game";
-import MainContainer from "../../../components/MainContainer.tsx";
-import MainBox from "../../../components/MainBox.tsx";
-import MainTitle from "../../../components/MainTitle.tsx";
-import ProfileIcon from "../../../components/ProfileIcon.tsx";
+import MainContainer from "../../../components/main-components/MainContainer.tsx";
+import MainBox from "../../../components/main-components/MainBox.tsx";
+import MainTitle from "../../../components/main-components/MainTitle.tsx";
+import ProfileIcon from "../../profile/components/ProfileIcon.tsx";
 import { useEffect, useState } from "react";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import Fancybox from "../../../components/FancyBox.tsx";
+import Fancybox from "./components/FancyBox.tsx";
 
 const helperIcons = {
   cheat_from_others: FaRegEye,

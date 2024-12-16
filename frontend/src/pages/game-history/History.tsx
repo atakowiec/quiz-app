@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "react-bootstrap";
-import Meta from "../../components/Meta.tsx";
-import MainContainer from "../../components/MainContainer.tsx";
-import Sidebar from "../../components/SideBar.tsx";
-import MainBox from "../../components/MainBox.tsx";
+import Meta from "../../components/main-components/Meta.tsx";
+import MainContainer from "../../components/main-components/MainContainer.tsx";
+import Sidebar from "../../components/main-components/sidebar/SideBar.tsx";
+import MainBox from "../../components/main-components/MainBox.tsx";
 import styles from "./History.module.scss";
-import MainTitle from "../../components/MainTitle.tsx";
+import MainTitle from "../../components/main-components/MainTitle.tsx";
 import { useUser } from "../../store/userSlice.ts";
 import getApi from "../../api/axios.ts";
 import { GameHistoryPlayerItem } from "@shared/game.js";

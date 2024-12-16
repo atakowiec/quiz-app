@@ -1,0 +1,296 @@
+@import "../../../../Global";
+
+.settingsBox {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.singleSetting {
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  align-items: center;
+}
+
+.settingsTitle {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.choiceBox {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  margin-left: auto;
+}
+
+.changeButton {
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  max-width: 30px;
+  max-height: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choiceValue {
+  background-color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  text-align: center;
+  justify-content: center;
+  border: none;
+  width: auto;
+  max-width: 4.2ch;
+}
+
+.choiceValue::-webkit-inner-spin-button,
+.choiceValue::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.choiceValue {
+  -moz-appearance: textfield;
+}
+
+.settingsButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+.settings {
+  background-color: $gray;
+  border: none;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  box-shadow: $button-shadow-black;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+
+  &:hover {
+    background-color: $button-gray-hover;
+  }
+}
+
+.customModal {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: $container-border-radius;
+  box-shadow: none;
+}
+
+.categoryModalBox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  overflow-y: auto;
+  padding: 1rem;
+  gap: 1rem;
+  margin-top: 1rem;
+  max-height: 400px;
+}
+
+.categoriesChoice {
+  display: flex;
+  flex: 1;
+  white-space: nowrap;
+
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: $button-shadow-black;
+  padding: 0.3rem;
+  font-weight: 400;
+  font-size: 1rem;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color 0.1s ease;
+  border: 2px solid transparent;
+  user-select: none;
+}
+
+.active {
+  border: 2px solid $green-black;
+}
+
+.categoryImage {
+  max-width: 30px;
+  max-height: 30px;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+}
+
+.categoryName {
+  flex: 1;
+  text-align: center;
+}
+
+.settButtons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  position: relative;
+}
+
+.saveBut {
+  border: none;
+  padding: $button-padding;
+  border-radius: $button-border-radius;
+  background-color: $green-black;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+  box-shadow: $button-shadow-green;
+
+  &:hover {
+    background-color: $button-green-hover;
+  }
+}
+
+.markButtons {
+  display: flex;
+  position: absolute;
+  right: 0;
+  gap: 1rem;
+}
+
+.markBut {
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: $button-border-radius;
+  background-color: $gray;
+  font-size: 1.2rem;
+  gap: 1rem;
+  box-shadow: $button-shadow-black;
+}
+
+.helpers {
+  padding-top: 1rem;
+}
+
+.singleHelper {
+  background-color: $gray;
+  border-radius: $container-border-radius;
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.helper {
+  display: flex;
+  flex-direction: column;
+}
+
+.helperName {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.helperDesc {
+  font-size: 0.9rem;
+}
+
+.helperIcon {
+  font-size: 5rem;
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $red;
+  transition: 0.4s;
+  border-radius: 10px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: $green;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+@media (max-width: $phone-breakpoint) {
+  .Title {
+    margin-bottom: 1rem;
+  }
+
+  .choiceValue {
+    font-size: 0.9rem;
+    min-width: 30px;
+  }
+
+  .settingsTitle {
+    font-size: 0.9rem;
+  }
+
+  .settings {
+    font-size: 0.9rem;
+  }
+}

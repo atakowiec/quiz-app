@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { ICategory } from "@shared/game";
 import QuestionElement from "./components/QuestionElement";
 import styles from "./styles/Questions.module.scss";
-import Meta from "../../../components/Meta";
+import Meta from "../../../components/main-components/Meta.tsx";
 import AddQuestionModal, {
   QuestionFormData,
 } from "./components/AddQuestionModal";

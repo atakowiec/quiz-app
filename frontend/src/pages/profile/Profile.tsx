@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { Breadcrumb } from "react-bootstrap";
-import Meta from "../../components/Meta.tsx";
-import Sidebar from "../../components/SideBar.tsx";
+import Meta from "../../components/main-components/Meta.tsx";
+import Sidebar from "../../components/main-components/sidebar/SideBar.tsx";
 import styles from "./Profile.module.scss";
 import { useSelector } from "react-redux";
 import { State } from "../../store";
-import MainContainer from "../../components/MainContainer.tsx";
-import MainBox from "../../components/MainBox.tsx";
-import MainTitle from "../../components/MainTitle.tsx";
+import MainContainer from "../../components/main-components/MainContainer.tsx";
+import MainBox from "../../components/main-components/MainBox.tsx";
+import MainTitle from "../../components/main-components/MainTitle.tsx";
 import { FaEdit, FaLock } from "react-icons/fa";
 import { UserState } from "../../store/userSlice.ts";
 import FriendCard from "./components/FriendCard.tsx";
 import AddFriendsModal from "./components/AddFriendsModal.tsx";
-import UpdateEmailModal from "./Edit/UpdateEmailModal.tsx";
-import ChangePasswordModal from "./Edit/ChangePasswordModal.tsx";
-import ProfileIcon from "../../components/ProfileIcon.tsx";
-import ProfileIconPicker from "../../components/profile-icon-picker/ProfileIconPicker.tsx";
+import UpdateEmailModal from "./edit/UpdateEmailModal.tsx";
+import ChangePasswordModal from "./edit/ChangePasswordModal.tsx";
+import ProfileIcon from "./components/ProfileIcon.tsx";
+import ProfileIconPicker from "./components/profile-icon-picker/ProfileIconPicker.tsx";
 import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const Profile: React.FC = () => {

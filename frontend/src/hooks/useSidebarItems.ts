@@ -1,6 +1,6 @@
 import { useUser } from "../store/userSlice.ts";
 import { useGame } from "../store/gameSlice.ts";
-import { SidebarItem } from "../components/SideBar.tsx";
+import { SidebarItem } from "../components/main-components/sidebar/SideBar.tsx";
 import { IoHomeSharp, IoSettingsSharp, IoStatsChartSharp } from "react-icons/io5";
 import {
   IoIosAddCircleOutline,

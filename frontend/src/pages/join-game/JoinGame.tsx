@@ -1,16 +1,16 @@
 import { Breadcrumb } from "react-bootstrap";
-import Meta from "../../components/Meta.tsx";
+import Meta from "../../components/main-components/Meta.tsx";
 import styles from "./JoinGame.module.scss";
-import Sidebar from "../../components/SideBar.tsx";
+import Sidebar from "../../components/main-components/sidebar/SideBar.tsx";
 import { useSocket } from "../../socket/useSocket.ts";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../store/userSlice.ts";
 import useQueryParam from "../../hooks/useQueryParam.ts";
-import SetUserNameModal from "../../components/set-username-modal/SetUserNameModal.tsx";
-import MainContainer from "../../components/MainContainer.tsx";
-import MainBox from "../../components/MainBox.tsx";
-import MainTitle from "../../components/MainTitle.tsx";
+import SetUserNameModal from "./set-username-modal/SetUserNameModal.tsx";
+import MainContainer from "../../components/main-components/MainContainer.tsx";
+import MainBox from "../../components/main-components/MainBox.tsx";
+import MainTitle from "../../components/main-components/MainTitle.tsx";
 import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const JoinGame: React.FC = () => {

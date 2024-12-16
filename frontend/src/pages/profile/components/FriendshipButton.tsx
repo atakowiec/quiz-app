@@ -2,7 +2,7 @@ import { UserDetails } from "@shared/user";
 import { useState } from "react";
 import styles from "../Profile.module.scss";
 import { BsPersonFillAdd, BsPersonFillCheck, BsPersonFillDown, BsPersonFillUp } from "react-icons/bs";
-import ConfirmationModal from "../../../components/ConfirmationModal.tsx";
+import ConfirmationModal from "../../../components/main-components/ConfirmationModal.tsx";
 import { ClientToServerEventsKeys } from "@shared/socket";
 import { useSocket } from "../../../socket/useSocket.ts";
 import { getFriendshipStatus } from "../../../utils/utils.ts";

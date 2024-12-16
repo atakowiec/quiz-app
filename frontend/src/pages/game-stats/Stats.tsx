@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../components/SideBar.tsx";
+import Sidebar from "../../components/main-components/sidebar/SideBar.tsx";
 import { useUser } from "../../store/userSlice.ts";
-import Meta from "../../components/Meta.tsx";
+import Meta from "../../components/main-components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
-import MainContainer from "../../components/MainContainer.tsx";
-import MainBox from "../../components/MainBox.tsx";
-import MainTitle from "../../components/MainTitle.tsx";
+import MainContainer from "../../components/main-components/MainContainer.tsx";
+import MainBox from "../../components/main-components/MainBox.tsx";
+import MainTitle from "../../components/main-components/MainTitle.tsx";
 import styles from "./Stats.module.scss";
-import RankingVisualization from "./RankingVisualization.tsx";
-import StatsModal from "./StatsModal.tsx";
+import RankingVisualization from "./components/RankingVisualization.tsx";
+import StatsModal from "./components/StatsModal.tsx";
 import { ProfileStats } from "@shared/game.js";
 import getApi from "../../api/axios.ts";
-import AverageScoreChartModal from "./AvgScoreModal.tsx";
+import AverageScoreChartModal from "./components/AvgScoreModal.tsx";
 import { useSidebarItems } from "../../hooks/useSidebarItems.ts";
 
 const Stats: React.FC = () => {

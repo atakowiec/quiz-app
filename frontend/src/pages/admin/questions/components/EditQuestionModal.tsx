@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "../styles/CreateQuestionModal.module.scss";
-import CustomInput from "../../../../components/CustomInput";
-import MainTitle from "../../../../components/MainTitle";
+import CustomInput from "../../../../components/main-components/CustomInput.tsx";
+import MainTitle from "../../../../components/main-components/MainTitle.tsx";
 import { toast } from "react-toastify";
 import {
   CreateQuestionRequest,

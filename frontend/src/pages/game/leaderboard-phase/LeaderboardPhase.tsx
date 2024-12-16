@@ -1,9 +1,9 @@
 import { Breadcrumb } from "react-bootstrap";
-import MainContainer from "../../../components/MainContainer.tsx";
+import MainContainer from "../../../components/main-components/MainContainer.tsx";
 import TimeBar from "../components/time-bar/TimeBar.tsx";
-import Meta from "../../../components/Meta.tsx";
-import MainBox from "../../../components/MainBox.tsx";
-import MainTitle from "../../../components/MainTitle.tsx";
+import Meta from "../../../components/main-components/Meta.tsx";
+import MainBox from "../../../components/main-components/MainBox.tsx";
+import MainTitle from "../../../components/main-components/MainTitle.tsx";
 import styles from "./Leaderboard.module.scss";
 import { useSelector } from "react-redux";
 import { GameState } from "../../../store/gameSlice.ts";

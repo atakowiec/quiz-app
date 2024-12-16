@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../../components/SideBar.tsx";
-import Meta from "../../../components/Meta.tsx";
+import Sidebar from "../../../components/main-components/sidebar/SideBar.tsx";
+import Meta from "../../../components/main-components/Meta.tsx";
 import { Breadcrumb, OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "./WaitingRoom.module.scss";
 import { LuCrown } from "react-icons/lu";
@@ -13,13 +13,13 @@ import { IoMdArrowUp } from "react-icons/io";
 import { GameState, useGame } from "../../../store/gameSlice.ts";
 import { UserState } from "../../../store/userSlice.ts";
 import { FaCheck, FaLink, FaUser } from "react-icons/fa6";
-import MainContainer from "../../../components/MainContainer.tsx";
-import MainBox from "../../../components/MainBox.tsx";
-import MainTitle from "../../../components/MainTitle.tsx";
+import MainContainer from "../../../components/main-components/MainContainer.tsx";
+import MainBox from "../../../components/main-components/MainBox.tsx";
+import MainTitle from "../../../components/main-components/MainTitle.tsx";
 import TimeBar from "../components/time-bar/TimeBar.tsx";
 import useProfileModal from "../../../hooks/profile-modal/useProfileModal.ts";
-import ConfirmationModal from "../../../components/ConfirmationModal.tsx";
-import InviteModal from "./InviteModal.tsx";
+import ConfirmationModal from "../../../components/main-components/ConfirmationModal.tsx";
+import InviteModal from "./game-invite/InviteModal.tsx";
 import { useGameSidebarItems } from "../../../hooks/useSidebarItems.ts";
 
 const WaitingRoom: React.FC = () => {

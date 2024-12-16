@@ -6,7 +6,7 @@ import { IoMdPerson } from "react-icons/io";
 import { UserDetails } from "@shared/user";
 import { FriendshipButton, FriendshipButtonProps } from "./FriendshipButton.tsx";
 import getApi from "../../../api/axios.ts";
-import ProfileIcon from "../../../components/ProfileIcon.tsx";
+import ProfileIcon from "./ProfileIcon.tsx";
 import useProfileModal from "../../../hooks/profile-modal/useProfileModal.ts";
 
 interface AddFriendsModalProps {

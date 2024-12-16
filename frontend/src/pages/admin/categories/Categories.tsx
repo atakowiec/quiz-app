@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import getApi from "../../../api/axios.ts";
 import { AxiosResponse } from "axios";
 import { globalDataActions } from "../../../store/globalDataSlice.ts";
-import Meta from "../../../components/Meta.tsx";
+import Meta from "../../../components/main-components/Meta.tsx";
 import { Breadcrumb } from "react-bootstrap";
 
 export default function Categories() {
