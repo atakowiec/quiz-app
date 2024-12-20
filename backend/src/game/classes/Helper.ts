@@ -1,51 +1,51 @@
-import { SocketType } from "../game.types";
-import { GameService } from "../services/game.service";
+import {SocketType} from "../game";
+import {GameService} from "../services/game.service";
 
 export enum HelperEnum {
-  FiftyFifty = "fifty_fifty",
-  ExtendTime = "extend_time",
-  CheatFromOthers = "cheat_from_others",
+    FiftyFifty = "fifty_fifty",
+    ExtendTime = "extend_time",
+    CheatFromOthers = "cheat_from_others",
 }
 
 abstract class Helper {
-  name: HelperEnum;
+    name: HelperEnum;
 
-  protected constructor(name: HelperEnum) {
-    this.name = name;
-  }
+    protected constructor(name: HelperEnum) {
+        this.name = name;
+    }
 
-  abstract execute(socket: SocketType, gameService: GameService): void;
+    abstract execute(socket: SocketType, gameService: GameService): void;
 }
 
 class FifyFifty extends Helper {
-  constructor() {
-    super(HelperEnum.FiftyFifty);
-  }
+    constructor() {
+        super(HelperEnum.FiftyFifty);
+    }
 
-  execute(socket: SocketType, gameService: GameService) {
-    gameService.getGameByUsername(socket.data.username)?.fiftyFifty(socket);
-  }
+    execute(socket: SocketType, gameService: GameService) {
+        gameService.getGameByUsername(socket.data.username)?.fiftyFifty(socket);
+    }
 }
 
 class ExtendTime extends Helper {
-  constructor() {
-    super(HelperEnum.ExtendTime);
-  }
+    constructor() {
+        super(HelperEnum.ExtendTime);
+    }
 
-  execute(socket: SocketType, gameService: GameService) {
-    gameService.getGameByUsername(socket.data.username)?.extendTime(socket);
-  }
+    execute(socket: SocketType, gameService: GameService) {
+        gameService.getGameByUsername(socket.data.username)?.extendTime(socket);
+    }
 }
 
 class CheatFromOthers extends Helper {
-  constructor() {
-    super(HelperEnum.CheatFromOthers);
-  }
+    constructor() {
+        super(HelperEnum.CheatFromOthers);
+    }
 
-  execute(socket: SocketType, gameService: GameService) {
-    gameService.getGameByUsername(socket.data.username)?.cheatFromOthers(socket);
-  }
+    execute(socket: SocketType, gameService: GameService) {
+        gameService.getGameByUsername(socket.data.username)?.cheatFromOthers(socket);
+    }
 }
 
 export default Helper;
-export { FifyFifty, ExtendTime, CheatFromOthers };
+export {FifyFifty, ExtendTime, CheatFromOthers};

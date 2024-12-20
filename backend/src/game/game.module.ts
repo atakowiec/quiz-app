@@ -1,23 +1,23 @@
-import { forwardRef, Module } from "@nestjs/common";
-import { GameService } from "./services/game.service";
-import { GameGateway } from "./gateways/game.gateway";
-import { AuthModule } from "src/auth/auth.module";
-import { GameController } from "./game.controller";
-import { QuestionsModule } from "../questions/questions.module";
-import { MatchmakingModule } from "src/matchmaking/matchmaking.module";
-import { GameHistoryModule } from "src/game-history/game-history.module";
-import { MetricsModule } from "../metrics/metrics.module";
+import {forwardRef, Module} from "@nestjs/common";
+import {GameService} from "./services/game.service";
+import {GameGateway} from "./gateways/game.gateway";
+import {AuthModule} from "src/auth/auth.module";
+import {QuestionsModule} from "../questions/questions.module";
+import {MatchmakingModule} from "src/matchmaking/matchmaking.module";
+import {GameHistoryModule} from "src/game-history/game-history.module";
+import {MetricsModule} from "../metrics/metrics.module";
 
 @Module({
-  imports: [
-    forwardRef(() => AuthModule),
-    QuestionsModule,
-    forwardRef(() => MatchmakingModule),
-    forwardRef(() => GameHistoryModule),
-    MetricsModule,
-  ],
-  providers: [GameService, GameGateway],
-  controllers: [GameController],
-  exports: [GameService, GameGateway],
+    imports: [
+        forwardRef(() => AuthModule),
+        QuestionsModule,
+        forwardRef(() => MatchmakingModule),
+        forwardRef(() => GameHistoryModule),
+        MetricsModule,
+    ],
+    providers: [GameService, GameGateway],
+    controllers: [],
+    exports: [GameService, GameGateway],
 })
-export class GameModule {}
+export class GameModule {
+}
