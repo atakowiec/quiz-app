@@ -1,5 +1,9 @@
 CREATE DATABASE  IF NOT EXISTS `quiz_database` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `quiz_database`;
+
+CREATE USER 'quiz_user'@'%' IDENTIFIED WITH mysql_native_password BY '3TRFTttgye4tg43w';
+GRANT ALL PRIVILEGES ON quiz_database.* TO 'quiz_user'@'%';
+FLUSH PRIVILEGES;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: quiz_database

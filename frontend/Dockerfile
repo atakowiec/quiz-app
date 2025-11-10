@@ -25,3 +25,5 @@ RUN npm --loglevel=verbose run build
 FROM nginx
 
 COPY --from=builder /app/frontend/dist /usr/share/nginx/html
+
+COPY ./frontend/nginx.conf /etc/nginx/conf.d/default.conf

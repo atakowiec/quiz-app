@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-frontend
+  namespace: quiz-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quiz-frontend
+  template:
+    metadata:
+      labels:
+        app: quiz-frontend
+    spec:
+      containers:
+        - name: quiz-frontend
+          image: atakowiec/k8s-quiz:frontend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
