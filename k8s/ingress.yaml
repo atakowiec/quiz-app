@@ -35,3 +35,13 @@ spec:
                 name: phpmyadmin
                 port:
                   number: 80
+    - host: img.cieszczyk.pl
+      http:
+        paths:
+          - path: /content
+            pathType: Prefix
+            backend:
+              service:
+                name: image-server
+                port:
+                  number: 80
