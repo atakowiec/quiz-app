@@ -8,6 +8,6 @@ data:
     CREATE DATABASE IF NOT EXISTS quiz_database;
     USE quiz_database;
 
-    CREATE USER 'quiz_user'@'%' IDENTIFIED WITH mysql_native_password BY '3TRFTttgye4tg43w';
+    CREATE USER 'quiz_user'@'%' IDENTIFIED BY 'xx';
     GRANT ALL PRIVILEGES ON quiz_database.* TO 'quiz_user'@'%';
     FLUSH PRIVILEGES;

@@ -24,5 +24,5 @@ spec:
       volumes:
         - name: images
           hostPath:
-            path: /root/quiz-app/k8s/images
+            path: /root/quiz-app/images
             type: Directory

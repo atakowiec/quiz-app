@@ -494,7 +494,7 @@ export default class Game {
         if (this.gameType === "matchmaking") {
             this.gameService.removeGame(this);
         }
-        this.gameService.incrementNumberOfEndedGamesMetric();
+
         setTimeout(() => {
             this.gameService.removeGame(this);
         }, 300000); // after 5 minutes game will be removed and it can't be played again

@@ -68,6 +68,7 @@ export class GameService {
         if (index !== -1) {
             this.games.splice(index, 1);
             this.metricsService.setActiveGamesCount(this.games.length);
+            this.metricsService.incrementGameFinished();
         }
 
         game.destroy();
@@ -182,10 +183,6 @@ export class GameService {
             score: member.score,
             place: member.place,
         };
-    }
-
-    public incrementNumberOfEndedGamesMetric() {
-        this.metricsService.incrementGameFinished();
     }
 
     private getUserGameCategoryScoreDatabaseObject(
