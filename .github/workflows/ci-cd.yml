@@ -1,0 +1,52 @@
+name: Build & Deploy to K8s
+
+on:
+  push:
+    branches:
+      - k8s
+      - master
+
+env:
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/quiz-app-frontend
+  BACKEND_IMAGE: ghcr.io/${{ github.repository_owner }}/quiz-app-backend
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      # Build and push Frontend
+      - name: Build & Push Frontend Image
+        run: |
+          docker build -t $FRONTEND_IMAGE:${{ github.sha }} -f ./frontend/Dockerfile .
+          docker tag $FRONTEND_IMAGE:${{ github.sha }} $FRONTEND_IMAGE:latest
+          docker push $FRONTEND_IMAGE:${{ github.sha }}
+          docker push $FRONTEND_IMAGE:latest
+
+      # Build and push Backend
+      - name: Build & Push Backend Image
+        run: |
+          docker build -t $BACKEND_IMAGE:${{ github.sha }} -f ./backend/Dockerfile .
+          docker tag $BACKEND_IMAGE:${{ github.sha }} $BACKEND_IMAGE:latest
+          docker push $BACKEND_IMAGE:${{ github.sha }}
+          docker push $BACKEND_IMAGE:latest
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
+
+      - name: Deploy to k3s
+        run: |
+          kubectl set image deployments.apps/quiz-frontend quiz-frontend=$FRONTEND_IMAGE:${{ github.sha }} -n quiz-app
+          kubectl set image deployments.apps/quiz-backend quiz-backend=$BACKEND_IMAGE:${{ github.sha }} -n quiz-app
+          kubectl rollout status deployment/quiz-frontend -n quiz-app
+          kubectl rollout status deployment/quiz-backend -n quiz-app
