@@ -31,14 +31,14 @@ spec:
               value: mysql
             - name: DB_PORT
               value: "3306"
-            - name: DB_USERNAME
+            - name: DB_USER
               value: "root"
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
-            - name: DB_DATABASE
+            - name: DB_NAME
               value: "quiz_database"
             - name: CLIENT_URL
               value: "https://quiz.cieszczyk.pl"
